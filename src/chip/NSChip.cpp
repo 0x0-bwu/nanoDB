@@ -1,0 +1,41 @@
+#include "NSChip.h"
+NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::chip::Chip)
+
+namespace nano::chip {
+
+#ifdef NANO_BOOST_SERIALIZATION_SUPPORT
+
+template <typename Archive>
+void Chip::serialize(Archive & ar, const unsigned int version)
+{
+    NS_UNUSED(version);
+    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(Chip);
+    ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(NamedObj);
+    NS_SERIALIZATION_CLASS_MEMBERS(ar);
+}
+NS_SERIALIZATION_FUNCTIONS_IMP(Chip)
+
+#endif//NANO_BOOST_SERIALIZATION_SUPPORT
+
+Chip::Chip(std::string name)
+ : NamedObj(std::move(name))
+{
+}
+
+void Chip::AddBlock(BlockId block)
+{
+    m_.blocks.emplace_back(block);
+}
+
+void Chip::SetTop(BlockId block)
+{
+    NS_ASSERT(std::find(m_.blocks.begin(), m_.blocks.end(), block) != m_.blocks.cend());
+    m_.top = block;
+}
+
+BlockId Chip::GetTop() const
+{
+    return m_.top;
+}
+
+} // namespace nano::chip
