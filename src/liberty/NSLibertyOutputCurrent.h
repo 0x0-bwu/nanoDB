@@ -1,0 +1,22 @@
+#pragma once
+#include "NSLiberty.h"
+
+namespace nano::liberty {
+
+class OutputCurrentParser;
+class OutputCurrent : public Entity<OutputCurrent>
+{
+public:
+    friend class OutputCurrentParser;
+    OutputCurrent() = default;
+
+    void AddCcsLut(Id<CcsLut> ccsLut);
+
+private:
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION;
+    NS_DEFINE_CLASS_MEMBERS(
+    (IdVec<CcsLut>, vectors))
+};
+
+} // namespace nano::liberty
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::liberty::OutputCurrent)
