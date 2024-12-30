@@ -212,6 +212,11 @@ bool Database::Save(std::string_view name, std::string_view filename, ArchiveFor
     return Instance().SaveImpl(name, filename, fmt);
 }
 
+bool Database::SaveCurrent(std::string_view filename, ArchiveFormat fmt)
+{
+    return Instance().SaveImpl(Current().GetName(), filename, fmt);
+}
+
 bool Database::Load(std::string_view filename, ArchiveFormat fmt)
 {
     return Instance().LoadImpl(filename, fmt);

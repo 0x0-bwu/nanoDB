@@ -1,3 +1,4 @@
 #pragma once
+#include "../../src/common/NSMaterial.h"
 #include "../../src/package/NSPackage.h"
 #include "../../src/package/NSPackageCell.h"

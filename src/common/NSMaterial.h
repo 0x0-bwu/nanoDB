@@ -1,18 +1,144 @@
 #pragma once
 #include "basic/NSContainer.hpp"
+#include <unordered_map>
 
 namespace nano::common {
 
-
-class Material : public NamedObj, public Entity<Material>
+class MaterialProp : public Entity<MaterialProp>
 {
 public:
-    Material(std::string name);
-    Material() = default;
+    virtual ~MaterialProp() = default;
+    virtual bool isPropValue() const { return false; }
+    virtual bool isPropTable() const { return false; }
+    virtual bool isPropPolyNomial() const { return false; }
 
+    //1x1-simple, 3x1-anisotropic, 3x3-tensor
+    virtual void GetDimensions(size_t & row, size_t & col) const { row = col = 0; }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
 };
 
+class MaterialPropValue : public MaterialProp, public Entity<MaterialPropValue>
+{
+public:
+    explicit MaterialPropValue(const std::array<NSFloat, 9> & values);
+    explicit MaterialPropValue(const std::array<NSFloat, 3> & values);
+    explicit MaterialPropValue(NSFloat value);
+    MaterialPropValue() = default;
+
+    bool isPropValue() const override { return true; }
+
+    void SetSimpleProperty(NSFloat value);
+    void SetAnisotropicProperty(const std::array<NSFloat, 3> & values);
+    void SetTensorProperty(const std::array<NSFloat, 9> & values);
+
+    bool GetSimpleProperty(NSFloat & value) const;
+    bool GetAnisotropicProperty(size_t row, NSFloat & value) const;
+    bool GetTensorProperty(size_t row, size_t col, NSFloat & value) const;
+
+    //1x1-simple, 3x1-anisotropic, 3x3-tensor
+    void GetDimensions(size_t & row, size_t & col) const override;
+private:
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION;
+    NS_DEFINE_CLASS_MEMBERS(
+    (std::vector<NSFloat>, values))
+};
+
+class MaterialPropTable : public MaterialProp, public Entity<MaterialPropTable>
+{
+public:
+    // todo
+    bool isPropTable() const override { return true; }
+
+private:
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION;
+    NS_DEFINE_CLASS_MEMBERS(
+    (std::map<NSFloat, MaterialPropId>, values))
+};
+
+class MaterialPropPolynomial : public MaterialProp, public Entity<MaterialPropPolynomial>
+{
+public:
+    explicit MaterialPropPolynomial(std::vector<std::vector<NSFloat>> coefficients);
+    MaterialPropPolynomial() = default;
+
+    bool isPropPolynomial() const { return true; }
+
+    bool GetSimpleProperty(NSFloat index, NSFloat & value) const;
+    bool GetAnisotropicProperty(NSFloat index, size_t row, NSFloat & value) const;
+    bool GetTensorProperty(NSFloat index, size_t row, size_t col, NSFloat & value) const;
+
+    //1x1-simple, 3x1-anisotropic, 3x3-tensor
+    void GetDimensions(size_t & row, size_t & col) const override;
+
+private:
+    static NSFloat Calculate(const std::vector<NSFloat> & coefficients, NSFloat index);
+private:
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION;
+    NS_DEFINE_CLASS_MEMBERS(
+    (std::vector<std::vector<NSFloat>>, coefficients))
+};
+
+enum class MaterialType { RIGID, FLUID };
+
+class Material : public NamedObj, public Entity<Material>
+{
+public:
+    enum Prop                              // unit in SI
+    {
+        PERMITTIVITY = 3,                  //F/m
+        PERMEABILITY = 4,                  //H/m
+        CONDUCTIVITY = 5,                  //S/m
+        DIELECTRIC_LOSS_TANGENT = 6,
+        MAGNETIC_LOSS_TANGENT = 7,
+        RESISTIVITY = 8,                   //ohm·m
+        THERMAL_CONDUCTIVITY = 14,         //W/(m·K)
+        MASS_DENSITY = 34,                 //kg/m^3
+        SPECIFIC_HEAT = 38,                //J/(kg·K)
+        YOUNGSMODULUS = 39,                //Pa
+        POISSONSRATIO = 40,
+        THERMAL_EXPANSION_COEFFICIENT = 42 //1/K
+    };
+    Material(std::string name);
+    Material();
+
+    bool hasProperty(Prop prop) const;
+    void SetProperty(Prop prop, MaterialPropId value);
+    MaterialPropId GetProperty(Prop prop) const;
+    void RemoveProperty(Prop prop);
+
+    void SetMaterialType(MaterialType type) { m_.type = type; }
+    MaterialType GetMaterialType() const { return m_.type; }
+
+private:
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION;
+    NS_DEFINE_CLASS_MEMBERS(
+    (MaterialType, type),
+    (std::unordered_map<Prop, MaterialPropId>, props))
+};
+
+class MaterialLib : public NamedObj, public Entity<MaterialLib>
+{
+public:
+    MaterialLib(std::string name);
+    MaterialLib() = default;
+
+    void AddMaterial(MaterialId mat);
+    MaterialId FindMaterial(std::string_view name) const;
+
+private:
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION;
+    NS_DEFINE_CLASS_MEMBERS(
+    (IdVec<Material, lut::Name>, materials))
+};
+
 } // namespace nane::common
 NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::common::Material)
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::common::MaterialLib)
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::common::MaterialProp)
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::common::MaterialPropValue)
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::common::MaterialPropTable)
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::common::MaterialPropPolynomial)
+NS_INHERIT_FROM_BASE(nano::common::MaterialPropValue, nano::common::MaterialProp)
+NS_INHERIT_FROM_BASE(nano::common::MaterialPropTable, nano::common::MaterialProp)
+NS_INHERIT_FROM_BASE(nano::common::MaterialPropPolynomial, nano::common::MaterialProp)

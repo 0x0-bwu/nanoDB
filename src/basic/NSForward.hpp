@@ -29,8 +29,20 @@ using NetId = Id<Net>;
 namespace common {
 
 class Material;
+class MaterialLib;
+class MaterialProp;
+class MaterialPropValue;
+class MaterialPropTable;
+class MaterialPropPolynomial;
+enum class MaterialType;
 
 using MaterialId = Id<Material>;
+using MaterialLibId = Id<MaterialLib>;
+using MaterialPropId = Id<MaterialProp>;
+using MaterialPropValueId = Id<MaterialPropValue>;
+using MaterialPropTableId = Id<MaterialPropTable>;
+using MaterialPropPolynomialId = Id<MaterialPropPolynomial>;
+
 
 }
 
@@ -71,8 +83,21 @@ using CircuitCellId = Id<CircuitCell>;
 using FootprintCellId = Id<FootprintCell>;
 using PackageId = Id<Package>;
 
+//alias
 using Material = common::Material;
+using MaterialLib = common::MaterialLib;
+using MaterialProp = common::MaterialProp;
+using MaterialPropPolynomial = common::MaterialPropPolynomial;
+using MaterialPropTable = common::MaterialPropTable;
+using MaterialPropValue = common::MaterialPropValue;
+using MaterialType = common::MaterialType;
+
 using MaterialId = common::MaterialId;
+using MaterialLibId = common::MaterialLibId;
+using MaterialPropId = common::MaterialPropId;
+using MaterialPropPolynomialId = common::MaterialPropPolynomialId;
+using MaterialPropTableId = common::MaterialPropTableId;
+using MaterialPropValueId = common::MaterialPropValueId;
 
 } // namespace package
 
@@ -101,6 +126,8 @@ using Content = Collection<
     chip::Net,
     ///
     common::Material,
+    common::MaterialLib,
+    common::MaterialProp,
     ///
     liberty::Cell,
     liberty::InternalPower,
@@ -134,6 +161,11 @@ inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<chip::ITerm                      >, "ChipITerm"sv                      ),
     hana::make_pair(hana::type_c<chip::Net                        >, "ChipNet"sv                        ),
     hana::make_pair(hana::type_c<common::Material                 >, "CommonMaterial"sv                 ),
+    hana::make_pair(hana::type_c<common::MaterialLib              >, "CommonMaterialLib"sv              ),
+    hana::make_pair(hana::type_c<common::MaterialProp             >, "CommonMaterialProp"sv             ),
+    hana::make_pair(hana::type_c<common::MaterialPropPolynomial   >, "CommonMaterialPropPolynomial"sv   ),
+    hana::make_pair(hana::type_c<common::MaterialPropTable        >, "CommonMaterialPropTable"sv        ),
+    hana::make_pair(hana::type_c<common::MaterialPropValue        >, "CommonMaterialPropValue"sv        ),
     hana::make_pair(hana::type_c<liberty::CcsLut                  >, "LibertyCcsLut"sv                  ),
     hana::make_pair(hana::type_c<liberty::Cell                    >, "LibertyCell"sv                    ),
     hana::make_pair(hana::type_c<liberty::InputPin                >, "LibertyInputPin"sv                ),
@@ -160,14 +192,17 @@ inline constexpr static auto elementNameMap = hana::make_map(
 );
 
 inline constexpr static auto inheritanceMap = hana::make_map(
-    hana::make_pair(hana::type_c<liberty::CcsLut                  >, hana::type_c<liberty::Lut                >),
-    hana::make_pair(hana::type_c<liberty::InputPin                >, hana::type_c<liberty::Pin                >),
-    hana::make_pair(hana::type_c<liberty::NormalizedDriverWaveform>, hana::type_c<liberty::Lut                >),
-    hana::make_pair(hana::type_c<liberty::OutputPin               >, hana::type_c<liberty::Pin                >),
-    hana::make_pair(hana::type_c<liberty::PwrGndPin               >, hana::type_c<liberty::Pin                >),
-    hana::make_pair(hana::type_c<liberty::SignalPin               >, hana::type_c<liberty::Pin                >),
-    hana::make_pair(hana::type_c<package::CircuitCell             >, hana::type_c<package::Cell               >),
-    hana::make_pair(hana::type_c<package::FootprintCell           >, hana::type_c<package::Cell               >)
+    hana::make_pair(hana::type_c<common::MaterialPropPolynomial   >, hana::type_c<common::MaterialProp >),
+    hana::make_pair(hana::type_c<common::MaterialPropTable        >, hana::type_c<common::MaterialProp >),
+    hana::make_pair(hana::type_c<common::MaterialPropValue        >, hana::type_c<common::MaterialProp >),
+    hana::make_pair(hana::type_c<liberty::CcsLut                  >, hana::type_c<liberty::Lut         >),
+    hana::make_pair(hana::type_c<liberty::InputPin                >, hana::type_c<liberty::Pin         >),
+    hana::make_pair(hana::type_c<liberty::NormalizedDriverWaveform>, hana::type_c<liberty::Lut         >),
+    hana::make_pair(hana::type_c<liberty::OutputPin               >, hana::type_c<liberty::Pin         >),
+    hana::make_pair(hana::type_c<liberty::PwrGndPin               >, hana::type_c<liberty::Pin         >),
+    hana::make_pair(hana::type_c<liberty::SignalPin               >, hana::type_c<liberty::Pin         >),
+    hana::make_pair(hana::type_c<package::CircuitCell             >, hana::type_c<package::Cell        >),
+    hana::make_pair(hana::type_c<package::FootprintCell           >, hana::type_c<package::Cell        >)
 );
 
 template <typename T, typename = hana::when<true>>
