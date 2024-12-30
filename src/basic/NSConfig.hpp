@@ -14,6 +14,8 @@ inline FROM & operator-- (CLASS & c) { return static_cast<FROM &>(c); }         
 inline FROM & operator-- (CLASS & c, int) { return static_cast<FROM &>(c); }                   \
 inline const FROM & operator-- (const CLASS & c) { return static_cast<const FROM &>(c); }      \
 inline const FROM & operator-- (const CLASS & c, int) { return static_cast<const FROM &>(c); } \
+inline nano::Id<FROM> operator-- (nano::Id<CLASS> id) { return nano::Id<FROM>(id); }           \
+inline nano::Id<FROM> operator-- (nano::Id<CLASS> id, int) { return nano::Id<FROM>(id); }      \
 /**/
 #define NS_INHERIT_FROM_BASE(CLASS, BASE) NS_INHERITANCE(CLASS, BASE, BASE)
 #define NS_DEFINE_CLASS_MEMBERS(...)                                          \
