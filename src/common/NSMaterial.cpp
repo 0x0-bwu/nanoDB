@@ -1,13 +1,13 @@
 #include "NSMaterial.h"
-NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::common::Material)
-NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::common::MaterialLib)
-NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::common::MaterialProp)
-NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::common::MaterialPropValue)
-NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::common::MaterialPropTable)
-NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::common::MaterialPropPolynomial)
+NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::Material)
+NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::MaterialLib)
+NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::MaterialProp)
+NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::MaterialPropValue)
+NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::MaterialPropTable)
+NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::MaterialPropPolynomial)
 
 #include <core/common>
-namespace nano::common {
+namespace nano {
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
 
@@ -239,4 +239,4 @@ MaterialId MaterialLib::FindMaterial(std::string_view name) const
     return m_.materials.Lookup<lut::Name>(name);
 }
 
-} // namespace nano::common
+} // namespace nano

@@ -50,7 +50,8 @@ template <typename T> using IdArr2 = std::array<Id<T>, 2>;
 template <typename T> using IdArr3 = std::array<Id<T>, 3>;
 template <typename T> using IdArr4 = std::array<Id<T>, 4>;
 
-using NSCoord2I = generic::geometry::Point2D<NSInt>;
+using NSCoord = NSInt;
+using NSCoord2D = generic::geometry::Point2D<NSInt>;
 using NSCoord2F = generic::geometry::Point2D<NSFloat>;
 
 template <typename T> using Optional = boost::optional<T>;
