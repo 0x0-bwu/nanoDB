@@ -50,4 +50,59 @@ using CurrUnit = NSUnit<generic::unit::Current>;
 inline static constexpr CapUnit::Unit DEFAULT_CAP_UNIT = CapUnit::Unit::PF;
 inline static constexpr ResUnit::Unit DEFAULT_RES_UNIT = ResUnit::Unit::KOHM;
 
+
+struct CoordUnit
+{
+public:
+    using Unit = generic::unit::Length;
+    CoordUnit() : CoordUnit(Unit::Micrometer, Unit::Nanometer) {}
+    explicit CoordUnit(Unit user) : CoordUnit(user, Unit::Nanometer) {}
+    /**
+     * @brief Construct a new CoordUnit object
+     * 
+     * @param user user unit, defualt is um
+     * @param data database unit, default is nm
+     */
+    explicit CoordUnit(Unit user, Unit data)
+    {
+        m_precision = generic::unit::Scale2Meter(data);
+        m_unit = m_precision / generic::unit::Scale2Meter(user);
+    }
+
+#ifdef NANO_BOOST_SERIALIZATION_SUPPORT
+    template <typename Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        NS_UNUSED(version);
+        ar & boost::serialization::make_nvp("unit", m_unit);
+        ar & boost::serialization::make_nvp("precision", m_precision);
+    }
+#endif//NANO_BOOST_SERIALIZATION_SUPPORT
+
+    NSFloat Scale2Coord() const
+    {
+        return NSFloat(1) / m_unit;
+    }
+
+    NSCoord toCoord(NSFloat value) const
+    {
+        return value * Scale2Coord();
+    }
+
+    NSFloat Scale2Unit() const
+    {
+        return m_unit;
+    }
+
+    template <typename Coord>
+    NSFloat toUnit(Coord coord) const
+    {
+        return coord * Scale2Unit();
+    }
+
+private:
+    NSFloat m_unit{1e-3};
+    NSFloat m_precision{1e-9};
+};
+
 } // namespace nano

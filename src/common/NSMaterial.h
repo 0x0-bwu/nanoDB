@@ -2,7 +2,7 @@
 #include "basic/NSContainer.hpp"
 #include <unordered_map>
 
-namespace nano::common {
+namespace nano {
 
 class MaterialProp : public Entity<MaterialProp>
 {
@@ -132,13 +132,13 @@ private:
     (IdVec<Material, lut::Name>, materials))
 };
 
-} // namespace nane::common
-NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::common::Material)
-NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::common::MaterialLib)
-NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::common::MaterialProp)
-NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::common::MaterialPropValue)
-NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::common::MaterialPropTable)
-NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::common::MaterialPropPolynomial)
-NS_INHERIT_FROM_BASE(nano::common::MaterialPropValue, nano::common::MaterialProp)
-NS_INHERIT_FROM_BASE(nano::common::MaterialPropTable, nano::common::MaterialProp)
-NS_INHERIT_FROM_BASE(nano::common::MaterialPropPolynomial, nano::common::MaterialProp)
+} // namespace nano
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::Material)
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::MaterialLib)
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::MaterialProp)
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::MaterialPropValue)
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::MaterialPropTable)
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::MaterialPropPolynomial)
+NS_INHERIT_FROM_BASE(nano::MaterialPropValue, nano::MaterialProp)
+NS_INHERIT_FROM_BASE(nano::MaterialPropTable, nano::MaterialProp)
+NS_INHERIT_FROM_BASE(nano::MaterialPropPolynomial, nano::MaterialProp)

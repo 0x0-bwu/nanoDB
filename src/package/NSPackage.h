@@ -1,5 +1,6 @@
 #pragma once
 #include "basic/NSContainer.hpp"
+#include "common/NSUnit.hpp"
 
 namespace nano::package {
 
@@ -17,6 +18,7 @@ public:
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
+    (CoordUnit, coordUnit),
     (MaterialLibId, matLib),
     (IdVec<Cell, lut::Name>, cells)
     )
