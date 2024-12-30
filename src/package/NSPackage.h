@@ -9,11 +9,15 @@ public:
     Package(std::string name);
     Package() = default;
 
+    void SetMaterialLib(MaterialLibId matLib) { m_.matLib = matLib; }
+    MaterialLibId GetMaterialLib() const { return m_.matLib; }
+
     void AddCell(CircuitCellId cell);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
+    (MaterialLibId, matLib),
     (IdVec<Cell, lut::Name>, cells)
     )
 };

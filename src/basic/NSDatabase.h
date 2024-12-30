@@ -201,6 +201,7 @@ public:
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     static bool Save(std::string_view name, std::string_view filename, ArchiveFormat fmt);
+    static bool SaveCurrent(std::string_view filename, ArchiveFormat fmt);
     static bool Load(std::string_view filename, ArchiveFormat fmt);
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
