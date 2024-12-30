@@ -1,5 +1,7 @@
 #pragma once
-#include "NSCommon.hpp"
+#include "NSConfig.hpp"
+#include "NSAlias.hpp"
+#include "NSVersion.hpp"
 #include <boost/hana.hpp>
 #include <type_traits>
 namespace nano {
@@ -23,6 +25,14 @@ using ITermId = Id<ITerm>;
 using NetId = Id<Net>;
 
 } // namespace chip
+
+namespace common {
+
+class Material;
+
+using MaterialId = Id<Material>;
+
+}
 
 namespace liberty {
 
@@ -49,6 +59,23 @@ using LutIndices = std::vector<LutNumbers>;
 
 } // namespace liberty
 
+namespace package {
+
+class Cell;
+class CircuitCell;
+class FootprintCell;
+class Package;
+
+using CellId = Id<Cell>;
+using CircuitCellId = Id<CircuitCell>;
+using FootprintCellId = Id<FootprintCell>;
+using PackageId = Id<Package>;
+
+using Material = common::Material;
+using MaterialId = common::MaterialId;
+
+} // namespace package
+
 namespace parasitic {
 
 class Net;
@@ -73,6 +100,8 @@ using Content = Collection<
     chip::ITerm,
     chip::Net,
     ///
+    common::Material,
+    ///
     liberty::Cell,
     liberty::InternalPower,
     liberty::LeakagePower,
@@ -84,6 +113,9 @@ using Content = Collection<
     liberty::Pin,
     liberty::Timing,
     liberty::Voltage,
+    ///
+    package::Cell,
+    package::Package,
     ///
     parasitic::Net,
     parasitic::Parasitic
@@ -101,6 +133,7 @@ inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<chip::Inst                       >, "ChipInst"sv                       ),
     hana::make_pair(hana::type_c<chip::ITerm                      >, "ChipITerm"sv                      ),
     hana::make_pair(hana::type_c<chip::Net                        >, "ChipNet"sv                        ),
+    hana::make_pair(hana::type_c<common::Material                 >, "CommonMaterial"sv                 ),
     hana::make_pair(hana::type_c<liberty::CcsLut                  >, "LibertyCcsLut"sv                  ),
     hana::make_pair(hana::type_c<liberty::Cell                    >, "LibertyCell"sv                    ),
     hana::make_pair(hana::type_c<liberty::InputPin                >, "LibertyInputPin"sv                ),
@@ -118,44 +151,36 @@ inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<liberty::SignalPin               >, "LibertySignalPin"sv               ),
     hana::make_pair(hana::type_c<liberty::Timing                  >, "LibertyTiming"sv                  ),
     hana::make_pair(hana::type_c<liberty::Voltage                 >, "LibertyVoltage"sv                 ),
+    hana::make_pair(hana::type_c<package::Cell                    >, "Cell"sv                           ),
+    hana::make_pair(hana::type_c<package::CircuitCell             >, "CircuitCell"sv                    ),
+    hana::make_pair(hana::type_c<package::FootprintCell           >, "FootprintCell"sv                  ),
+    hana::make_pair(hana::type_c<package::Package                 >, "Package"sv                        ),  
     hana::make_pair(hana::type_c<parasitic::Net                   >, "ParasiticNet"sv                   ),
     hana::make_pair(hana::type_c<parasitic::Parasitic             >, "Parasitic"sv                      )
 );
 
 inline constexpr static auto inheritanceMap = hana::make_map(
-    hana::make_pair(hana::type_c<Binding                          >, hana::type_c<Binding                     >),
-    hana::make_pair(hana::type_c<chip::Block                      >, hana::type_c<chip::Block                 >),
-    hana::make_pair(hana::type_c<chip::BTerm                      >, hana::type_c<chip::BTerm                 >),
-    hana::make_pair(hana::type_c<chip::Chip                       >, hana::type_c<chip::Chip                  >),
-    hana::make_pair(hana::type_c<chip::Inst                       >, hana::type_c<chip::Inst                  >),
-    hana::make_pair(hana::type_c<chip::ITerm                      >, hana::type_c<chip::ITerm                 >),
-    hana::make_pair(hana::type_c<chip::Net                        >, hana::type_c<chip::Net                   >),
     hana::make_pair(hana::type_c<liberty::CcsLut                  >, hana::type_c<liberty::Lut                >),
-    hana::make_pair(hana::type_c<liberty::Cell                    >, hana::type_c<liberty::Cell               >),
     hana::make_pair(hana::type_c<liberty::InputPin                >, hana::type_c<liberty::Pin                >),
-    hana::make_pair(hana::type_c<liberty::InternalPower           >, hana::type_c<liberty::InternalPower      >),
-    hana::make_pair(hana::type_c<liberty::LeakagePower            >, hana::type_c<liberty::LeakagePower       >),
-    hana::make_pair(hana::type_c<liberty::Library                 >, hana::type_c<liberty::Library            >),
-    hana::make_pair(hana::type_c<liberty::Lut                     >, hana::type_c<liberty::Lut                >),
-    hana::make_pair(hana::type_c<liberty::LutTemplate             >, hana::type_c<liberty::LutTemplate        >),
     hana::make_pair(hana::type_c<liberty::NormalizedDriverWaveform>, hana::type_c<liberty::Lut                >),
-    hana::make_pair(hana::type_c<liberty::OperatingConditions     >, hana::type_c<liberty::OperatingConditions>),
-    hana::make_pair(hana::type_c<liberty::OutputCurrent           >, hana::type_c<liberty::OutputCurrent      >),
     hana::make_pair(hana::type_c<liberty::OutputPin               >, hana::type_c<liberty::Pin                >),
-    hana::make_pair(hana::type_c<liberty::Pin                     >, hana::type_c<liberty::Pin                >),
     hana::make_pair(hana::type_c<liberty::PwrGndPin               >, hana::type_c<liberty::Pin                >),
     hana::make_pair(hana::type_c<liberty::SignalPin               >, hana::type_c<liberty::Pin                >),
-    hana::make_pair(hana::type_c<liberty::Timing                  >, hana::type_c<liberty::Timing             >),
-    hana::make_pair(hana::type_c<liberty::Voltage                 >, hana::type_c<liberty::Voltage            >),
-    hana::make_pair(hana::type_c<parasitic::Net                   >, hana::type_c<parasitic::Net              >),
-    hana::make_pair(hana::type_c<parasitic::Parasitic             >, hana::type_c<parasitic::Parasitic        >)
+    hana::make_pair(hana::type_c<package::CircuitCell             >, hana::type_c<package::Cell               >),
+    hana::make_pair(hana::type_c<package::FootprintCell           >, hana::type_c<package::Cell               >)
 );
 
-static_assert(hana::size(elementNameMap) == hana::size(inheritanceMap), 
-    "key of element name map and inheritance map should be consistant");
+template <typename T, typename = hana::when<true>>
+struct Base { using type = std::decay_t<T>; };
 
 template <typename T>
-using BaseOf = typename std::decay_t<decltype(inheritanceMap[hana::type_c<T>])>::type;
+struct Base<T, hana::when<hana::contains(inheritanceMap, hana::type_c<T>)>>
+{
+    using type = typename std::decay_t<decltype(inheritanceMap[hana::type_c<T>])>::type;
+};
+
+template <typename T>
+using BaseOf = typename Base<T>::type;
 
 } // namespace traits
 

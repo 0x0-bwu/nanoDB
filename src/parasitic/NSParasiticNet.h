@@ -1,6 +1,6 @@
 #pragma once
 
-#include "basic/NSDatabase.h"
+#include "NSParasitic.h"
 #include "generic/graph/model/DirectedGraph.hpp"
 
 namespace nano::parasitic {

@@ -1,6 +1,7 @@
 #pragma once
 #include "basic/NSDatabase.h"
 #include "basic/NSContainer.hpp"
+#include "common/NSCommon.hpp"
 namespace nano::liberty {
 
 inline static constexpr IdType FALL = 0;

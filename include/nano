@@ -1,5 +1,7 @@
 #pragma once
 #include <core/chip>
+#include <core/common>
 #include <core/liberty>
 #include <core/verilog>
+#include <core/package>
 #include <core/parasitic>

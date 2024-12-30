@@ -56,14 +56,14 @@ public:
     template <typename Derived>
     Derived & operator[] (const Id<Derived> id)
     { 
-        static_assert(std::is_same_v<typename std::decay_t<decltype(traits::inheritanceMap[hana::type_c<Derived>])>::type, T>, "should be derived class or self");
+        static_assert(std::is_same_v<traits::BaseOf<T>, T>, "should be derived class or self");
         return (Derived&)(*m_data[IdType(id)]);
     }   
 
     template <typename Derived>
     const Derived & operator[] (const Id<Derived> id) const
     { 
-        static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
+        static_assert(std::is_same_v<traits::BaseOf<T>, T>, "should be derived class or self");
         return (Derived&)(*m_data[IdType(id)]);
     }
 
@@ -71,7 +71,7 @@ public:
     Id<Derived> Create(Args &&... args)
     {
         static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
-        static_assert(std::is_constructible_v<T, Args...>, "should be constructible from args...");
+        static_assert(std::is_constructible_v<Derived, Args...>, "should be constructible from args...");
         auto id = m_recycler.Empty() ? m_data.Append(nullptr) : m_recycler.Take();
         NS_ASSERT(m_data[id] == nullptr);
         m_data[id] = new Derived(std::forward<Args>(args)...);
@@ -125,6 +125,8 @@ protected:
     // members
     std::string m_name;
 };
+
+enum class ArchiveFormat { TXT = 0, XML = 1, BIN = 2};
 
 template <typename... Eles>
 class Collection : public NamedObj
@@ -182,6 +184,7 @@ private:
 
 class Database
 {
+    static_assert(hana::size(traits::elementNameMap) - hana::size(traits::inheritanceMap) == hana::size(Content::Elements()), "don't forget to register elements name!");
 public:
     ~Database() = default;
     Database(Database &&) = delete;
