@@ -13,7 +13,7 @@ public:
     void SetMaterialLib(MaterialLibId matLib) { m_.matLib = matLib; }
     MaterialLibId GetMaterialLib() const { return m_.matLib; }
 
-    void AddCell(CircuitCellId cell);
+    void AddCell(CellId cell);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;

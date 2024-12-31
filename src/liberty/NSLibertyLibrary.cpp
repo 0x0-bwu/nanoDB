@@ -1,7 +1,5 @@
-#include "NSLibertyLibrary.h"
-NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::Library)
-
 #include <core/liberty>
+NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::Library)
 
 namespace nano::liberty {
 

@@ -1,4 +1,4 @@
-#include "NSLibertyInternalPower.h"
+#include <core/liberty>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::InternalPower)
 
 namespace nano::liberty {

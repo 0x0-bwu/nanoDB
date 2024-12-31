@@ -4,6 +4,7 @@
 #include "generic/utils/Version.hpp"
 #include "generic/utils/Index.hpp"
 
+#include <boost/noncopyable.hpp>
 #include <boost/hana.hpp>
 #include <unordered_map>
 #include <typeindex>
@@ -81,8 +82,8 @@ public:
 
     bool Remove(Id<T> id)
     {
+        if (size_t(id) >= m_data.size()) return false;
         if (nullptr == m_data[id]) return false;
-        NS_ASSERT(size_t(id) < m_data.Size());
         m_recycler.Add(id);
         delete m_data[id];
         m_data[id] = nullptr;
@@ -228,7 +229,7 @@ private:
 };
 
 template <typename T>
-class Entity
+class Entity : private boost::noncopyable
 {
 public:
     friend class Container<T>;

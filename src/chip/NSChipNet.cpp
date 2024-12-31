@@ -1,4 +1,4 @@
-#include "NSChipNet.h"
+#include <core/chip>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::chip::Net)
 
 namespace nano::chip {

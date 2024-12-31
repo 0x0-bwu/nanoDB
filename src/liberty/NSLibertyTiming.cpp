@@ -1,4 +1,4 @@
-#include "NSLibertyTiming.h"
+#include <core/liberty>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::Timing)
 
 namespace nano::liberty {

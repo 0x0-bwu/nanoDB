@@ -115,15 +115,18 @@ CPtr<Content> Database::FindImpl(std::string_view name) const
 
 bool Database::CloseImpl(std::string_view name)
 {
-    if (m_current && name == m_current->GetName())
-        m_current = nullptr;
-    return m_contents.erase(name);
+    bool res{false};
+    if (m_current && name == m_current->GetName()) {
+        res = m_contents.erase(name);
+        if (res) m_current = nullptr;
+    }
+    return res;
 }
 
 void Database::ShutdownImpl()
 {
-    m_current = nullptr;
     m_contents.clear();
+    m_current = nullptr;
 }
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
@@ -232,15 +235,18 @@ bool Database::SaveImpl(std::string_view name, std::string_view filename, Archiv
 bool Database::LoadImpl(std::string_view filename, ArchiveFormat fmt)
 {
     auto c = std::make_unique<Content>("");
+    m_current = c.get();
     if (c->Load(filename, fmt)) {
         if (FindImpl(c->GetName().data())) {
             NS_ERROR("failed to load, database %1% alread exists!", c->GetName());
-            return false;
         }
-        auto res = m_contents.emplace(c->GetName(), std::move(c));
-        m_current = res.first->second.get();
-        return res.second;
+        else {
+            auto res = m_contents.emplace(c->GetName(), std::move(c));
+            m_current = res.second ? res.first->second.get() : nullptr;
+            return res.second;
+        }
     }
+    m_current = nullptr;
     return false;
 }
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT

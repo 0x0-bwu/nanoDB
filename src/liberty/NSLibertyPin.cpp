@@ -1,4 +1,4 @@
-#include "NSLibertyPin.h"
+#include <core/liberty>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::Pin)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::InputPin)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::OutputPin)
