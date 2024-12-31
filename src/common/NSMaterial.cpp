@@ -1,12 +1,10 @@
-#include "NSMaterial.h"
+#include <core/common>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::Material)
-NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::MaterialLib)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::MaterialProp)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::MaterialPropValue)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::MaterialPropTable)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::MaterialPropPolynomial)
 
-#include <core/common>
 namespace nano {
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT

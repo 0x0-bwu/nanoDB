@@ -1,4 +1,4 @@
-#include "NSLibertyOutputCurrent.h"
+#include <core/liberty>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::OutputCurrent)
 
 namespace nano::liberty {

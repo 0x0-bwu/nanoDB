@@ -1,4 +1,4 @@
-#include "NSPackageCell.h"
+#include <core/package>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::Cell)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::CircuitCell)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::FootprintCell)

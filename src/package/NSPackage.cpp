@@ -1,7 +1,6 @@
-#include "NSPackage.h"
+#include <core/package>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::Package)
 
-#include <core/package>
 namespace nano::package {
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
@@ -23,9 +22,9 @@ Package::Package(std::string name)
 {
 }
 
-void Package::AddCell(CircuitCellId cell)
+void Package::AddCell(CellId cell)
 {
-    m_.cells.emplace_back(CellId(cell));
+    m_.cells.emplace_back(cell);
 }
 
 } // namespace package

@@ -1,9 +1,7 @@
-#include "NSLibertyLut.h"
+#include <core/liberty>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::Lut)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::CcsLut)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::NormalizedDriverWaveform)
-
-#include "NSLibertyLutTemplate.h"
 
 namespace nano::liberty {
 

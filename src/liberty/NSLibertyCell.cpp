@@ -1,8 +1,6 @@
-#include "NSLibertyCell.h"
+#include <core/liberty>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::Cell)
 
-#include "NSLibertyLibrary.h"
-#include "NSLibertyPin.h"
 namespace nano::liberty {
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT

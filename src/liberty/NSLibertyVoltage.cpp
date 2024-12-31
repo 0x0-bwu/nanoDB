@@ -1,4 +1,4 @@
-#include "NSLibertyVoltage.h"
+#include <core/liberty>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::Voltage)
 
 namespace nano::liberty {

@@ -1,4 +1,4 @@
-#include "NSLibertyLeakagePower.h"
+#include <core/liberty>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::LeakagePower)
 
 namespace nano::liberty {

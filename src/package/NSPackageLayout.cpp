@@ -1,7 +1,6 @@
-#include "NSPackageLayout.h"
+#include <core/package>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::Layout)
 
-#include <core/package>
 namespace nano::package {
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT

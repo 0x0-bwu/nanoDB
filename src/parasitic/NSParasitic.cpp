@@ -1,7 +1,6 @@
-#include "NSParasitic.h"
+#include <core/parasitic>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::parasitic::Parasitic)
 
-#include <core/parasitic>
 #include "parasitic/parser/NSParasiticParser.hpp"
 
 #include <boost/algorithm/string.hpp>
