@@ -129,7 +129,7 @@ public:
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (IdVec<Material, lut::Name>, materials))
+    (IdVec<Material, NameLut>, materials))
 };
 
 } // namespace nano

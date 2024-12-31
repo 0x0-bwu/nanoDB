@@ -20,7 +20,7 @@ private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION 
     NS_DEFINE_CLASS_MEMBERS(
     (std::string, filename),
-    (IdVec<Net, lut::Name>, nets))   
+    (IdVec<Net, NameLut>, nets))   
 };
     
 } // namespace nano::parasitic
