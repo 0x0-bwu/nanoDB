@@ -342,13 +342,9 @@ public:
     Id() : Index<Id<T>>() {}
     explicit Id(SizeType id) : Index<Id<T>>(id) {}
 
-    template <typename Other>
-    explicit Id(Id<Other> other) : Id(SizeType(other))
+    template <typename Other, typename std::enable_if_t<std::is_base_of_v<T, Other>, bool> = true>
+    Id(Id<Other> other) : Id(SizeType(other))
     {
-        static_assert(
-            std::is_base_of_v<T, Other> or 
-            std::is_base_of_v<Other, T>, "should be bass or derived class");
-
     }
 
     bool isNull() const
