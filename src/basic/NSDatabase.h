@@ -56,14 +56,14 @@ public:
     template <typename Derived>
     Derived & operator[] (const Id<Derived> id)
     { 
-        static_assert(std::is_same_v<traits::BaseOf<T>, T>, "should be derived class or self");
+        static_assert(std::is_same_v<traits::BaseOf<Derived>, T>, "should be derived class or self");
         return (Derived&)(*m_data[IdType(id)]);
     }   
 
     template <typename Derived>
     const Derived & operator[] (const Id<Derived> id) const
     { 
-        static_assert(std::is_same_v<traits::BaseOf<T>, T>, "should be derived class or self");
+        static_assert(std::is_same_v<traits::BaseOf<Derived>, T>, "should be derived class or self");
         return (Derived&)(*m_data[IdType(id)]);
     }
 
@@ -342,9 +342,18 @@ public:
     Id() : Index<Id<T>>() {}
     explicit Id(SizeType id) : Index<Id<T>>(id) {}
 
-    template <typename Other, typename std::enable_if_t<std::is_base_of_v<T, Other>, bool> = true>
-    Id(Id<Other> other) : Id(SizeType(other))
+    template <typename Derived, typename std::enable_if_t<std::is_base_of_v<T, Derived>, bool> = true>
+    Id(Id<Derived> derived) : Id(SizeType(derived)) // implicit convert from derived to base
     {
+    }
+
+    template <typename Base, typename std::enable_if_t<not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>, bool> = true>
+    explicit Id(Id<Base> base) // explicit convert from base to derivied, will do dynamic cast check
+    {
+        //wbtest
+        if (dynamic_cast<const T *>(base.operator->()))
+            m_id = SizeType(base);
+        else { NS_ASSERT_MSG(false, "dynamic cast failed!")}
     }
 
     bool isNull() const
