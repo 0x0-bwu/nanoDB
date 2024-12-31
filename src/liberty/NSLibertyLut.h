@@ -33,7 +33,7 @@ public:
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (NSFloat, referenceTime))
+    (Float, referenceTime))
 };
 
 class NormalizedDriverWaveformParser;

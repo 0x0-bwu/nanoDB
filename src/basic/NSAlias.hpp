@@ -36,11 +36,11 @@ using UPtr = std::unique_ptr<T, Deleter>;
 
 using IdType = size_t;
 
-using NSInt = int64_t;
-using NSFloat = float;
+using Int = int64_t;
+using Float = float;
 
 template <typename Key, typename Value>
-using NSMap = std::unordered_map<Key, Value>;
+using Map = std::unordered_map<Key, Value>;
 
 template <typename T> using Arr2 = std::array<T, 2>;
 
@@ -50,9 +50,10 @@ template <typename T> using IdArr2 = std::array<Id<T>, 2>;
 template <typename T> using IdArr3 = std::array<Id<T>, 3>;
 template <typename T> using IdArr4 = std::array<Id<T>, 4>;
 
-using NSCoord = NSInt;
-using NSCoord2D = generic::geometry::Point2D<NSInt>;
-using NSCoord2F = generic::geometry::Point2D<NSFloat>;
+using NCoord = Int;
+using FCoord = Float;
+using NCoord2D = generic::geometry::Point2D<Int>;
+using FCoord2D = generic::geometry::Point2D<Float>;
 
 template <typename T> using Optional = boost::optional<T>;
 

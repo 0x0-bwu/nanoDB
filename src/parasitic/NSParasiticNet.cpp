@@ -64,7 +64,7 @@ ResId Net::AddEdge(CapId source, CapId target)
     return resId;
 }
 
-void Net::SetRes(CapId c1, CapId c2, NSFloat res)
+void Net::SetRes(CapId c1, CapId c2, Float res)
 {
     auto id = FindEdge(c1, c2);
     if (not id)
@@ -72,29 +72,29 @@ void Net::SetRes(CapId c1, CapId c2, NSFloat res)
     m_.res[id] = res;
 }
 
-NSFloat Net::GetRes(CapId c1, CapId c2) const
+Float Net::GetRes(CapId c1, CapId c2) const
 {
     auto id = FindEdge(c1, c2);
     NS_ASSERT(id);
     return m_.res[id];
 }
 
-NSFloat Net::GetRes(ResId id) const
+Float Net::GetRes(ResId id) const
 {
     return m_.res[id];
 }
 
-void Net::SetCap(CapId c, NSFloat cap)
+void Net::SetCap(CapId c, Float cap)
 {
     m_.cap[c] = cap;
 }
 
-NSFloat Net::GetCap(CapId c) const
+Float Net::GetCap(CapId c) const
 {
     return m_.cap[c];
 }
 
-void Net::AddCouplingCap(CapId c1, NetId net, CapId c2, NSFloat cap)
+void Net::AddCouplingCap(CapId c1, NetId net, CapId c2, Float cap)
 {
     auto iter = m_.ccap.find(c1);
     if (iter == m_.ccap.end())

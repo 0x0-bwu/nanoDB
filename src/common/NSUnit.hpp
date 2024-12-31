@@ -9,21 +9,21 @@ struct NSUnit
 public:
     using Unit = U;
     NSUnit() = default;
-    NSUnit(NSFloat scale, Unit u) : m_unit(u), m_scale(scale) {}
+    NSUnit(Float scale, Unit u) : m_unit(u), m_scale(scale) {}
 
-    NSFloat toSI(NSFloat value = 1) const
+    Float toSI(Float value = 1) const
     {
         return value * m_scale * generic::unit::Scale2SI(m_unit);
     }
 
-    NSFloat toUnit(NSFloat value, Unit u) const
+    Float toUnit(Float value, Unit u) const
     {
-        return value * m_scale * std::pow(NSFloat(10), (int(m_unit) - int(u)) * 3);
+        return value * m_scale * std::pow(Float(10), (int(m_unit) - int(u)) * 3);
     }
 
     bool operator== (const NSUnit<U> & other) const
     {
-        return std::abs(toSI() - other.toSI()) < 10 * std::numeric_limits<NSFloat>::epsilon();
+        return std::abs(toSI() - other.toSI()) < 10 * std::numeric_limits<Float>::epsilon();
     }
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
@@ -37,7 +37,7 @@ public:
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 private:
     Unit m_unit{static_cast<U>(0)};
-    NSFloat m_scale{1};
+    Float m_scale{1};
 };
 
 using PwrUnit = NSUnit<generic::unit::Power>;
@@ -79,30 +79,30 @@ public:
     }
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-    NSFloat Scale2Coord() const
+    Float Scale2Coord() const
     {
-        return NSFloat(1) / m_unit;
+        return Float(1) / m_unit;
     }
 
-    NSCoord toCoord(NSFloat value) const
+    NCoord toCoord(Float value) const
     {
         return value * Scale2Coord();
     }
 
-    NSFloat Scale2Unit() const
+    Float Scale2Unit() const
     {
         return m_unit;
     }
 
     template <typename Coord>
-    NSFloat toUnit(Coord coord) const
+    Float toUnit(Coord coord) const
     {
         return coord * Scale2Unit();
     }
 
 private:
-    NSFloat m_unit{1e-3};
-    NSFloat m_precision{1e-9};
+    Float m_unit{1e-3};
+    Float m_precision{1e-9};
 };
 
 } // namespace nano

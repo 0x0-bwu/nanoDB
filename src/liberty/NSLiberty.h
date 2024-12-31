@@ -53,7 +53,7 @@ enum class TimingType : int8_t
     //todo, other timing arcs
 };
 
-using VoltageMap = std::unordered_map<std::string, NSFloat>;
+using VoltageMap = std::unordered_map<std::string, Float>;
 
 Id<Library> LoadLibrary(std::string_view filename);
 

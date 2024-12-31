@@ -21,27 +21,27 @@ private:
 class MaterialPropValue : public MaterialProp, public Entity<MaterialPropValue>
 {
 public:
-    explicit MaterialPropValue(const std::array<NSFloat, 9> & values);
-    explicit MaterialPropValue(const std::array<NSFloat, 3> & values);
-    explicit MaterialPropValue(NSFloat value);
+    explicit MaterialPropValue(const std::array<Float, 9> & values);
+    explicit MaterialPropValue(const std::array<Float, 3> & values);
+    explicit MaterialPropValue(Float value);
     MaterialPropValue() = default;
 
     bool isPropValue() const override { return true; }
 
-    void SetSimpleProperty(NSFloat value);
-    void SetAnisotropicProperty(const std::array<NSFloat, 3> & values);
-    void SetTensorProperty(const std::array<NSFloat, 9> & values);
+    void SetSimpleProperty(Float value);
+    void SetAnisotropicProperty(const std::array<Float, 3> & values);
+    void SetTensorProperty(const std::array<Float, 9> & values);
 
-    bool GetSimpleProperty(NSFloat & value) const;
-    bool GetAnisotropicProperty(size_t row, NSFloat & value) const;
-    bool GetTensorProperty(size_t row, size_t col, NSFloat & value) const;
+    bool GetSimpleProperty(Float & value) const;
+    bool GetAnisotropicProperty(size_t row, Float & value) const;
+    bool GetTensorProperty(size_t row, size_t col, Float & value) const;
 
     //1x1-simple, 3x1-anisotropic, 3x3-tensor
     void GetDimensions(size_t & row, size_t & col) const override;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (std::vector<NSFloat>, values))
+    (std::vector<Float>, values))
 };
 
 class MaterialPropTable : public MaterialProp, public Entity<MaterialPropTable>
@@ -53,30 +53,30 @@ public:
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (std::map<NSFloat, MaterialPropId>, values))
+    (std::map<Float, MaterialPropId>, values))
 };
 
 class MaterialPropPolynomial : public MaterialProp, public Entity<MaterialPropPolynomial>
 {
 public:
-    explicit MaterialPropPolynomial(std::vector<std::vector<NSFloat>> coefficients);
+    explicit MaterialPropPolynomial(std::vector<std::vector<Float>> coefficients);
     MaterialPropPolynomial() = default;
 
     bool isPropPolynomial() const { return true; }
 
-    bool GetSimpleProperty(NSFloat index, NSFloat & value) const;
-    bool GetAnisotropicProperty(NSFloat index, size_t row, NSFloat & value) const;
-    bool GetTensorProperty(NSFloat index, size_t row, size_t col, NSFloat & value) const;
+    bool GetSimpleProperty(Float index, Float & value) const;
+    bool GetAnisotropicProperty(Float index, size_t row, Float & value) const;
+    bool GetTensorProperty(Float index, size_t row, size_t col, Float & value) const;
 
     //1x1-simple, 3x1-anisotropic, 3x3-tensor
     void GetDimensions(size_t & row, size_t & col) const override;
 
 private:
-    static NSFloat Calculate(const std::vector<NSFloat> & coefficients, NSFloat index);
+    static Float Calculate(const std::vector<Float> & coefficients, Float index);
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (std::vector<std::vector<NSFloat>>, coefficients))
+    (std::vector<std::vector<Float>>, coefficients))
 };
 
 enum class MaterialType { RIGID, FLUID };

@@ -23,6 +23,22 @@ using MaterialPropValueId = Id<MaterialPropValue>;
 using MaterialPropTableId = Id<MaterialPropTable>;
 using MaterialPropPolynomialId = Id<MaterialPropPolynomial>;
 
+class Shape;
+class ShapeCircle;
+class ShapeFromTemplate;
+class ShapePath;
+class ShapePolygon;
+class ShapePolygonWithHoles;
+class ShapeRect;
+
+using ShapeId = Id<Shape>;
+using ShapeCircleId = Id<ShapeCircle>;
+using ShapeFromTemplateId = Id<ShapeFromTemplate>;
+using ShapePathId = Id<ShapePath>;
+using ShapePolygonId = Id<ShapePolygon>;
+using ShapePolygonWithHolesId = Id<ShapePolygonWithHoles>;
+using ShapeRectId = Id<ShapeRect>;
+
 namespace chip {
 
 class Block;
@@ -61,7 +77,7 @@ class SignalPin;
 class Timing;
 class Voltage;
 
-using LutNumbers = std::vector<NSFloat>;
+using LutNumbers = std::vector<Float>;
 using LutIndices = std::vector<LutNumbers>;
 
 } // namespace liberty
@@ -73,12 +89,14 @@ class CircuitCell;
 class FootprintCell;
 class Layout;
 class Package;
+class StackupLayer;
 
 using CellId = Id<Cell>;
 using CircuitCellId = Id<CircuitCell>;
 using FootprintCellId = Id<FootprintCell>;
 using LayoutId = Id<Layout>;
 using PackageId = Id<Package>;
+using StackLayerId = Id<StackupLayer>;
 
 } // namespace package
 
@@ -102,6 +120,7 @@ using Content = Collection<
     Material,
     MaterialLib,
     MaterialProp,
+    Shape,
     ///
     chip::Block,
     chip::BTerm,
@@ -125,6 +144,7 @@ using Content = Collection<
     package::Cell,
     package::Layout,
     package::Package,
+    package::StackupLayer,
     ///
     parasitic::Net,
     parasitic::Parasitic
@@ -142,6 +162,13 @@ inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<MaterialPropPolynomial           >, "MaterialPropPolynomial"sv         ),
     hana::make_pair(hana::type_c<MaterialPropTable                >, "MaterialPropTable"sv              ),
     hana::make_pair(hana::type_c<MaterialPropValue                >, "MaterialPropValue"sv              ),
+    hana::make_pair(hana::type_c<Shape                            >, "Shape"sv                          ),
+    hana::make_pair(hana::type_c<ShapeCircle                      >, "ShapeCircle"sv                    ),
+    hana::make_pair(hana::type_c<ShapeFromTemplate                >, "ShapeFromTemplate"sv              ),
+    hana::make_pair(hana::type_c<ShapePath                        >, "ShapePath"sv                      ),
+    hana::make_pair(hana::type_c<ShapePolygon                     >, "ShapePolygon"sv                   ),
+    hana::make_pair(hana::type_c<ShapePolygonWithHoles            >, "ShapePolygonWithHoles"sv          ),
+    hana::make_pair(hana::type_c<ShapeRect                        >, "ShapeRect"sv                      ),
     hana::make_pair(hana::type_c<chip::Block                      >, "ChipBlock"sv                      ),
     hana::make_pair(hana::type_c<chip::BTerm                      >, "ChipBTerm"sv                      ),
     hana::make_pair(hana::type_c<chip::Chip                       >, "Chip"sv                           ),
@@ -169,7 +196,8 @@ inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<package::CircuitCell             >, "CircuitCell"sv                    ),
     hana::make_pair(hana::type_c<package::FootprintCell           >, "FootprintCell"sv                  ),
     hana::make_pair(hana::type_c<package::Layout                  >, "Layout"sv                         ),
-    hana::make_pair(hana::type_c<package::Package                 >, "Package"sv                        ),  
+    hana::make_pair(hana::type_c<package::Package                 >, "Package"sv                        ),
+    hana::make_pair(hana::type_c<package::StackupLayer            >, "StackupLayer"sv                   ),
     hana::make_pair(hana::type_c<parasitic::Net                   >, "ParasiticNet"sv                   ),
     hana::make_pair(hana::type_c<parasitic::Parasitic             >, "Parasitic"sv                      )
 );
@@ -178,6 +206,12 @@ inline constexpr static auto inheritanceMap = hana::make_map(
     hana::make_pair(hana::type_c<MaterialPropPolynomial           >, hana::type_c<MaterialProp         >),
     hana::make_pair(hana::type_c<MaterialPropTable                >, hana::type_c<MaterialProp         >),
     hana::make_pair(hana::type_c<MaterialPropValue                >, hana::type_c<MaterialProp         >),
+    hana::make_pair(hana::type_c<ShapeCircle                      >, hana::type_c<Shape                >),
+    hana::make_pair(hana::type_c<ShapeFromTemplate                >, hana::type_c<Shape                >),
+    hana::make_pair(hana::type_c<ShapePath                        >, hana::type_c<Shape                >),
+    hana::make_pair(hana::type_c<ShapePolygon                     >, hana::type_c<Shape                >),
+    hana::make_pair(hana::type_c<ShapePolygonWithHoles            >, hana::type_c<Shape                >),
+    hana::make_pair(hana::type_c<ShapeRect                        >, hana::type_c<Shape                >),
     hana::make_pair(hana::type_c<liberty::CcsLut                  >, hana::type_c<liberty::Lut         >),
     hana::make_pair(hana::type_c<liberty::InputPin                >, hana::type_c<liberty::Pin         >),
     hana::make_pair(hana::type_c<liberty::NormalizedDriverWaveform>, hana::type_c<liberty::Lut         >),

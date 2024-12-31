@@ -54,7 +54,7 @@ bool ParseCurrUnit(std::string_view s, CurrUnit & cu)
             ("UA", CurrUnit::Unit::UA);
         }
     } const symbols;
-    NSFloat scale;
+    Float scale;
     CurrUnit::Unit unit;
     auto f1 = [&](auto & ctx){ scale = x3::_attr(ctx); };
     auto f2 = [&](auto & ctx){ unit = x3::_attr(ctx); };
@@ -76,7 +76,7 @@ bool ParsePwrUnit(std::string_view s, PwrUnit & pu)
             ("PW", PwrUnit::Unit::PW);
         }
     } const symbols;
-    NSFloat scale;
+    Float scale;
     PwrUnit::Unit unit;
     auto f1 = [&](auto & ctx){ scale = x3::_attr(ctx); };
     auto f2 = [&](auto & ctx){ unit = x3::_attr(ctx); };
@@ -95,7 +95,7 @@ bool ParseResUnit(std::string_view s, ResUnit & ru)
             ("OHM", ResUnit::Unit::OHM);
         }
     } const symbols;
-    NSFloat scale;
+    Float scale;
     ResUnit::Unit unit;
     auto f1 = [&](auto & ctx){ scale = x3::_attr(ctx); };
     auto f2 = [&](auto & ctx){ unit = x3::_attr(ctx); };
@@ -117,7 +117,7 @@ bool ParseTimeUnit(std::string_view s, TimeUnit & tu)
             ("S", TimeUnit::Unit::Second);
         }
     } const symbols;
-    NSFloat scale;
+    Float scale;
     TimeUnit::Unit unit;
     auto f1 = [&](auto & ctx){ scale = x3::_attr(ctx); };
     auto f2 = [&](auto & ctx){ unit = x3::_attr(ctx); };
@@ -137,7 +137,7 @@ bool ParseVoltUnit(std::string_view s, VoltUnit & vu)
             ("V", VoltUnit::Unit::V);
         }
     } const symbols;
-    NSFloat scale;
+    Float scale;
     VoltUnit::Unit unit;
     auto f1 = [&](auto & ctx){ scale = x3::_attr(ctx); };
     auto f2 = [&](auto & ctx){ unit = x3::_attr(ctx); };
@@ -230,13 +230,13 @@ std::string_view toString(const SimpleAttribute::Value & value)
     return boost::get<std::string>(value).c_str();
 }
 
-NSFloat toFloat(const SimpleAttribute::Value & value)
+Float toFloat(const SimpleAttribute::Value & value)
 {
     if (auto * f = boost::get<float>(&value))
         return *f;
     else if (auto * i = boost::get<int>(&value))
-        return NSFloat(*i);
-    return std::numeric_limits<NSFloat>::quiet_NaN();
+        return Float(*i);
+    return std::numeric_limits<Float>::quiet_NaN();
 }
 
 LutNumbers toNumbers(const std::vector<SimpleAttribute::Value> & values)

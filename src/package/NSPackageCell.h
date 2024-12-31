@@ -19,8 +19,13 @@ public:
     CircuitCell(std::string name);
     CircuitCell() = default;
 
+    void SetLayout(LayoutId layout);
+    LayoutId GetLayout() const;
+
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
+    NS_DEFINE_CLASS_MEMBERS(
+    (LayoutId, layout))
 };
 
 class FootprintCell : public Cell, public Entity<FootprintCell>

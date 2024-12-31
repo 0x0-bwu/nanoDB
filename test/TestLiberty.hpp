@@ -12,7 +12,7 @@ using namespace boost::unit_test;
 void liberty_member_check(const liberty::Library & lib)
 {
     using namespace liberty;
-    constexpr NSFloat t = 1e-3;
+    constexpr Float t = 1e-3;
     BOOST_CHECK(lib->comment == "");
     BOOST_CHECK(lib->revision == "1.0");
     BOOST_CHECK(lib->delayModel == DelayModel::TABLE_LOOKUP);

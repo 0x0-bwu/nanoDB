@@ -30,7 +30,7 @@ private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
     (Id<Library>, library),
-    (NSFloat, area),
+    (Float, area),
     (IdVec<PwrGndPin>, pgPins),
     (IdVec<SignalPin>, signalPins),
     (IdVec<LeakagePower>, leakagePower))

@@ -66,10 +66,10 @@ private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
     (Arr2<std::string>, driverWaveform),
-    (NSFloat, maxTransition),
-    (NSFloat, pinCapacitane),
-    (Arr2<NSFloat>, capacitance),
-    (Arr2<Arr2<NSFloat>>, capRange),
+    (Float, maxTransition),
+    (Float, pinCapacitane),
+    (Arr2<Float>, capacitance),
+    (Arr2<Arr2<Float>>, capRange),
     (std::string, inputVoltage))
 };
 
@@ -86,7 +86,7 @@ private:
     (std::string, function),
     (std::string, powerDownFunction),
     (std::string, outputVoltage),
-    (NSFloat, maxCapacitance),
+    (Float, maxCapacitance),
     (IdVec<Timing>, timings))
 };
 
