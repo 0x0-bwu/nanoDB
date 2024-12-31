@@ -20,8 +20,12 @@ void t_basic()
 
     // inheritance
     {
-        auto ccsLut = Create<liberty::CcsLut>();
-        BOOST_CHECK(ccsLut->Identical(Id<liberty::Lut>(ccsLut)));
+        Id<liberty::CcsLut> ccsLut = Create<liberty::CcsLut>();
+        Id<liberty::Lut> lut = ccsLut;
+        BOOST_CHECK(ccsLut->Identical(lut));
+        BOOST_CHECK(not Id<liberty::CcsLut>(lut).isNull());
+        BOOST_CHECK(Id<liberty::NormalizedDriverWaveform>(lut).isNull());
+
         static_assert(std::is_same_v<decltype(ccsLut), Id<liberty::CcsLut>>);
         static_assert(std::is_same_v<decltype(*ccsLut),liberty::CcsLut&>);
         static_assert(std::is_same_v<decltype(--(*ccsLut)),liberty::Lut&>);
