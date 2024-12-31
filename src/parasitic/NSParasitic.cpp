@@ -55,7 +55,7 @@ bool ParseResUnit(std::string_view s, ResUnit & ru)
             ("OHM", ResUnit::Unit::OHM);
         }
     } const symbols;
-    NSFloat scale;
+    Float scale;
     ResUnit::Unit unit;
     auto f1 = [&](auto & ctx){ scale = x3::_attr(ctx); };
     auto f2 = [&](auto & ctx){ unit = x3::_attr(ctx); };
@@ -74,7 +74,7 @@ bool ParseCapUnit(std::string_view s, CapUnit & cu)
             ("PF", CapUnit::Unit::PF);
         }
     } const symbols;
-    NSFloat scale;
+    Float scale;
     CapUnit::Unit unit;
     auto f1 = [&](auto & ctx){ scale = x3::_attr(ctx); };
     auto f2 = [&](auto & ctx){ unit = x3::_attr(ctx); };
@@ -161,7 +161,7 @@ ParasiticId ReadSpef(std::string_view filename)
             conn.name = getNodeName(sconn.node);
             if (sconn.coord.has_value()) {
                 auto & c = sconn.coord.value();
-                conn.coord = NSCoord2F(c.x, c.y);
+                conn.coord = FCoord2D(c.x, c.y);
             }
         }
         std::sort(net->pins.begin(), net->pins.end(), [](const auto & a, const auto & b) {

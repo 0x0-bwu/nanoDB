@@ -1,5 +1,6 @@
 #pragma once
-#include "../../src/common/NSMaterial.h"
+#include "common"
 #include "../../src/package/NSPackage.h"
 #include "../../src/package/NSPackageCell.h"
+#include "../../src/package/NSPackageLayer.h"
 #include "../../src/package/NSPackageLayout.h"

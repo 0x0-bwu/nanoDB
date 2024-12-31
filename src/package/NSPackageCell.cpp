@@ -49,6 +49,17 @@ CircuitCell::CircuitCell(std::string name)
 {
 }
 
+void CircuitCell::SetLayout(LayoutId layout)
+{
+    NS_ASSERT(Entity<Cell>::Identical(layout->GetCell()));
+    m_.layout = layout;
+}
+
+LayoutId CircuitCell::GetLayout() const
+{
+    return m_.layout;
+}
+
 FootprintCell::FootprintCell(std::string name)
  : Cell(std::move(name))
 {

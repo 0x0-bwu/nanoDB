@@ -13,7 +13,7 @@ public:
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (NSFloat, value),
+    (Float, value),
     (std::string, when),
     (std::string, relatedPG))
 };

@@ -9,6 +9,8 @@ public:
     explicit Layout(CellId cell);
     Layout() = default;
 
+    CellId GetCell() const { return m_.cell; }
+
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(

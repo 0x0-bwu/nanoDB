@@ -69,44 +69,44 @@ NS_SERIALIZATION_FUNCTIONS_IMP(MaterialLib)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-MaterialPropValue::MaterialPropValue(const std::array<NSFloat, 9> & values)
+MaterialPropValue::MaterialPropValue(const std::array<Float, 9> & values)
 {
     SetTensorProperty(values);
 }
 
-MaterialPropValue::MaterialPropValue(const std::array<NSFloat, 3> & values)
+MaterialPropValue::MaterialPropValue(const std::array<Float, 3> & values)
 {
     SetAnisotropicProperty(values);
 }
 
-MaterialPropValue::MaterialPropValue(NSFloat value)
+MaterialPropValue::MaterialPropValue(Float value)
 {
     SetSimpleProperty(value);
 }
 
-void MaterialPropValue::SetSimpleProperty(NSFloat value)
+void MaterialPropValue::SetSimpleProperty(Float value)
 {
     m_.values.assign(1, value);
 }
 
-void MaterialPropValue::SetAnisotropicProperty(const std::array<NSFloat, 3> & values)
+void MaterialPropValue::SetAnisotropicProperty(const std::array<Float, 3> & values)
 {
     m_.values.assign(values.begin(), values.end());
 }
 
-void MaterialPropValue::SetTensorProperty(const std::array<NSFloat, 9> & values)
+void MaterialPropValue::SetTensorProperty(const std::array<Float, 9> & values)
 {
     m_.values.assign(values.begin(), values.end());
 }
 
-bool MaterialPropValue::GetSimpleProperty(NSFloat & value) const
+bool MaterialPropValue::GetSimpleProperty(Float & value) const
 {
     if (m_.values.size() != 1) return false;
     value = m_.values[0];
     return true;
 }
 
-bool MaterialPropValue::GetAnisotropicProperty(size_t row, NSFloat & value) const
+bool MaterialPropValue::GetAnisotropicProperty(size_t row, Float & value) const
 {
     NS_ASSERT_MSG(row < 3, "index out of range");
     if (m_.values.size() != 3) return false;
@@ -114,7 +114,7 @@ bool MaterialPropValue::GetAnisotropicProperty(size_t row, NSFloat & value) cons
     return true;
 }
 
-bool MaterialPropValue::GetTensorProperty(size_t row, size_t col, NSFloat & value) const
+bool MaterialPropValue::GetTensorProperty(size_t row, size_t col, Float & value) const
 {
     NS_ASSERT_MSG(row < 3 and col < 3, "index out of range");
     if (m_.values.size() != 9) return false;
@@ -138,19 +138,19 @@ void MaterialPropValue::GetDimensions(size_t & row, size_t & col) const
     }
 }
 
-MaterialPropPolynomial::MaterialPropPolynomial(std::vector<std::vector<NSFloat>> coefficients)
+MaterialPropPolynomial::MaterialPropPolynomial(std::vector<std::vector<Float>> coefficients)
 {
     m_.coefficients = std::move(coefficients);
 }
 
-bool MaterialPropPolynomial::GetSimpleProperty(NSFloat index, NSFloat & value) const
+bool MaterialPropPolynomial::GetSimpleProperty(Float index, Float & value) const
 {
     if (m_.coefficients.size() != 1) return false;
     value = Calculate(m_.coefficients[0], index);
     return true;
 }
 
-bool MaterialPropPolynomial::GetAnisotropicProperty(NSFloat index, size_t row, NSFloat & value) const
+bool MaterialPropPolynomial::GetAnisotropicProperty(Float index, size_t row, Float & value) const
 {
     NS_ASSERT_MSG(row < 3, "index out of range");
     if (m_.coefficients.size() != 3) return false;
@@ -158,7 +158,7 @@ bool MaterialPropPolynomial::GetAnisotropicProperty(NSFloat index, size_t row, N
     return true;
 }
 
-bool MaterialPropPolynomial::GetTensorProperty(NSFloat index, size_t row, size_t col, NSFloat & value) const
+bool MaterialPropPolynomial::GetTensorProperty(Float index, size_t row, size_t col, Float & value) const
 {
     NS_ASSERT_MSG(row < 3 and col < 3, "index out of range");
     if (m_.coefficients.size() != 9) return false;
@@ -182,7 +182,7 @@ void MaterialPropPolynomial::GetDimensions(size_t & row, size_t & col) const
     }
 }
 
-NSFloat MaterialPropPolynomial::Calculate(const std::vector<NSFloat> & coefficients, NSFloat index)
+Float MaterialPropPolynomial::Calculate(const std::vector<Float> & coefficients, Float index)
 {
     NS_ASSERT(not coefficients.empty());
     auto value = coefficients.front();

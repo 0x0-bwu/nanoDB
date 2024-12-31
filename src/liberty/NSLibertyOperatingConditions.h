@@ -14,9 +14,9 @@ public:
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (NSInt, process),
-    (NSFloat, temperature),
-    (NSFloat, voltage))
+    (Int, process),
+    (Float, temperature),
+    (Float, voltage))
 };
 } // namespace nano::liberty
 NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::liberty::OperatingConditions)

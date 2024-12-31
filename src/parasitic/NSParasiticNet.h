@@ -17,9 +17,9 @@ struct CouplingCap
 {
     NetId net;
     CapId cap;
-    NSFloat value{0};
+    Float value{0};
     CouplingCap() = default;
-    CouplingCap(NetId net, CapId cap, NSFloat value)
+    CouplingCap(NetId net, CapId cap, Float value)
      : net(net), cap(cap), value(value) {}
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
 };
@@ -30,7 +30,7 @@ struct ConnectedPin
     bool isPort;
     IOType ioType;
     std::string name;
-    Optional<NSCoord2F> coord;
+    Optional<FCoord2D> coord;
     ConnectedPin() = default;
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
 };
@@ -49,20 +49,20 @@ public:
     CapId AddNode() override;
     ResId AddEdge(CapId source, CapId target) override;
 
-    void SetRes(CapId c1, CapId c2, NSFloat res);
-    NSFloat GetRes(CapId c1, CapId c2) const;
-    NSFloat GetRes(ResId id) const;
+    void SetRes(CapId c1, CapId c2, Float res);
+    Float GetRes(CapId c1, CapId c2) const;
+    Float GetRes(ResId id) const;
 
-    void SetCap(CapId c, NSFloat cap);
-    NSFloat GetCap(CapId c) const;
+    void SetCap(CapId c, Float cap);
+    Float GetCap(CapId c) const;
 
-    void AddCouplingCap(CapId c1, NetId net, CapId c2, NSFloat cap);
+    void AddCouplingCap(CapId c1, NetId net, CapId c2, Float cap);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (LinearMap<ResId, NSFloat>, res),
-    (LinearMap<CapId, NSFloat>, cap),
+    (LinearMap<ResId, Float>, res),
+    (LinearMap<CapId, Float>, cap),
     (CouplingCaps, ccap),
     (ConnectedPins, pins))
 };

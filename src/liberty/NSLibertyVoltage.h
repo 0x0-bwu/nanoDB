@@ -14,10 +14,10 @@ public:
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (NSFloat, low),
-    (NSFloat, high),
-    (NSFloat, min),
-    (NSFloat, max))
+    (Float, low),
+    (Float, high),
+    (Float, min),
+    (Float, max))
 };
 } // namespace nano::liberty
 NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::liberty::Voltage)
