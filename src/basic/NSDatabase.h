@@ -350,10 +350,9 @@ public:
     template <typename Base, typename std::enable_if_t<not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>, bool> = true>
     explicit Id(Id<Base> base) // explicit convert from base to derivied, will do dynamic cast check
     {
-        //wbtest
         if (dynamic_cast<const T *>(base.operator->()))
             m_id = SizeType(base);
-        else { NS_ASSERT_MSG(false, "dynamic cast failed!")}
+        else m_id = INVALID_ID;
     }
 
     bool isNull() const
