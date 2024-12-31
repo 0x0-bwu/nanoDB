@@ -20,7 +20,7 @@ private:
     NS_DEFINE_CLASS_MEMBERS(
     (CoordUnit, coordUnit),
     (MaterialLibId, matLib),
-    (IdVec<Cell, lut::Name>, cells)
+    (IdVec<Cell, NameLut>, cells)
     )
 };
 } // namespace nano::package
