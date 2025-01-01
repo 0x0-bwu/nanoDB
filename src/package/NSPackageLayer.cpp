@@ -30,24 +30,24 @@ StackupLayer::StackupLayer()
 {
 }
 
-void StackupLayer::SetConductingMaterial(std::string conductingMat)
+void StackupLayer::SetConductingMaterial(MaterialId conductingMat)
 {
-    m_.conductingMat = std::move(conductingMat);
+    m_.conductingMat = conductingMat;
 }
 
-std::string_view StackupLayer::GetConductingMaterial() const
+MaterialId StackupLayer::GetConductingMaterial() const
 {
-    return m_.conductingMat.c_str();
+    return m_.conductingMat;
 }
 
-void StackupLayer::SetDielectricMaterial(std::string dielectricMat)
+void StackupLayer::SetDielectricMaterial(MaterialId dielectricMat)
 {
-    m_.dielectricMat = std::move(dielectricMat);    
+    m_.dielectricMat = dielectricMat;
 }
 
-std::string_view StackupLayer::GetDielectricMaterial() const
+MaterialId StackupLayer::GetDielectricMaterial() const
 {
-    return m_.dielectricMat.c_str();
+    return m_.dielectricMat;
 }
     
 } // namespace nano::package

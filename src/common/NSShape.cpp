@@ -85,6 +85,11 @@ NS_SERIALIZATION_FUNCTIONS_IMP(ShapeFromTemplate)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
+ShapeRect::ShapeRect(const CoordUnit & coordUnit, FCoord2D ll, FCoord2D ur)
+ : ShapeRect(coordUnit.toCoord(ll), coordUnit.toCoord(ur))
+{
+}
+
 ShapeRect::ShapeRect(NCoord2D ll, NCoord2D ur)
  : ShapeRect(NBox2D(ll, ur))
 {
@@ -154,15 +159,14 @@ void ShapePath::SetPoints(std::vector<NCoord2D> points)
     m_.shape = std::move(points);
 }
 
-ShapeCircle::ShapeCircle(NCoord2D o, NCoord r, size_t div)
+ShapeCircle::ShapeCircle(NCoord2D o, NCoord r)
 {
     m_.center = o;
     m_.radius = r;
-    m_.div = div;
 }
 
 ShapeCircle::ShapeCircle()
- : ShapeCircle(NCoord2D(0, 0), 0, 0)
+ : ShapeCircle(NCoord2D(0, 0), 0)
 {
 }
 
@@ -174,7 +178,7 @@ NBox2D ShapeCircle::GetBBox() const
 
 NPolygon ShapeCircle::GetOutline() const
 {
-    return InscribedPolygon(Circle(m_.center, m_.radius), m_.div);
+    return InscribedPolygon(Circle(m_.center, m_.radius), NANO_SHAPE_CIRCLE_DIV);
 }
 
 NPolygonWithHoles ShapeCircle::GetContour() const
@@ -191,12 +195,21 @@ void ShapeCircle::Transform(const Transform2D & trans)
 
 bool ShapeCircle::isValid() const
 {
-    return generic::math::GT<NCoord>(m_.radius, 0) and m_.div >= 3;
+    return generic::math::GT<NCoord>(m_.radius, 0);
 }
 
-ShapePolygon::ShapePolygon(std::vector<NCoord2D> points)
+ShapePolygon::ShapePolygon(const CoordUnit & coordUnit, std::vector<FCoord2D> outline, FCoord cornerR)
+ : ShapePolygon(coordUnit.toCoord(outline), coordUnit.toCoord(cornerR))
 {
-    m_.shape = std::move(points);
+}
+
+ShapePolygon::ShapePolygon(std::vector<NCoord2D> points, NCoord cornerR)
+{
+    NPolygon polygon;
+    polygon.Set(std::move(points));
+    if (cornerR > 0)
+        polygon = RoundCorners(polygon, cornerR, NANO_SHAPE_CIRCLE_DIV);
+    m_.shape = std::move(polygon);
 }
 
 NBox2D ShapePolygon::GetBBox() const
