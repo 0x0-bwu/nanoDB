@@ -139,6 +139,12 @@ public:
         return m_luts.template Lookup<Lut>(std::forward<Key>(key));
     }
 
+    template <typename Func>
+    void Sort(Func && func)
+    {
+        std::sort(m_data.begin(), m_data.end(), std::forward<Func>(func));
+    }
+
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     template <typename Archive>
     void serialize(Archive & ar, const unsigned int)

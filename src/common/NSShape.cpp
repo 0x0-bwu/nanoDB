@@ -159,6 +159,11 @@ void ShapePath::SetPoints(std::vector<NCoord2D> points)
     m_.shape = std::move(points);
 }
 
+ShapeCircle::ShapeCircle(const CoordUnit & coordUnit, FCoord2D o, FCoord r)
+ : ShapeCircle(coordUnit.toCoord(o), coordUnit.toCoord(r))
+{
+}
+
 ShapeCircle::ShapeCircle(NCoord2D o, NCoord r)
 {
     m_.center = o;

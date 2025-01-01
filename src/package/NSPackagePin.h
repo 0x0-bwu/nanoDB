@@ -1,6 +1,7 @@
 #pragma once
-#include "basic/NSContainer.hpp"
 #include "common/NSCommon.hpp"
+#include "NSPackage.h"
+
 namespace nano::package {
 
 class Pin : public NamedObj, public Entity<Pin>
@@ -10,7 +11,7 @@ protected:
     Pin() = default;
 
 private:
-    NS_SERIALIZATION_FUNCTIONS_DECLARATION;
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (NCoord2D, location),
     (IOType, ioType))

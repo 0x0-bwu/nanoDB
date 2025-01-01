@@ -21,4 +21,14 @@ Layout::Layout(CellId cell)
     m_.cell = cell;
 }
 
+void Layout::SetBoundary(ShapeId boundary)
+{
+    m_.boundary = boundary;
+}
+
+void Layout::AddNet(NetId net)
+{
+    m_.nets.emplace_back(net);
+}
+
 } // namespace package

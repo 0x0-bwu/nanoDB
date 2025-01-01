@@ -18,6 +18,9 @@ public:
 
     void AddCell(CellId cell);
     void AddPadstack(PadstackId padstack);
+    void AddStackupLayer(StackupLayerId layer);
+
+    void SortStackupLayers(bool ascending = false);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
@@ -25,7 +28,8 @@ private:
     (CoordUnit, coordUnit),
     (MaterialLibId, matLib),
     (IdVec<Cell, NameLut>, cells),
-    (IdVec<Padstack, NameLut>, padstacks)
+    (IdVec<Padstack, NameLut>, padstacks),
+    (IdVec<StackupLayer, NameLut>, stackupLayers)
     )
 };
 } // namespace nano::package

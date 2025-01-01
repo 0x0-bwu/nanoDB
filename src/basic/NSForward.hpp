@@ -86,9 +86,11 @@ namespace package {
 
 class Cell;
 class CircuitCell;
+class ConnObj;
 class FootprintCell;
 class FootprintPin;
 class Layout;
+class Net;
 class Package;
 class Padstack;
 class Pin;
@@ -96,9 +98,11 @@ class StackupLayer;
 
 using CellId = Id<Cell>;
 using CircuitCellId = Id<CircuitCell>;
+using ConnObjId = Id<ConnObj>;
 using FootprintCellId = Id<FootprintCell>;
 using FootprintPinId = Id<FootprintPin>;
 using LayoutId = Id<Layout>;
+using NetId = Id<Net>;
 using PackageId = Id<Package>;
 using PadstackId = Id<Padstack>;
 using PinId = Id<Pin>;
@@ -148,7 +152,9 @@ using Content = Collection<
     liberty::Voltage,
     ///
     package::Cell,
+    package::ConnObj,
     package::Layout,
+    package::Net,
     package::Package,
     package::Padstack,
     package::Pin,
@@ -200,15 +206,17 @@ inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<liberty::SignalPin               >, "LibertySignalPin"sv               ),
     hana::make_pair(hana::type_c<liberty::Timing                  >, "LibertyTiming"sv                  ),
     hana::make_pair(hana::type_c<liberty::Voltage                 >, "LibertyVoltage"sv                 ),
-    hana::make_pair(hana::type_c<package::Cell                    >, "Cell"sv                           ),
-    hana::make_pair(hana::type_c<package::CircuitCell             >, "CircuitCell"sv                    ),
-    hana::make_pair(hana::type_c<package::FootprintCell           >, "FootprintCell"sv                  ),
-    hana::make_pair(hana::type_c<package::FootprintPin            >, "FootpinrtPin"sv                   ),
-    hana::make_pair(hana::type_c<package::Layout                  >, "Layout"sv                         ),
+    hana::make_pair(hana::type_c<package::Cell                    >, "PackageCell"sv                    ),
+    hana::make_pair(hana::type_c<package::CircuitCell             >, "PackageCircuitCell"sv             ),
+    hana::make_pair(hana::type_c<package::ConnObj                 >, "PackageConnObj"sv                 ),
+    hana::make_pair(hana::type_c<package::FootprintCell           >, "PackageFootprintCell"sv           ),
+    hana::make_pair(hana::type_c<package::FootprintPin            >, "PackageFootpinrtPin"sv            ),
+    hana::make_pair(hana::type_c<package::Layout                  >, "PackageLayout"sv                  ),
+    hana::make_pair(hana::type_c<package::Net                     >, "PackageNet"sv                     ),
     hana::make_pair(hana::type_c<package::Package                 >, "Package"sv                        ),
-    hana::make_pair(hana::type_c<package::Padstack                >, "Padstack"sv                       ),
-    hana::make_pair(hana::type_c<package::Pin                     >, "Pin"sv                            ),
-    hana::make_pair(hana::type_c<package::StackupLayer            >, "StackupLayer"sv                   ),
+    hana::make_pair(hana::type_c<package::Padstack                >, "PackagePadstack"sv                ),
+    hana::make_pair(hana::type_c<package::Pin                     >, "PackagePin"sv                     ),
+    hana::make_pair(hana::type_c<package::StackupLayer            >, "PackageStackupLayer"sv            ),
     hana::make_pair(hana::type_c<parasitic::Net                   >, "ParasiticNet"sv                   ),
     hana::make_pair(hana::type_c<parasitic::Parasitic             >, "Parasitic"sv                      )
 );

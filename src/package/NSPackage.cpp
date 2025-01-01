@@ -32,5 +32,16 @@ void Package::AddPadstack(PadstackId padstack)
     m_.padstacks.emplace_back(padstack);
 }
 
+void Package::AddStackupLayer(StackupLayerId layer)
+{
+    m_.stackupLayers.emplace_back(layer);
+}
+
+void Package::SortStackupLayers(bool ascending)
+{
+    m_.stackupLayers.Sort([&](const StackupLayerId & lhs, const StackupLayerId & rhs) {
+        return ascending ? lhs->GetElevation() < rhs->GetElevation() : lhs->GetElevation() > rhs->GetElevation();
+    });
+}
 
 } // namespace package

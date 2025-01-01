@@ -11,7 +11,8 @@ using namespace boost::unit_test;
 
 namespace detail {
 
-void SetupMaterials(package::PackageId pkg)
+using namespace package;
+void SetupMaterials(PackageId pkg)
 {
     auto matLib = nano::Create<MaterialLib>("mat_lib");
     pkg->SetMaterialLib(matLib);
@@ -57,9 +58,9 @@ void SetupMaterials(package::PackageId pkg)
     matLib->AddMaterial(matSolder);
 }
 
-package::PadstackId CreateBondwireSolderJoints(package::PackageId pkg, std::string name, Float bwRadius)
+PadstackId CreateBondwireSolderJoints(PackageId pkg, std::string name, Float bwRadius)
 {
-    auto padstack = nano::Create<package::Padstack>(std::move(name), pkg);
+    auto padstack = nano::Create<Padstack>(std::move(name), pkg);
     pkg->AddPadstack(padstack);
 
     padstack->SetTopSolderBumpMaterial(pkg->GetMaterialLib()->FindMaterial("Solder"));
@@ -70,6 +71,103 @@ package::PadstackId CreateBondwireSolderJoints(package::PackageId pkg, std::stri
     padstack->SetTopSolderBumpParameters(topBump, 0.05);
     padstack->SetBotSolderBallParameters(botBall, 0.05);   
     return padstack; 
+}
+
+FootprintCellId CreateSicFootprintCell(PackageId pkg)
+{
+    const auto & coordUnit = pkg->GetCoordUnit();
+    auto sicDie = nano::Create<FootprintCell>("SicDie", pkg);
+    sicDie->SetComponentType(ComponentType::IC);
+    sicDie->SetSolderBallBumpHeight(0.1);
+    auto solder = pkg->GetMaterialLib()->FindMaterial("Solder");
+    sicDie->SetSolderFillingMaterial(solder);
+    auto boundary = nano::Create<ShapeRect>(coordUnit, FCoord2D(-2.545, -2.02), FCoord2D(2.545, 2.02));
+    sicDie->SetBoundary(boundary);
+    auto sic = pkg->GetMaterialLib()->FindMaterial("SiC");
+    sicDie->SetMaterial(sic);
+    sicDie->SetHeight(0.18);
+
+    sicDie->AddPin(nano::Create<FootprintPin>("G", sicDie, coordUnit.toCoord(FCoord2D(-1.25,  1.0)), IOType::INPUT));
+    sicDie->AddPin(nano::Create<FootprintPin>("B", sicDie, coordUnit.toCoord(FCoord2D(-1.25,  0.0)), IOType::INPUT));
+    sicDie->AddPin(nano::Create<FootprintPin>("D", sicDie, coordUnit.toCoord(FCoord2D(-1.25, -1.0)), IOType::INPUT));
+    sicDie->AddPin(nano::Create<FootprintPin>("A", sicDie, coordUnit.toCoord(FCoord2D( 1.25,  1.0)), IOType::INPUT));
+    sicDie->AddPin(nano::Create<FootprintPin>("C", sicDie, coordUnit.toCoord(FCoord2D( 1.25,  0.0)), IOType::INPUT));
+    sicDie->AddPin(nano::Create<FootprintPin>("E", sicDie, coordUnit.toCoord(FCoord2D( 1.25, -1.0)), IOType::INPUT));
+    sicDie->AddPin(nano::Create<FootprintPin>("K", sicDie, coordUnit.toCoord(FCoord2D(-2.00, -0.5)), IOType::INPUT));
+    
+    pkg->AddCell(sicDie);
+    return sicDie;
+}
+
+FootprintCellId CreateDiodeFootprintCell(PackageId pkg)
+{
+    const auto & coordUnit = pkg->GetCoordUnit();
+    auto diode = nano::Create<FootprintCell>("Diode", pkg);
+    diode->SetComponentType(ComponentType::IC);
+    diode->SetSolderBallBumpHeight(0.1);
+    auto solder = pkg->GetMaterialLib()->FindMaterial("Solder");
+    diode->SetSolderFillingMaterial(solder);
+    auto boundary = nano::Create<ShapeRect>(coordUnit, FCoord2D(-2.25, -2.25), FCoord2D(2.25, 2.25));
+    diode->SetBoundary(boundary);
+    auto sic = pkg->GetMaterialLib()->FindMaterial("SiC");
+    diode->SetMaterial(sic);
+    diode->SetHeight(0.18);
+
+    diode->AddPin(nano::Create<FootprintPin>("A", diode, coordUnit.toCoord(FCoord2D(-1.125,  1.50)), IOType::INPUT));
+    diode->AddPin(nano::Create<FootprintPin>("B", diode, coordUnit.toCoord(FCoord2D(-1.125,  0.75)), IOType::INPUT));
+    diode->AddPin(nano::Create<FootprintPin>("C", diode, coordUnit.toCoord(FCoord2D(-1.125,  0.00)), IOType::INPUT));
+    diode->AddPin(nano::Create<FootprintPin>("D", diode, coordUnit.toCoord(FCoord2D(-1.125, -0.75)), IOType::INPUT));
+    diode->AddPin(nano::Create<FootprintPin>("E", diode, coordUnit.toCoord(FCoord2D(-1.125, -1.50)), IOType::INPUT));
+
+    diode->AddPin(nano::Create<FootprintPin>("F", diode, coordUnit.toCoord(FCoord2D( 1.125,  1.50)), IOType::INPUT));
+    diode->AddPin(nano::Create<FootprintPin>("G", diode, coordUnit.toCoord(FCoord2D( 1.125,  0.75)), IOType::INPUT));
+    diode->AddPin(nano::Create<FootprintPin>("H", diode, coordUnit.toCoord(FCoord2D( 1.125,  0.00)), IOType::INPUT));
+    diode->AddPin(nano::Create<FootprintPin>("I", diode, coordUnit.toCoord(FCoord2D( 1.125, -0.75)), IOType::INPUT));
+    diode->AddPin(nano::Create<FootprintPin>("J", diode, coordUnit.toCoord(FCoord2D( 1.125, -1.50)), IOType::INPUT));
+
+    pkg->AddCell(diode);
+    return diode;
+}
+
+FootprintCellId CreateGateResistanceFootprintCell(PackageId pkg)
+{
+    const auto & coordUnit = pkg->GetCoordUnit();
+    auto res = nano::Create<FootprintCell>("Rg", pkg);
+    res->SetComponentType(ComponentType::RESISTOR);
+    auto boundary = nano::Create<ShapeRect>(coordUnit, FCoord2D(-1.05, -0.65), FCoord2D(1.05, 0.65));
+    res->SetBoundary(boundary);
+    auto sic = pkg->GetMaterialLib()->FindMaterial("SiC");
+    res->SetMaterial(sic);
+    res->SetHeight(0.5);
+    
+    pkg->AddCell(res);
+    return res;
+}
+
+LayoutId CreateBaseLayout(PackageId pkg)
+{
+    const auto & coordUnit = pkg->GetCoordUnit();
+    auto baseCell = nano::Create<CircuitCell>("base", pkg);
+    pkg->AddCell(baseCell);
+    auto baseLayout = nano::Create<Layout>(baseCell);
+    baseCell->SetLayout(baseLayout);
+
+    auto boundary = nano::Create<ShapePolygonWithHoles>();
+    auto outline = ShapePolygon(coordUnit, {{-52.2, -29.7}, {52.2, -29.7}, {52.5, 29.7}, {-52.2, 29.7}}, 5.3).GetOutline();
+    boundary->SetOutline(outline);
+    boundary->AddHole(ShapeCircle(coordUnit, {-46.5, -24}, 3.85).GetOutline());
+    boundary->AddHole(ShapeCircle(coordUnit, { 46.5, -24}, 3.85).GetOutline());
+    boundary->AddHole(ShapeCircle(coordUnit, { 46.5,  24}, 3.85).GetOutline());
+    boundary->AddHole(ShapeCircle(coordUnit, {-46.5,  24}, 3.85).GetOutline());
+    baseLayout->SetBoundary(boundary);
+
+    baseLayout->AddNet(nano::Create<Net>("Gate", baseLayout));
+    baseLayout->AddNet(nano::Create<Net>("Drain", baseLayout));
+    baseLayout->AddNet(nano::Create<Net>("Source", baseLayout));
+    baseLayout->AddNet(nano::Create<Net>("Kelvin", baseLayout));
+
+    return baseLayout;
+
 }
 
 } // namespace detail
@@ -86,18 +184,27 @@ void t_create_package()
     CoordUnit coordUnit(CoordUnit::Unit::Millimeter);
     pkg->SetCoordUnit(coordUnit);
 
+    //layers
+    auto matAlN = pkg->GetMaterialLib()->FindMaterial("AlN");
+    auto matAir = pkg->GetMaterialLib()->FindMaterial("Air");
+    auto matCu = pkg->GetMaterialLib()->FindMaterial("Cu");
+    auto matSold = pkg->GetMaterialLib()->FindMaterial("Solder");
+    pkg->AddStackupLayer(nano::Create<StackupLayer>("TopCuLayer", LayerType::CONDUCTING, 0, 0.3, matCu, matAir));
+    pkg->AddStackupLayer(nano::Create<StackupLayer>("CeramicLayer", LayerType::DIELECTRIC,  -0.3, 0.38, matAlN, matAir));
+    pkg->AddStackupLayer(nano::Create<StackupLayer>("BotCuLayer", LayerType::CONDUCTING, -0.68, 0.3, matCu, matAir));
+    pkg->AddStackupLayer(nano::Create<StackupLayer>("SolderLayer", LayerType::CONDUCTING, -0.98, 0.1, matSold, matAir));
+    pkg->AddStackupLayer(nano::Create<StackupLayer>("BaseLayer", LayerType::CONDUCTING, -1.08, 3, matCu, matCu));
+    pkg->SortStackupLayers();
+
     auto thinBwSolderDef = detail::CreateBondwireSolderJoints(pkg, "Thin Solder Joints", 0.0635);
     auto thickBwSolderDef = detail::CreateBondwireSolderJoints(pkg, "Thick Solder Joints", 0.15);
 
-
-
     //cells
-    auto baseCell = nano::Create<CircuitCell>("base");
-    pkg->AddCell(baseCell);
-    auto baseLayout = nano::Create<Layout>(baseCell);
-    baseCell->SetLayout(baseLayout);
+    auto sicDieDef = detail::CreateSicFootprintCell(pkg);
+    auto diodeDef = detail::CreateDiodeFootprintCell(pkg);
+    auto gateResDef = detail::CreateGateResistanceFootprintCell(pkg);
 
-
+    auto baseLayout = detail::CreateBaseLayout(pkg);
 
 
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/CAS300M12BM2.xml";
