@@ -94,6 +94,7 @@ private:
 class ShapeCircle : public Shape, public Entity<ShapeCircle>
 {
 public:
+    ShapeCircle(const CoordUnit & coordUnit, FCoord2D o, FCoord r);
     ShapeCircle(NCoord2D o, NCoord r);
     ShapeCircle();
     

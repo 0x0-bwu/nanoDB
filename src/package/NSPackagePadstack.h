@@ -1,5 +1,5 @@
 #pragma once
-#include "basic/NSContainer.hpp"
+#include "NSPackage.h"
 
 namespace nano::package {
 

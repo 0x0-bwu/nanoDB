@@ -1,5 +1,5 @@
 #pragma once
-#include "basic/NSContainer.hpp"
+#include "NSPackage.h"
 
 namespace nano::package {
 
@@ -9,12 +9,20 @@ public:
     explicit Layout(CellId cell);
     Layout() = default;
 
+    void SetBoundary(ShapeId boundary);
+    ShapeId GetBoundary() const { return m_.boundary; }
+
     CellId GetCell() const { return m_.cell; }
+
+    void AddNet(NetId net);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (CellId, cell))
+    (CellId, cell),
+    (ShapeId, boundary),
+    (IdVec<Net, NameLut>, nets)
+    )
 };
 
 } // namespace nano::package

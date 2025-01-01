@@ -13,7 +13,8 @@ enum class LayerType : int8_t
 class StackupLayer : public NamedObj, public Entity<StackupLayer>
 {
 public:
-    StackupLayer(std::string name, LayerType type);
+    StackupLayer(std::string name, LayerType type, 
+        Float elevation, Float thickness, MaterialId conductingMat, MaterialId dielectricMat);
     StackupLayer();
 
     LayerType GetLayerType() const { return m_.type; }

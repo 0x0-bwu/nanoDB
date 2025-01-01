@@ -1,8 +1,10 @@
 add_library(nanoPackage
     NSPackage.cpp
     NSPackageCell.cpp
+    NSPackageConnObj.cpp
     NSPackageLayer.cpp
     NSPackageLayout.cpp
+    NSPackageNet.cpp
     NSPackagePadstack.cpp
     NSPackagePin.cpp
 )

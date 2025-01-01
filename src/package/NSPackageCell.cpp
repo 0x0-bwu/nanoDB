@@ -39,13 +39,14 @@ NS_SERIALIZATION_FUNCTIONS_IMP(FootprintCell)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Cell::Cell(std::string name)
+Cell::Cell(std::string name, PackageId package)
  : NamedObj(std::move(name))
 {
+    m_.package = package;
 }
 
-CircuitCell::CircuitCell(std::string name)
- : Cell(std::move(name))
+CircuitCell::CircuitCell(std::string name, PackageId package)
+ : Cell(std::move(name), package)
 {
 }
 
@@ -60,9 +61,57 @@ LayoutId CircuitCell::GetLayout() const
     return m_.layout;
 }
 
-FootprintCell::FootprintCell(std::string name)
- : Cell(std::move(name))
+FootprintCell::FootprintCell(std::string name, PackageId package)
+ : Cell(std::move(name), package)
 {
+    m_.compType = ComponentType::INVALID;
+    m_.height = 0;
+    m_.solderHeight = 0;
+}
+
+FootprintCell::FootprintCell()
+ : FootprintCell("", PackageId())
+{
+}
+
+void FootprintCell::SetComponentType(ComponentType type)
+{
+    m_.compType = type;
+}
+
+ComponentType FootprintCell::GetComponentType() const
+{
+    return m_.compType;
+}
+
+void FootprintCell::SetSolderBallBumpHeight(Float height)
+{
+    m_.solderHeight = height;
+}
+
+void FootprintCell::SetSolderFillingMaterial(MaterialId material)
+{
+    m_.solderFillingMaterial = material;
+}
+
+void FootprintCell::SetBoundary(ShapeId boundary)
+{
+    m_.boundary = boundary;
+}
+
+void FootprintCell::SetMaterial(MaterialId material)
+{
+    m_.material = material;
+}
+
+void FootprintCell::SetHeight(Float height)
+{
+    m_.height = height;
+}
+
+void FootprintCell::AddPin(FootprintPinId pin)
+{
+    m_.pins.emplace_back(pin);
 }
 
 } // namespace package

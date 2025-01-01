@@ -17,16 +17,19 @@ NS_SERIALIZATION_FUNCTIONS_IMP(StackupLayer)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-StackupLayer::StackupLayer(std::string name,  LayerType type)
+StackupLayer::StackupLayer(std::string name,  LayerType type, 
+    Float elevation, Float thickness, MaterialId conductingMat, MaterialId dielectricMat)
  : NamedObj(std::move(name))
 {
     m_.type = type;
-    m_.elevation = 0;
-    m_.thickness = 0;
+    m_.elevation = elevation;
+    m_.thickness = thickness;
+    m_.conductingMat = conductingMat;
+    m_.dielectricMat = dielectricMat;
 }
 
 StackupLayer::StackupLayer()
- : StackupLayer("", LayerType::INVALID)
+ : StackupLayer("", LayerType::INVALID, Float(0), Float(0), MaterialId(), MaterialId())
 {
 }
 
