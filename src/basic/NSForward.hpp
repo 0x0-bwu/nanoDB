@@ -87,16 +87,22 @@ namespace package {
 class Cell;
 class CircuitCell;
 class FootprintCell;
+class FootprintPin;
 class Layout;
 class Package;
+class Padstack;
+class Pin;
 class StackupLayer;
 
 using CellId = Id<Cell>;
 using CircuitCellId = Id<CircuitCell>;
 using FootprintCellId = Id<FootprintCell>;
+using FootprintPinId = Id<FootprintPin>;
 using LayoutId = Id<Layout>;
 using PackageId = Id<Package>;
-using StackLayerId = Id<StackupLayer>;
+using PadstackId = Id<Padstack>;
+using PinId = Id<Pin>;
+using StackupLayerId = Id<StackupLayer>;
 
 } // namespace package
 
@@ -144,6 +150,8 @@ using Content = Collection<
     package::Cell,
     package::Layout,
     package::Package,
+    package::Padstack,
+    package::Pin,
     package::StackupLayer,
     ///
     parasitic::Net,
@@ -195,8 +203,11 @@ inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<package::Cell                    >, "Cell"sv                           ),
     hana::make_pair(hana::type_c<package::CircuitCell             >, "CircuitCell"sv                    ),
     hana::make_pair(hana::type_c<package::FootprintCell           >, "FootprintCell"sv                  ),
+    hana::make_pair(hana::type_c<package::FootprintPin            >, "FootpinrtPin"sv                   ),
     hana::make_pair(hana::type_c<package::Layout                  >, "Layout"sv                         ),
     hana::make_pair(hana::type_c<package::Package                 >, "Package"sv                        ),
+    hana::make_pair(hana::type_c<package::Padstack                >, "Padstack"sv                       ),
+    hana::make_pair(hana::type_c<package::Pin                     >, "Pin"sv                            ),
     hana::make_pair(hana::type_c<package::StackupLayer            >, "StackupLayer"sv                   ),
     hana::make_pair(hana::type_c<parasitic::Net                   >, "ParasiticNet"sv                   ),
     hana::make_pair(hana::type_c<parasitic::Parasitic             >, "Parasitic"sv                      )
@@ -219,7 +230,8 @@ inline constexpr static auto inheritanceMap = hana::make_map(
     hana::make_pair(hana::type_c<liberty::PwrGndPin               >, hana::type_c<liberty::Pin         >),
     hana::make_pair(hana::type_c<liberty::SignalPin               >, hana::type_c<liberty::Pin         >),
     hana::make_pair(hana::type_c<package::CircuitCell             >, hana::type_c<package::Cell        >),
-    hana::make_pair(hana::type_c<package::FootprintCell           >, hana::type_c<package::Cell        >)
+    hana::make_pair(hana::type_c<package::FootprintCell           >, hana::type_c<package::Cell        >),
+    hana::make_pair(hana::type_c<package::FootprintPin            >, hana::type_c<package::Pin         >)
 );
 
 template <typename T, typename = hana::when<true>>

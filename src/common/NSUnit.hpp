@@ -89,6 +89,19 @@ public:
         return value * Scale2Coord();
     }
 
+    NCoord2D toCoord(const FCoord2D & coord) const
+    {
+        return NCoord2D(toCoord(coord[0]), toCoord(coord[1]));
+    }
+
+    std::vector<NCoord2D> toCoord(const std::vector<FCoord2D> & coords) const
+    {
+        std::vector<NCoord2D> res; res.reserve(coords.size());
+        std::transform(coords.begin(), coords.end(), 
+            std::back_inserter(res), [&](const auto & c) { return toCoord(c); });
+        return res;
+    }
+
     Float Scale2Unit() const
     {
         return m_unit;

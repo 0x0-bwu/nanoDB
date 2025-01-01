@@ -1,6 +1,7 @@
 #pragma once
 #include "basic/NSContainer.hpp"
 #include "NSTransform.hpp"
+#include "NSUnit.hpp"
 
 #include "generic/geometry/Geometries.hpp"
 
@@ -17,6 +18,7 @@ using FPolyline = generic::geometry::Polyline2D<FCoord>;
 using NPolygonWithHoles = generic::geometry::PolygonWithHoles2D<NCoord>;
 using FPolygonWithHoles = generic::geometry::PolygonWithHoles2D<FCoord>;
 
+inline static constexpr size_t NANO_SHAPE_CIRCLE_DIV = 32;
 enum class ShapeType
 {
     INVALID = -1,
@@ -48,6 +50,7 @@ private:
 class ShapeRect : public Shape, public Entity<ShapeRect>
 {
 public:
+    ShapeRect(const CoordUnit & coordUnit, FCoord2D ll, FCoord2D ur);
     ShapeRect(NCoord2D ll, NCoord2D ur);
     explicit ShapeRect(NBox2D box);
     ShapeRect() = default;
@@ -91,7 +94,7 @@ private:
 class ShapeCircle : public Shape, public Entity<ShapeCircle>
 {
 public:
-    ShapeCircle(NCoord2D o, NCoord r, size_t div);
+    ShapeCircle(NCoord2D o, NCoord r);
     ShapeCircle();
     
     bool hasHole() const override { return false; }
@@ -105,14 +108,14 @@ private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (NCoord2D, center),
-    (NCoord, radius),
-    (size_t, div))
+    (NCoord, radius))
 };
 
 class ShapePolygon : public Shape, public Entity<ShapePolygon>
 {
 public:
-    explicit ShapePolygon(std::vector<NCoord2D> outline);
+    ShapePolygon(const CoordUnit & coordUnit, std::vector<FCoord2D> outline, FCoord cornerR = 0);
+    explicit ShapePolygon(std::vector<NCoord2D> outline, NCoord cornerR = 0);
     ShapePolygon() = default;
 
     bool hasHole() const override { return false; }

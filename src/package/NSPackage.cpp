@@ -27,4 +27,10 @@ void Package::AddCell(CellId cell)
     m_.cells.emplace_back(cell);
 }
 
+void Package::AddPadstack(PadstackId padstack)
+{
+    m_.padstacks.emplace_back(padstack);
+}
+
+
 } // namespace package

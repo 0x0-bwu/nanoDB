@@ -24,11 +24,11 @@ public:
     void SetThickness(Float thickness) { m_.thickness = thickness; }
     Float GetThickness() const { return m_.thickness; }
 
-    void SetConductingMaterial(std::string conductingMat);
-    std::string_view GetConductingMaterial() const;
+    void SetConductingMaterial(MaterialId material);
+    MaterialId GetConductingMaterial() const;
 
-    void SetDielectricMaterial(std::string dielectricMat);
-    std::string_view GetDielectricMaterial() const;
+    void SetDielectricMaterial(MaterialId material);
+    MaterialId GetDielectricMaterial() const;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
@@ -36,8 +36,8 @@ private:
     (LayerType, type),
     (Float, elevation),
     (Float, thickness),
-    (std::string, conductingMat),
-    (std::string, dielectricMat))
+    (MaterialId, conductingMat),
+    (MaterialId, dielectricMat))
 };
 
 } // namespace nano::package

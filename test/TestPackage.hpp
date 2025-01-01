@@ -9,14 +9,10 @@
 using namespace nano;
 using namespace boost::unit_test;
 
-void t_create_package()
-{
-    using namespace nano::package;
-    Database::Create("CAS300M12BM2");
-    auto pkg = nano::Create<Package>("CAS300M12BM2");
-    BOOST_CHECK(pkg);
+namespace detail {
 
-    //materials
+void SetupMaterials(package::PackageId pkg)
+{
     auto matLib = nano::Create<MaterialLib>("mat_lib");
     pkg->SetMaterialLib(matLib);
     BOOST_CHECK(pkg->GetMaterialLib());
@@ -59,6 +55,41 @@ void t_create_package()
     matSolder->SetProperty(Material::MASS_DENSITY, nano::Create<MaterialPropValue>(7800));
     matSolder->SetProperty(Material::RESISTIVITY, nano::Create<MaterialPropValue>(11.4e-8));
     matLib->AddMaterial(matSolder);
+}
+
+package::PadstackId CreateBondwireSolderJoints(package::PackageId pkg, std::string name, Float bwRadius)
+{
+    auto padstack = nano::Create<package::Padstack>(std::move(name), pkg);
+    pkg->AddPadstack(padstack);
+
+    padstack->SetTopSolderBumpMaterial(pkg->GetMaterialLib()->FindMaterial("Solder"));
+    padstack->SetBotSolderBallMaterial(pkg->GetMaterialLib()->FindMaterial("Solder"));
+    Float bumpR = 1.1 * bwRadius;
+    auto topBump = nano::Create<ShapeRect>(pkg->GetCoordUnit(), FCoord2D{-bumpR, -bumpR}, FCoord2D{bumpR, bumpR});
+    auto botBall = nano::Create<ShapeRect>(pkg->GetCoordUnit(), FCoord2D{-bumpR, -bumpR}, FCoord2D{bumpR, bumpR});
+    padstack->SetTopSolderBumpParameters(topBump, 0.05);
+    padstack->SetBotSolderBallParameters(botBall, 0.05);   
+    return padstack; 
+}
+
+} // namespace detail
+
+void t_create_package()
+{
+    using namespace nano::package;
+    Database::Create("CAS300M12BM2");
+    auto pkg = nano::Create<Package>("CAS300M12BM2");
+    BOOST_CHECK(pkg);
+
+    detail::SetupMaterials(pkg);
+
+    CoordUnit coordUnit(CoordUnit::Unit::Millimeter);
+    pkg->SetCoordUnit(coordUnit);
+
+    auto thinBwSolderDef = detail::CreateBondwireSolderJoints(pkg, "Thin Solder Joints", 0.0635);
+    auto thickBwSolderDef = detail::CreateBondwireSolderJoints(pkg, "Thick Solder Joints", 0.15);
+
+
 
     //cells
     auto baseCell = nano::Create<CircuitCell>("base");
