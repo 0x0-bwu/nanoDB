@@ -19,6 +19,7 @@ public:
     void AddCell(CellId cell);
     void AddPadstack(PadstackId padstack);
     void AddStackupLayer(StackupLayerId layer);
+    void AddComponentLayer(ComponentLayerId layer);
 
     void SortStackupLayers(bool ascending = false);
 
@@ -29,6 +30,7 @@ private:
     (MaterialLibId, matLib),
     (IdVec<Cell, NameLut>, cells),
     (IdVec<Padstack, NameLut>, padstacks),
+    (IdVec<ComponentLayer>, componentLayers),
     (IdVec<StackupLayer, NameLut>, stackupLayers)
     )
 };

@@ -37,6 +37,11 @@ void Package::AddStackupLayer(StackupLayerId layer)
     m_.stackupLayers.emplace_back(layer);
 }
 
+void Package::AddComponentLayer(ComponentLayerId layer)
+{
+    m_.componentLayers.emplace_back(layer);
+}
+
 void Package::SortStackupLayers(bool ascending)
 {
     m_.stackupLayers.Sort([&](const StackupLayerId & lhs, const StackupLayerId & rhs) {

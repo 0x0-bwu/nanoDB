@@ -8,16 +8,29 @@ enum class LayerType : int8_t
     INVALID = -1,
     DIELECTRIC = 0,
     CONDUCTING = 1,
+    COMPONENT = 10,
 };
 
-class StackupLayer : public NamedObj, public Entity<StackupLayer>
+class Layer : public NamedObj, public Entity<Layer>
+{
+public:
+    Layer(std::string name, LayerType type);
+    Layer() = default;
+
+    LayerType GetLayerType() const { return m_.type; }
+private:
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION
+    NS_DEFINE_CLASS_MEMBERS(
+    (LayerType, type)
+    )
+};
+
+class StackupLayer : public Layer, public Entity<StackupLayer>
 {
 public:
     StackupLayer(std::string name, LayerType type, 
         Float elevation, Float thickness, MaterialId conductingMat, MaterialId dielectricMat);
     StackupLayer();
-
-    LayerType GetLayerType() const { return m_.type; }
 
     void SetElevation(Float elevation) { m_.elevation = elevation; }
     Float GetElevation() const { return m_.elevation; }
@@ -32,14 +45,30 @@ public:
     MaterialId GetDielectricMaterial() const;
 
 private:
-    NS_SERIALIZATION_FUNCTIONS_DECLARATION;
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (LayerType, type),
     (Float, elevation),
     (Float, thickness),
     (MaterialId, conductingMat),
     (MaterialId, dielectricMat))
 };
 
+class ComponentLayer : public Layer, public Entity<ComponentLayer>
+{
+public:
+    ComponentLayer(std::string name);
+    ComponentLayer() = default;
+
+private:
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION
+    NS_DEFINE_CLASS_MEMBERS(
+    (size_t, dummy)
+    )
+};
+
 } // namespace nano::package
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::package::Layer);
 NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::package::StackupLayer);
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::package::ComponentLayer);
+NS_INHERIT_FROM_BASE(nano::package::StackupLayer, nano::package::Layer);
+NS_INHERIT_FROM_BASE(nano::package::ComponentLayer, nano::package::Layer);
