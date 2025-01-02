@@ -3,6 +3,7 @@
 #include "../../src/package/NSPackage.h"
 #include "../../src/package/NSPackageCell.h"
 #include "../../src/package/NSPackageConnObj.h"
+#include "../../src/package/NSPackageHierObj.h"
 #include "../../src/package/NSPackageLayer.h"
 #include "../../src/package/NSPackageLayout.h"
 #include "../../src/package/NSPackageNet.h"

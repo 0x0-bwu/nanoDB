@@ -148,7 +148,7 @@ LayoutId CreateBaseLayout(PackageId pkg)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
     auto cell = pkg->AddCell(nano::Create<CircuitCell>("base", pkg));
-    auto layout = cell->SetLayout(nano::Create<Layout>(cell));
+    auto layout = CircuitCellId(cell)->SetLayout(nano::Create<Layout>(cell));
 
     auto boundary = nano::Create<ShapePolygonWithHoles>();
     auto outline = ShapePolygon(coordUnit, {{-52.2, -29.7}, {52.2, -29.7}, {52.5, 29.7}, {-52.2, 29.7}}, 5.3).GetOutline();
@@ -159,7 +159,7 @@ LayoutId CreateBaseLayout(PackageId pkg)
     boundary->AddHole(ShapeCircle(coordUnit, {-46.5,  24}, 3.85).GetOutline());
     layout->SetBoundary(boundary);
 
-    auto gateNet = baseLayout->AddNet(nano::Create<Net>("Gate", layout));
+    auto gateNet = layout->AddNet(nano::Create<Net>("Gate", layout));
     layout->AddNet(nano::Create<Net>("Drain", layout));
     layout->AddNet(nano::Create<Net>("Source", layout));
     layout->AddNet(nano::Create<Net>("Kelvin", layout));
@@ -250,7 +250,7 @@ LayoutId CreateDriverLayout(PackageId pkg)
     auto cell = nano::Create<CircuitCell>("driver", pkg);
     auto layout = nano::Create<Layout>(cell);
 
-    auto boundary = nano::Create<ShapePolygon>(coordUnit,{{-5.5, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {-5.5, 14.725}});
+    auto boundary = nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-5.5, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {-5.5, 14.725}});
     layout->SetBoundary(boundary);
 
     auto noNet = layout->AddNet(nano::Create<Net>("NoNet", layout));
@@ -259,21 +259,21 @@ LayoutId CreateDriverLayout(PackageId pkg)
     auto layer3 = pkg->FindStackupLayer("BotCuLayer");
     auto layer4 = pkg->FindStackupLayer("SolderLayer");
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
-                       nano::Create<ShapePolygon>(coordUnit, {{1.7,   9.625}, {4.7,   9.625}, {4.7, 13.925}, {1.7, 13.925}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{1.7,   9.625}, {4.7,   9.625}, {4.7, 13.925}, {1.7, 13.925}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
-                       nano::Create<ShapePolygon>(coordUnit, {{1.7,   4.325}, {4.7,   4.325}, {4.7,  8.625}, {1.7,  8.625}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{1.7,   4.325}, {4.7,   4.325}, {4.7,  8.625}, {1.7,  8.625}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
-                       nano::Create<ShapePolygon>(coordUnit, {{1.7, -13.925}, {4.7, -13.925}, {4.7,  1.075}, {3.2,  1.075}, {3.2, -1.775}, 
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{1.7, -13.925}, {4.7, -13.925}, {4.7,  1.075}, {3.2,  1.075}, {3.2, -1.775}, 
                        {4.2, -1.775}, {4.2, -4.925}, {3.2, -4.925}, {3.2, -7.025}, {4.2, -7.025}, {4.2, -11.425}, {1.7, -11.425}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
-                       nano::Create<ShapePolygon>(coordUnit, {{1.7, -10.325}, {3.2, -10.325}, {3.2, -8.225}, {2.2, -8.225}, {2.2, -3.875}, 
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{1.7, -10.325}, {3.2, -10.325}, {3.2, -8.225}, {2.2, -8.225}, {2.2, -3.875}, 
                        {3.2, -3.875}, {3.2, -2.825}, {2.2, -2.825}, {2.2, 2.175}, {4.7, 2.175}, {4.7, 3.225}, {1.7, 3.225}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer2, 
-                       nano::Create<ShapePolygon>(coordUnit, {{0.9, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {0.9, 14.725}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{0.9, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {0.9, 14.725}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer3,
-                       nano::Create<ShapePolygon>(coordUnit, {{1.4, -14.225}, {5.0, -14.225}, {5.0, 14.225}, {1.4, 14.225}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{1.4, -14.225}, {5.0, -14.225}, {5.0, 14.225}, {1.4, 14.225}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer4,
-                       nano::Create<ShapePolygon>(coordUnit, {{0.9, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {0.9, 14.725}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{0.9, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {0.9, 14.725}}, 0.25)));
     
     return layout;
 }
