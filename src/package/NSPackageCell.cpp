@@ -50,10 +50,11 @@ CircuitCell::CircuitCell(std::string name, PackageId package)
 {
 }
 
-void CircuitCell::SetLayout(LayoutId layout)
+LayoutId CircuitCell::SetLayout(LayoutId layout)
 {
     NS_ASSERT(Entity<Cell>::Identical(layout->GetCell()));
     m_.layout = layout;
+    return m_.layout;
 }
 
 LayoutId CircuitCell::GetLayout() const

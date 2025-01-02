@@ -58,7 +58,7 @@ void SetupMaterials(PackageId pkg)
     matLib->AddMaterial(matSolder);
 }
 
-PadstackId CreateBondwireSolderJoints(PackageId pkg, std::string name, Float bwRadius)
+PadstackId CreateBondingWireSolderJoints(PackageId pkg, std::string name, Float bwRadius)
 {
     auto padstack = nano::Create<Padstack>(std::move(name), pkg);
     pkg->AddPadstack(padstack);
@@ -147,10 +147,8 @@ FootprintCellId CreateGateResistanceFootprintCell(PackageId pkg)
 LayoutId CreateBaseLayout(PackageId pkg)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
-    auto baseCell = nano::Create<CircuitCell>("base", pkg);
-    pkg->AddCell(baseCell);
-    auto baseLayout = nano::Create<Layout>(baseCell);
-    baseCell->SetLayout(baseLayout);
+    auto cell = pkg->AddCell(nano::Create<CircuitCell>("base", pkg));
+    auto layout = cell->SetLayout(nano::Create<Layout>(cell));
 
     auto boundary = nano::Create<ShapePolygonWithHoles>();
     auto outline = ShapePolygon(coordUnit, {{-52.2, -29.7}, {52.2, -29.7}, {52.5, 29.7}, {-52.2, 29.7}}, 5.3).GetOutline();
@@ -159,13 +157,13 @@ LayoutId CreateBaseLayout(PackageId pkg)
     boundary->AddHole(ShapeCircle(coordUnit, { 46.5, -24}, 3.85).GetOutline());
     boundary->AddHole(ShapeCircle(coordUnit, { 46.5,  24}, 3.85).GetOutline());
     boundary->AddHole(ShapeCircle(coordUnit, {-46.5,  24}, 3.85).GetOutline());
-    baseLayout->SetBoundary(boundary);
+    layout->SetBoundary(boundary);
 
-    baseLayout->AddNet(nano::Create<Net>("Gate", baseLayout));
-    baseLayout->AddNet(nano::Create<Net>("Drain", baseLayout));
-    baseLayout->AddNet(nano::Create<Net>("Source", baseLayout));
-    baseLayout->AddNet(nano::Create<Net>("Kelvin", baseLayout));
-    auto noNet = baseLayout->AddNet(nano::Create<Net>("NoNet", baseLayout));
+    auto gateNet = baseLayout->AddNet(nano::Create<Net>("Gate", layout));
+    layout->AddNet(nano::Create<Net>("Drain", layout));
+    layout->AddNet(nano::Create<Net>("Source", layout));
+    layout->AddNet(nano::Create<Net>("Kelvin", layout));
+    auto noNet = layout->AddNet(nano::Create<Net>("NoNet", layout));
 
     std::vector<FCoord2D> dPLoc{
         {-3, 24}, {-3, 23.275}, {-3, 22.55}, {-4, 23.275}, {-4, 22.55}, {-3, 6.525}, {-3, 5.8}, {-3, 5.075}, {-4, 6.525}, {-4, 5.8},
@@ -180,17 +178,104 @@ LayoutId CreateBaseLayout(PackageId pkg)
         auto bw1 = nano::Create<BondingWire>("DS1_" + std::to_string(i), noNet, 0.15);
         bw1->SetStartLayer(topCuLayer, coordUnit.toCoord(dPLoc[i]), false);
         bw1->SetEndLayer(topCuLayer, coordUnit.toCoord(sPLoc[i]), false);
-        baseLayout->AddConnObj(bw1);
+        layout->AddConnObj(bw1);
 
         dPLoc[i][1] *= -1; sPLoc[i][1] *= -1;
         auto bw2 = nano::Create<BondingWire>("DS2_" + std::to_string(i), noNet, 0.15);
         bw2->SetStartLayer(topCuLayer, coordUnit.toCoord(dPLoc[i]), false);
         bw2->SetEndLayer(topCuLayer, coordUnit.toCoord(sPLoc[i]), false);
-        baseLayout->AddConnObj(bw2);
+        layout->AddConnObj(bw2);
     }
 
-    return baseLayout;
+    std::vector<FCoord2D> gPLoc{{-3, 3}, {-3, 1.8}};
+    for (size_t i = 0; i < gPLoc.size(); ++i) {
+        const auto & p = gPLoc.at(i);
+        auto bw1 = nano::Create<BondingWire>("G1_" + std::to_string(i), noNet, 0.0635);
+        bw1->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(p[0], p[1])), false);
+        bw1->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(-p[0], p[1])), false);
+        layout->AddConnObj(bw1);
 
+        auto bw2 = nano::Create<BondingWire>("G2_" + std::to_string(i), noNet, 0.0635);
+        bw2->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(p[0], -p[1])), false);
+        bw2->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(-p[0], -p[1])), false);
+        layout->AddConnObj(bw2);
+    }
+
+    auto kelvinBw0 = nano::Create<BondingWire>("KelvinBw0", gateNet, 0.0635);
+    kelvinBw0->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(30.15, -5.95)), false);
+    kelvinBw0->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(40.05, -5.95)), false);
+    layout->AddConnObj(kelvinBw0);
+
+    auto kelvinBw = nano::Create<BondingWire>("KelvinBw", gateNet, 0.0635);
+    kelvinBw->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(30.15, 5)), false);
+    kelvinBw->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(30.15, -5)), false);
+    layout->AddConnObj(kelvinBw);
+
+    auto gateBw0 = nano::Create<BondingWire>("GateBw0", gateNet, 0.0635);
+    gateBw0->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32, -12.375)), false);
+    gateBw0->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(40.05, -12.375)), false);
+    layout->AddConnObj(gateBw0);
+
+    auto gateBw = nano::Create<BondingWire>("GateBw", gateNet, 0.0635);
+    gateBw->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32, 5)), false);
+    gateBw->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32, -5)), false);
+    layout->AddConnObj(gateBw);
+
+    auto gateBw1 = nano::Create<BondingWire>("GateBw1", gateNet, 0.0635);
+    gateBw1->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32.5, 3.0)), false);
+    gateBw1->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(41.3, 3.35)), false);
+    layout->AddConnObj(gateBw1);
+
+    auto gateBw2 = nano::Create<BondingWire>("GateBw2", gateNet, 0.0635);
+    gateBw2->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32.5, 1.8)), false);
+    gateBw2->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(40.05, 1.0375)), false);
+    layout->AddConnObj(gateBw2);
+
+    auto gateBw3 = nano::Create<BondingWire>("GateBw3", gateNet, 0.0635);
+    gateBw3->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32.5, -1.8)), false);
+    gateBw3->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(40.05, -0.3625)), false);
+    layout->AddConnObj(gateBw3);
+
+    auto gateBw4 = nano::Create<BondingWire>("GateBw4", gateNet, 0.0635);
+    gateBw4->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32.5, -3)), false);
+    gateBw4->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(40.05, -2.7)), false);
+    layout->AddConnObj(gateBw4);
+
+    return layout;
+}
+
+LayoutId CreateDriverLayout(PackageId pkg)
+{
+    const auto & coordUnit = pkg->GetCoordUnit();
+    auto cell = nano::Create<CircuitCell>("driver", pkg);
+    auto layout = nano::Create<Layout>(cell);
+
+    auto boundary = nano::Create<ShapePolygon>(coordUnit,{{-5.5, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {-5.5, 14.725}});
+    layout->SetBoundary(boundary);
+
+    auto noNet = layout->AddNet(nano::Create<Net>("NoNet", layout));
+    auto layer1 = pkg->FindStackupLayer("TopCuLayer");
+    auto layer2 = pkg->FindStackupLayer("CeramicLayer");
+    auto layer3 = pkg->FindStackupLayer("BotCuLayer");
+    auto layer4 = pkg->FindStackupLayer("SolderLayer");
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
+                       nano::Create<ShapePolygon>(coordUnit, {{1.7,   9.625}, {4.7,   9.625}, {4.7, 13.925}, {1.7, 13.925}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
+                       nano::Create<ShapePolygon>(coordUnit, {{1.7,   4.325}, {4.7,   4.325}, {4.7,  8.625}, {1.7,  8.625}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
+                       nano::Create<ShapePolygon>(coordUnit, {{1.7, -13.925}, {4.7, -13.925}, {4.7,  1.075}, {3.2,  1.075}, {3.2, -1.775}, 
+                       {4.2, -1.775}, {4.2, -4.925}, {3.2, -4.925}, {3.2, -7.025}, {4.2, -7.025}, {4.2, -11.425}, {1.7, -11.425}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
+                       nano::Create<ShapePolygon>(coordUnit, {{1.7, -10.325}, {3.2, -10.325}, {3.2, -8.225}, {2.2, -8.225}, {2.2, -3.875}, 
+                       {3.2, -3.875}, {3.2, -2.825}, {2.2, -2.825}, {2.2, 2.175}, {4.7, 2.175}, {4.7, 3.225}, {1.7, 3.225}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer2, 
+                       nano::Create<ShapePolygon>(coordUnit, {{0.9, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {0.9, 14.725}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer3,
+                       nano::Create<ShapePolygon>(coordUnit, {{1.4, -14.225}, {5.0, -14.225}, {5.0, 14.225}, {1.4, 14.225}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer4,
+                       nano::Create<ShapePolygon>(coordUnit, {{0.9, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {0.9, 14.725}}, 0.25)));
+    
+    return layout;
 }
 
 } // namespace detail
@@ -219,8 +304,8 @@ void t_create_package()
     pkg->AddStackupLayer(nano::Create<StackupLayer>("BaseLayer", LayerType::CONDUCTING, -1.08, 3, matCu, matCu));
     pkg->SortStackupLayers();
 
-    auto thinBwSolderDef = detail::CreateBondwireSolderJoints(pkg, "Thin Solder Joints", 0.0635);
-    auto thickBwSolderDef = detail::CreateBondwireSolderJoints(pkg, "Thick Solder Joints", 0.15);
+    auto thinBwSolderDef = detail::CreateBondingWireSolderJoints(pkg, "Thin Solder Joints", 0.0635);
+    auto thickBwSolderDef = detail::CreateBondingWireSolderJoints(pkg, "Thick Solder Joints", 0.15);
 
     //cells
     auto sicDieDef = detail::CreateSicFootprintCell(pkg);
@@ -228,6 +313,7 @@ void t_create_package()
     auto gateResDef = detail::CreateGateResistanceFootprintCell(pkg);
 
     auto baseLayout = detail::CreateBaseLayout(pkg);
+    auto driverLayout = detail::CreateDriverLayout(pkg);
 
 
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/CAS300M12BM2.xml";

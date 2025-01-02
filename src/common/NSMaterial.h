@@ -21,16 +21,16 @@ private:
 class MaterialPropValue : public MaterialProp, public Entity<MaterialPropValue>
 {
 public:
-    explicit MaterialPropValue(const std::array<Float, 9> & values);
-    explicit MaterialPropValue(const std::array<Float, 3> & values);
+    explicit MaterialPropValue(const Arr9<Float> & values);
+    explicit MaterialPropValue(const Arr3<Float> & values);
     explicit MaterialPropValue(Float value);
     MaterialPropValue() = default;
 
     bool isPropValue() const override { return true; }
 
     void SetSimpleProperty(Float value);
-    void SetAnisotropicProperty(const std::array<Float, 3> & values);
-    void SetTensorProperty(const std::array<Float, 9> & values);
+    void SetAnisotropicProperty(const Arr3<Float> & values);
+    void SetTensorProperty(const Arr9<Float> & values);
 
     bool GetSimpleProperty(Float & value) const;
     bool GetAnisotropicProperty(size_t row, Float & value) const;

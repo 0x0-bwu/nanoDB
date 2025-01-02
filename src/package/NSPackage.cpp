@@ -22,24 +22,24 @@ Package::Package(std::string name)
 {
 }
 
-void Package::AddCell(CellId cell)
+CellId Package::AddCell(CellId cell)
 {
-    m_.cells.Add(cell);
+    return m_.cells.Add(cell);
 }
 
-void Package::AddPadstack(PadstackId padstack)
+PadstackId Package::AddPadstack(PadstackId padstack)
 {
-    m_.padstacks.Add(padstack);
+    return m_.padstacks.Add(padstack);
 }
 
-void Package::AddStackupLayer(StackupLayerId layer)
+StackupLayerId Package::AddStackupLayer(StackupLayerId layer)
 {
-    m_.stackupLayers.Add(layer);
+    return m_.stackupLayers.Add(layer);
 }
 
-void Package::AddComponentLayer(ComponentLayerId layer)
+ComponentLayerId Package::AddComponentLayer(ComponentLayerId layer)
 {
-    m_.componentLayers.Add(layer);
+    return m_.componentLayers.Add(layer);
 }
 
 void Package::SortStackupLayers(bool ascending)
