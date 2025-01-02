@@ -6,6 +6,7 @@ derate
 fanin
 fanout
 hana
+hier
 insts
 jedec
 kohm

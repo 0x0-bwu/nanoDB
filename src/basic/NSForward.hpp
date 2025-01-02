@@ -89,11 +89,13 @@ namespace package {
 
 class BondingWire;
 class Cell;
+class CellInst;
 class CircuitCell;
 class ConnObj;
 class ComponentLayer;
 class FootprintCell;
 class FootprintPin;
+class HierObj;
 class Layer;
 class Layout;
 class Net;
@@ -106,11 +108,13 @@ class StackupLayer;
 
 using BondingWireId    = Id<BondingWire>;
 using CellId           = Id<Cell>;
+using CellInstId       = Id<CellInst>;
 using CircuitCellId    = Id<CircuitCell>;
 using ConnObjId        = Id<ConnObj>;
 using ComponentLayerId = Id<ComponentLayer>;
 using FootprintCellId  = Id<FootprintCell>;
 using FootprintPinId   = Id<FootprintPin>;
+using HierObjId        = Id<HierObj>;
 using LayerId          = Id<Layer>;
 using LayoutId         = Id<Layout>;
 using NetId            = Id<Net>;
@@ -166,6 +170,7 @@ using Content = Collection<
     ///
     package::Cell,
     package::ConnObj,
+    package::HierObj,
     package::Layer,
     package::Layout,
     package::Net,
@@ -221,11 +226,13 @@ inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<liberty::Voltage                 >, "LibertyVoltage"sv                 ),
     hana::make_pair(hana::type_c<package::BondingWire             >, "PackageBondingWire"sv             ),
     hana::make_pair(hana::type_c<package::Cell                    >, "PackageCell"sv                    ),
+    hana::make_pair(hana::type_c<package::CellInst                >, "PackageCellInst"sv                ),
     hana::make_pair(hana::type_c<package::CircuitCell             >, "PackageCircuitCell"sv             ),
     hana::make_pair(hana::type_c<package::ConnObj                 >, "PackageConnObj"sv                 ),
     hana::make_pair(hana::type_c<package::ComponentLayer          >, "PackageComponentLayer"sv          ),
     hana::make_pair(hana::type_c<package::FootprintCell           >, "PackageFootprintCell"sv           ),
     hana::make_pair(hana::type_c<package::FootprintPin            >, "PackageFootpinrtPin"sv            ),
+    hana::make_pair(hana::type_c<package::HierObj                 >, "PackageHierObj"sv                 ),
     hana::make_pair(hana::type_c<package::Layer                   >, "PackageLayer"sv                   ),
     hana::make_pair(hana::type_c<package::Layout                  >, "PackageLayout"sv                  ),
     hana::make_pair(hana::type_c<package::Net                     >, "PackageNet"sv                     ),
@@ -256,6 +263,7 @@ inline constexpr static auto inheritanceMap = hana::make_map(
     hana::make_pair(hana::type_c<liberty::PwrGndPin               >, hana::type_c<liberty::Pin         >),
     hana::make_pair(hana::type_c<liberty::SignalPin               >, hana::type_c<liberty::Pin         >),
     hana::make_pair(hana::type_c<package::BondingWire             >, hana::type_c<package::ConnObj     >),
+    hana::make_pair(hana::type_c<package::CellInst                >, hana::type_c<package::HierObj     >),
     hana::make_pair(hana::type_c<package::CircuitCell             >, hana::type_c<package::Cell        >),
     hana::make_pair(hana::type_c<package::ComponentLayer          >, hana::type_c<package::Layer       >),
     hana::make_pair(hana::type_c<package::FootprintCell           >, hana::type_c<package::Cell        >),

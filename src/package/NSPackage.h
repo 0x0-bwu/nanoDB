@@ -22,7 +22,7 @@ public:
     ComponentLayerId AddComponentLayer(ComponentLayerId layer);
     void SortStackupLayers(bool ascending = false);
 
-    LayerId FindStackupLayer(const std::string & name) const;
+    StackupLayerId FindStackupLayer(const std::string & name) const;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;

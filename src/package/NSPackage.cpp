@@ -49,7 +49,7 @@ void Package::SortStackupLayers(bool ascending)
     });
 }
 
-LayerId Package::FindStackupLayer(const std::string & name) const
+StackupLayerId Package::FindStackupLayer(const std::string & name) const
 {
     return m_.stackupLayers.Lookup<lut::Name>(name);
 }
