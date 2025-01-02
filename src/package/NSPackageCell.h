@@ -22,7 +22,7 @@ public:
     CircuitCell(std::string name, PackageId package);
     CircuitCell() = default;
 
-    void SetLayout(LayoutId layout);
+    LayoutId SetLayout(LayoutId layout);
     LayoutId GetLayout() const;
 
 private:

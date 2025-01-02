@@ -69,12 +69,12 @@ NS_SERIALIZATION_FUNCTIONS_IMP(MaterialLib)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-MaterialPropValue::MaterialPropValue(const std::array<Float, 9> & values)
+MaterialPropValue::MaterialPropValue(const Arr9<Float> & values)
 {
     SetTensorProperty(values);
 }
 
-MaterialPropValue::MaterialPropValue(const std::array<Float, 3> & values)
+MaterialPropValue::MaterialPropValue(const Arr3<Float> & values)
 {
     SetAnisotropicProperty(values);
 }
@@ -89,12 +89,12 @@ void MaterialPropValue::SetSimpleProperty(Float value)
     m_.values.assign(1, value);
 }
 
-void MaterialPropValue::SetAnisotropicProperty(const std::array<Float, 3> & values)
+void MaterialPropValue::SetAnisotropicProperty(const Arr3<Float> & values)
 {
     m_.values.assign(values.begin(), values.end());
 }
 
-void MaterialPropValue::SetTensorProperty(const std::array<Float, 9> & values)
+void MaterialPropValue::SetTensorProperty(const Arr9<Float> & values)
 {
     m_.values.assign(values.begin(), values.end());
 }

@@ -16,10 +16,10 @@ public:
     void SetMaterialLib(MaterialLibId matLib) { m_.matLib = matLib; }
     MaterialLibId GetMaterialLib() const { return m_.matLib; }
 
-    void AddCell(CellId cell);
-    void AddPadstack(PadstackId padstack);
-    void AddStackupLayer(StackupLayerId layer);
-    void AddComponentLayer(ComponentLayerId layer);
+    CellId AddCell(CellId cell);
+    PadstackId AddPadstack(PadstackId padstack);
+    StackupLayerId AddStackupLayer(StackupLayerId layer);
+    ComponentLayerId AddComponentLayer(ComponentLayerId layer);
     void SortStackupLayers(bool ascending = false);
 
     LayerId FindStackupLayer(const std::string & name) const;
