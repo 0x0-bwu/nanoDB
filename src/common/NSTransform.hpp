@@ -140,4 +140,24 @@ inline Transform2D makeTransform2D(Float scale, Float rotation, Float x, Float y
     return transform;
 }
 
+class Transformable2D
+{
+#ifdef NANO_BOOST_SERIALIZATION_SUPPORT
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        NS_UNUSED(version)
+        ar & boost::serialization::make_nvp("transform", m_transform);
+    }
+#endif//NANO_BOOST_SERIALIZATION_SUPPORT
+public:
+    Transform2D & GetTransform() { return m_transform; }
+    const Transform2D & GetTransform() const { return m_transform; }
+    void SetTransform(const Transform2D & transform) { m_transform = transform; }
+    void AddTransform(const Transform2D & transform) { m_transform.Append(transform); }
+private:
+    Transform2D m_transform;
+};
+
 } // namespace nano

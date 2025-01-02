@@ -16,11 +16,11 @@ class MaterialPropTable;
 class MaterialPropPolynomial;
 enum class MaterialType;
 
-using MaterialId = Id<Material>;
-using MaterialLibId = Id<MaterialLib>;
-using MaterialPropId = Id<MaterialProp>;
-using MaterialPropValueId = Id<MaterialPropValue>;
-using MaterialPropTableId = Id<MaterialPropTable>;
+using MaterialId               = Id<Material>;
+using MaterialLibId            = Id<MaterialLib>;
+using MaterialPropId           = Id<MaterialProp>;
+using MaterialPropValueId      = Id<MaterialPropValue>;
+using MaterialPropTableId      = Id<MaterialPropTable>;
 using MaterialPropPolynomialId = Id<MaterialPropPolynomial>;
 
 class Shape;
@@ -31,13 +31,13 @@ class ShapePolygon;
 class ShapePolygonWithHoles;
 class ShapeRect;
 
-using ShapeId = Id<Shape>;
-using ShapeCircleId = Id<ShapeCircle>;
-using ShapeFromTemplateId = Id<ShapeFromTemplate>;
-using ShapePathId = Id<ShapePath>;
-using ShapePolygonId = Id<ShapePolygon>;
+using ShapeId                 = Id<Shape>;
+using ShapeCircleId           = Id<ShapeCircle>;
+using ShapeFromTemplateId     = Id<ShapeFromTemplate>;
+using ShapePathId             = Id<ShapePath>;
+using ShapePolygonId          = Id<ShapePolygon>;
 using ShapePolygonWithHolesId = Id<ShapePolygonWithHoles>;
-using ShapeRectId = Id<ShapeRect>;
+using ShapeRectId             = Id<ShapeRect>;
 
 namespace chip {
 
@@ -50,10 +50,10 @@ class Net;
 
 using BlockId = Id<Block>;
 using BTermId = Id<BTerm>;
-using ChipId = Id<Chip>;
-using InstId = Id<Inst>;
+using ChipId  = Id<Chip>;
+using InstId  = Id<Inst>;
 using ITermId = Id<ITerm>;
-using NetId = Id<Net>;
+using NetId   = Id<Net>;
 
 } // namespace chip
 
@@ -84,29 +84,39 @@ using LutIndices = std::vector<LutNumbers>;
 
 namespace package {
 
+class BondingWire;
 class Cell;
 class CircuitCell;
 class ConnObj;
+class ComponentLayer;
 class FootprintCell;
 class FootprintPin;
+class Layer;
 class Layout;
 class Net;
 class Package;
 class Padstack;
+class PadstackInst;
 class Pin;
+class RoutingWire;
 class StackupLayer;
 
-using CellId = Id<Cell>;
-using CircuitCellId = Id<CircuitCell>;
-using ConnObjId = Id<ConnObj>;
-using FootprintCellId = Id<FootprintCell>;
-using FootprintPinId = Id<FootprintPin>;
-using LayoutId = Id<Layout>;
-using NetId = Id<Net>;
-using PackageId = Id<Package>;
-using PadstackId = Id<Padstack>;
-using PinId = Id<Pin>;
-using StackupLayerId = Id<StackupLayer>;
+using BondingWireId    = Id<BondingWire>;
+using CellId           = Id<Cell>;
+using CircuitCellId    = Id<CircuitCell>;
+using ConnObjId        = Id<ConnObj>;
+using ComponentLayerId = Id<ComponentLayer>;
+using FootprintCellId  = Id<FootprintCell>;
+using FootprintPinId   = Id<FootprintPin>;
+using LayerId          = Id<Layer>;
+using LayoutId         = Id<Layout>;
+using NetId            = Id<Net>;
+using PackageId        = Id<Package>;
+using PadstackId       = Id<Padstack>;
+using PadstackInstId   = Id<PadstackInst>;
+using PinId            = Id<Pin>;
+using RoutingWireId    = Id<RoutingWire>;
+using StackupLayerId   = Id<StackupLayer>;
 
 } // namespace package
 
@@ -115,7 +125,7 @@ namespace parasitic {
 class Net;
 class Parasitic;
 
-using NetId = Id<Net>;
+using NetId       = Id<Net>;
 using ParasiticId = Id<Parasitic>;
 
 } // namespace parasitic
@@ -153,12 +163,12 @@ using Content = Collection<
     ///
     package::Cell,
     package::ConnObj,
+    package::Layer,
     package::Layout,
     package::Net,
     package::Package,
     package::Padstack,
     package::Pin,
-    package::StackupLayer,
     ///
     parasitic::Net,
     parasitic::Parasitic
@@ -206,16 +216,21 @@ inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<liberty::SignalPin               >, "LibertySignalPin"sv               ),
     hana::make_pair(hana::type_c<liberty::Timing                  >, "LibertyTiming"sv                  ),
     hana::make_pair(hana::type_c<liberty::Voltage                 >, "LibertyVoltage"sv                 ),
+    hana::make_pair(hana::type_c<package::BondingWire             >, "PackageBondingWire"sv             ),
     hana::make_pair(hana::type_c<package::Cell                    >, "PackageCell"sv                    ),
     hana::make_pair(hana::type_c<package::CircuitCell             >, "PackageCircuitCell"sv             ),
     hana::make_pair(hana::type_c<package::ConnObj                 >, "PackageConnObj"sv                 ),
+    hana::make_pair(hana::type_c<package::ComponentLayer          >, "PackageComponentLayer"sv          ),
     hana::make_pair(hana::type_c<package::FootprintCell           >, "PackageFootprintCell"sv           ),
     hana::make_pair(hana::type_c<package::FootprintPin            >, "PackageFootpinrtPin"sv            ),
+    hana::make_pair(hana::type_c<package::Layer                   >, "PackageLayer"sv                   ),
     hana::make_pair(hana::type_c<package::Layout                  >, "PackageLayout"sv                  ),
     hana::make_pair(hana::type_c<package::Net                     >, "PackageNet"sv                     ),
     hana::make_pair(hana::type_c<package::Package                 >, "Package"sv                        ),
     hana::make_pair(hana::type_c<package::Padstack                >, "PackagePadstack"sv                ),
+    hana::make_pair(hana::type_c<package::PadstackInst            >, "PackagePadstackInst"sv            ),
     hana::make_pair(hana::type_c<package::Pin                     >, "PackagePin"sv                     ),
+    hana::make_pair(hana::type_c<package::RoutingWire             >, "PackageRoutingWire"sv             ),
     hana::make_pair(hana::type_c<package::StackupLayer            >, "PackageStackupLayer"sv            ),
     hana::make_pair(hana::type_c<parasitic::Net                   >, "ParasiticNet"sv                   ),
     hana::make_pair(hana::type_c<parasitic::Parasitic             >, "Parasitic"sv                      )
@@ -237,9 +252,14 @@ inline constexpr static auto inheritanceMap = hana::make_map(
     hana::make_pair(hana::type_c<liberty::OutputPin               >, hana::type_c<liberty::Pin         >),
     hana::make_pair(hana::type_c<liberty::PwrGndPin               >, hana::type_c<liberty::Pin         >),
     hana::make_pair(hana::type_c<liberty::SignalPin               >, hana::type_c<liberty::Pin         >),
+    hana::make_pair(hana::type_c<package::BondingWire             >, hana::type_c<package::ConnObj     >),
     hana::make_pair(hana::type_c<package::CircuitCell             >, hana::type_c<package::Cell        >),
+    hana::make_pair(hana::type_c<package::ComponentLayer          >, hana::type_c<package::Layer       >),
     hana::make_pair(hana::type_c<package::FootprintCell           >, hana::type_c<package::Cell        >),
-    hana::make_pair(hana::type_c<package::FootprintPin            >, hana::type_c<package::Pin         >)
+    hana::make_pair(hana::type_c<package::FootprintPin            >, hana::type_c<package::Pin         >),
+    hana::make_pair(hana::type_c<package::PadstackInst            >, hana::type_c<package::ConnObj     >),
+    hana::make_pair(hana::type_c<package::RoutingWire             >, hana::type_c<package::ConnObj     >),
+    hana::make_pair(hana::type_c<package::StackupLayer            >, hana::type_c<package::Layer       >)
 );
 
 template <typename T, typename = hana::when<true>>
