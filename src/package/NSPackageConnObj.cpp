@@ -22,6 +22,7 @@ void BondingWire::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
     ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(BondingWire);
+    ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(NamedObj);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(ConnObj);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
@@ -54,12 +55,32 @@ ConnObj::ConnObj(NetId net)
     m_.net = net;
 }
 
-BondingWire::BondingWire(NetId net, LayerId start, LayerId end, Float radius)
- : ConnObj(net)
+BondingWireId ConnObj::GetBondingWire() const
+{
+    return BondingWireId(GetId());
+}
+
+RoutingWireId ConnObj::GetRoutingWire() const
+{
+    return RoutingWireId(GetId());
+}
+
+PadstackInstId ConnObj::GetPadstackInst() const
+{
+    return PadstackInstId(GetId());
+}
+
+BondingWire::BondingWire(std::string name, NetId net, LayerId start, LayerId end, Float radius)
+ : NamedObj(std::move(name)), ConnObj(net)
 {
     m_.layers[0] = start;
     m_.layers[1] = end;
     m_.radius = radius;
+}
+
+BondingWire::BondingWire(std::string name, NetId net, Float radius)
+ : BondingWire(std::move(name), net, LayerId(), LayerId(), radius)
+{
 }
 
 void BondingWire::SetRadius(Float radius)
@@ -84,16 +105,40 @@ Float BondingWire::GetHeight() const
 
 void BondingWire::SetStartLayer(LayerId layer, const NCoord2D & loc, bool flipped)
 {
-    m_.layers[0] = layer;
+    SetStartLayer(layer);
     m_.locations[0] = loc;
     m_.flipped[0] = flipped;
 }
 
+void BondingWire::SetStartLayer(LayerId layer)
+{
+    if (m_.layers[0])
+        m_.layers[0]->RemoveStartBondingWire(Entity<BondingWire>::GetId());
+    m_.layers[0] = layer;
+}
+
+LayerId BondingWire::GetStartLayer() const
+{
+    return m_.layers[0];   
+}
+
 void BondingWire::SetEndLayer(LayerId layer, const NCoord2D & loc, bool flipped)
 {
-    m_.layers[1] = layer;
+    SetEndLayer(layer);
     m_.locations[1] = loc;
     m_.flipped[1] = flipped;
+}
+
+void BondingWire::SetEndLayer(LayerId layer)
+{
+    if (m_.layers[1])
+        m_.layers[1]->RemoveEndBondingWire(Entity<BondingWire>::GetId());
+    m_.layers[1] = layer;
+}
+
+LayerId BondingWire::GetEndLayer() const
+{
+    return m_.layers[1];
 }
 
 void BondingWire::SetMaterial(MaterialId material)
@@ -132,10 +177,16 @@ void BondingWire::Transform(const Transform2D & transform)
     generic::geometry::Transform(m_.locations[1], transform.GetTransform());
 }
 
-RoutingWire::RoutingWire(NetId net, ShapeId shape)
+RoutingWire::RoutingWire(NetId net, StackupLayerId layer, ShapeId shape)
  : ConnObj(net)
 {
+    m_.layer = layer;
     m_.shape = shape;
+}
+
+StackupLayerId RoutingWire::GetStackupLayer() const
+{
+    return m_.layer;
 }
 
 PadstackInst::PadstackInst(PadstackId padstack, NetId net)

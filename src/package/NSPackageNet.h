@@ -6,10 +6,14 @@ namespace nano::package {
 class Net : public NamedObj, public Entity<Net>
 {
 public:
+    friend class Layout;
     Net(std::string name, LayoutId layout);
     Net() = default;
 
     LayoutId GetLayout() const { return m_.layout; }
+    
+private:
+    ConnObjId AddConnObj(ConnObjId connObj);
     
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION

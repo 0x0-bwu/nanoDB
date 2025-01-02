@@ -24,22 +24,22 @@ Package::Package(std::string name)
 
 void Package::AddCell(CellId cell)
 {
-    m_.cells.emplace_back(cell);
+    m_.cells.Add(cell);
 }
 
 void Package::AddPadstack(PadstackId padstack)
 {
-    m_.padstacks.emplace_back(padstack);
+    m_.padstacks.Add(padstack);
 }
 
 void Package::AddStackupLayer(StackupLayerId layer)
 {
-    m_.stackupLayers.emplace_back(layer);
+    m_.stackupLayers.Add(layer);
 }
 
 void Package::AddComponentLayer(ComponentLayerId layer)
 {
-    m_.componentLayers.emplace_back(layer);
+    m_.componentLayers.Add(layer);
 }
 
 void Package::SortStackupLayers(bool ascending)
@@ -49,4 +49,9 @@ void Package::SortStackupLayers(bool ascending)
     });
 }
 
-} // namespace package
+LayerId Package::FindStackupLayer(const std::string & name) const
+{
+    return m_.stackupLayers.Lookup<lut::Name>(name);
+}
+
+} // namespace nano::package

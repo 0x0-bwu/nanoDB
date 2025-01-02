@@ -22,6 +22,12 @@ public:
         [[maybe_unused]] auto res = m_lut.emplace(m_keyFn(id), id).second;
         NS_ASSERT_MSG(res, "duplicated key in lut");
     }
+    
+    void Remove(const Id<T> id)
+    {
+        m_lut.erase(m_keyFn(id));
+    }
+
     Id<T> Lookup(const Key & key) const
     {
         auto iter = m_lut.find(key);
@@ -57,6 +63,11 @@ public:
     void Add(const Id<T> id)
     {
         hana::for_each(m_luts, [&](auto & c){ hana::second(c).Add(id); });
+    }
+
+    void Remove(const Id<T> id)
+    {
+        hana::for_each(m_luts, [&](auto & c){ hana::second(c).Remove(id); });
     }
 
     template <template <typename> class L, typename K>
@@ -143,6 +154,14 @@ public:
     void Sort(Func && func)
     {
         std::sort(m_data.begin(), m_data.end(), std::forward<Func>(func));
+    }
+
+    Id<T> Add(const Id<T> id) { return emplace_back(id); }
+
+    void Remove(const Id<T> id)
+    {
+        m_luts.Remove(id);
+        m_data.erase(std::remove(m_data.begin(), m_data.end(), id), m_data.end());
     }
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT

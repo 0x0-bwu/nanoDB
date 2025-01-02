@@ -20,8 +20,9 @@ public:
     void AddPadstack(PadstackId padstack);
     void AddStackupLayer(StackupLayerId layer);
     void AddComponentLayer(ComponentLayerId layer);
-
     void SortStackupLayers(bool ascending = false);
+
+    LayerId FindStackupLayer(const std::string & name) const;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;

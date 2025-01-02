@@ -229,7 +229,7 @@ MaterialLib::MaterialLib(std::string name)
 
 void MaterialLib::AddMaterial(MaterialId mat)
 {
-    m_.materials.emplace_back(mat);
+    m_.materials.Add(mat);
 }
 
 MaterialId MaterialLib::FindMaterial(std::string_view name) const

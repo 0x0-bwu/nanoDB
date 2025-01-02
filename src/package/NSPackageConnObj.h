@@ -9,6 +9,12 @@ public:
     explicit ConnObj(NetId net);
     ConnObj() = default;
 
+    NetId GetNet() const { return m_.net; }
+
+    BondingWireId GetBondingWire() const;
+    RoutingWireId GetRoutingWire() const;
+    PadstackInstId GetPadstackInst() const;
+
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
@@ -24,10 +30,11 @@ enum class BondingWireType
     // JEDEC5
 };
 
-class BondingWire : public ConnObj, public Entity<BondingWire>
+class BondingWire : public NamedObj, public ConnObj, public Entity<BondingWire>
 {
 public:
-    BondingWire(NetId net, LayerId start, LayerId end, Float radius);
+    BondingWire(std::string name, NetId net, LayerId start, LayerId end, Float radius);
+    BondingWire(std::string name, NetId net, Float radius);
     BondingWire() = default;
 
     void SetRadius(Float radius);
@@ -38,9 +45,11 @@ public:
 
     void SetStartLayer(LayerId layer, const NCoord2D & loc, bool flipped);
     void SetStartLayer(LayerId layer);
+    LayerId GetStartLayer() const;
 
     void SetEndLayer(LayerId layer, const NCoord2D & loc, bool flipped);
     void SetEndLayer(LayerId layer);
+    LayerId GetEndLayer() const;
 
     void SetMaterial(MaterialId material);
     MaterialId GetMaterial() const;
@@ -70,12 +79,15 @@ private:
 class RoutingWire : public ConnObj, public Entity<RoutingWire>
 {
 public:
-    RoutingWire(NetId net, ShapeId shape);
+    RoutingWire(NetId net, StackupLayerId layer, ShapeId shape);
     RoutingWire() = default;
+
+    StackupLayerId GetStackupLayer() const;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
+    (StackupLayerId, layer),
     (ShapeId, shape)
     )
 };

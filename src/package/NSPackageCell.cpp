@@ -111,7 +111,7 @@ void FootprintCell::SetHeight(Float height)
 
 void FootprintCell::AddPin(FootprintPinId pin)
 {
-    m_.pins.emplace_back(pin);
+    m_.pins.Add(pin);
 }
 
 } // namespace package
