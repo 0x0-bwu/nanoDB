@@ -43,12 +43,12 @@ template <typename Key, typename Value>
 using Map = std::unordered_map<Key, Value>;
 
 template <typename T> using Arr2 = std::array<T, 2>;
+template <typename T> using Arr3 = std::array<T, 3>;
+template <typename T> using Arr4 = std::array<T, 4>;
+template <typename T> using Arr9 = std::array<T, 9>;
 
 template <typename T> class Id;
 template <typename T> using IdSet = std::unordered_set<Id<T>>;
-template <typename T> using IdArr2 = std::array<Id<T>, 2>;
-template <typename T> using IdArr3 = std::array<Id<T>, 3>;
-template <typename T> using IdArr4 = std::array<Id<T>, 4>;
 
 using NCoord = Int;
 using FCoord = Float;

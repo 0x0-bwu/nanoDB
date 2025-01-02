@@ -54,9 +54,82 @@ ConnObj::ConnObj(NetId net)
     m_.net = net;
 }
 
-BondingWire::BondingWire(NetId net)
+BondingWire::BondingWire(NetId net, LayerId start, LayerId end, Float radius)
  : ConnObj(net)
 {
+    m_.layers[0] = start;
+    m_.layers[1] = end;
+    m_.radius = radius;
+}
+
+void BondingWire::SetRadius(Float radius)
+{
+    m_.radius = radius;
+}
+
+Float BondingWire::GetRadius() const
+{
+    return m_.radius;
+} 
+
+void BondingWire::SetHeight(Float height)
+{
+    m_.height = height;
+}
+
+Float BondingWire::GetHeight() const
+{
+    return m_.height;
+}
+
+void BondingWire::SetStartLayer(LayerId layer, const NCoord2D & loc, bool flipped)
+{
+    m_.layers[0] = layer;
+    m_.locations[0] = loc;
+    m_.flipped[0] = flipped;
+}
+
+void BondingWire::SetEndLayer(LayerId layer, const NCoord2D & loc, bool flipped)
+{
+    m_.layers[1] = layer;
+    m_.locations[1] = loc;
+    m_.flipped[1] = flipped;
+}
+
+void BondingWire::SetMaterial(MaterialId material)
+{
+    m_.material = material;
+}
+
+MaterialId BondingWire::GetMaterial() const
+{
+    return m_.material;
+}
+
+void BondingWire::SetBondingWireType(BondingWireType type)
+{
+    m_.type = type;
+}
+
+BondingWireType BondingWire::GetBondingWireType() const
+{
+    return m_.type;
+}
+
+void BondingWire::SetSolderJoints(PadstackId solderJoints)
+{
+    m_.solderJoints = solderJoints;
+}
+
+PadstackId BondingWire::GetSolderJoints() const
+{
+    return m_.solderJoints;
+}
+
+void BondingWire::Transform(const Transform2D & transform)
+{
+    generic::geometry::Transform(m_.locations[0], transform.GetTransform());
+    generic::geometry::Transform(m_.locations[1], transform.GetTransform());
 }
 
 RoutingWire::RoutingWire(NetId net, ShapeId shape)

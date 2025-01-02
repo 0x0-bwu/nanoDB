@@ -15,7 +15,7 @@ private:
     NS_DEFINE_CLASS_MEMBERS(
     (std::string, relatedPin),
     (std::string, relatedPG),
-    (IdArr2<Lut>, power))
+    (Arr2<LutId>, power))
 };
 
 } // namespace nano::liberty

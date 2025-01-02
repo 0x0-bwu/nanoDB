@@ -16,15 +16,54 @@ private:
     )
 };
 
+enum class BondingWireType
+{
+    INVALID = -1,
+    SIMPLE = 0,
+    JEDEC4,
+    // JEDEC5
+};
+
 class BondingWire : public ConnObj, public Entity<BondingWire>
 {
 public:
-    BondingWire(NetId net);
+    BondingWire(NetId net, LayerId start, LayerId end, Float radius);
     BondingWire() = default;
+
+    void SetRadius(Float radius);
+    Float GetRadius() const;
+
+    void SetHeight(Float height);
+    Float GetHeight() const;
+
+    void SetStartLayer(LayerId layer, const NCoord2D & loc, bool flipped);
+    void SetStartLayer(LayerId layer);
+
+    void SetEndLayer(LayerId layer, const NCoord2D & loc, bool flipped);
+    void SetEndLayer(LayerId layer);
+
+    void SetMaterial(MaterialId material);
+    MaterialId GetMaterial() const;
+
+    void SetBondingWireType(BondingWireType type);
+    BondingWireType GetBondingWireType() const;
+
+    void SetSolderJoints(PadstackId solderJoints);
+    PadstackId GetSolderJoints() const;
+
+    void Transform(const Transform2D & transform);
+
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (Float, diameter)
+    (MaterialId, material),
+    (Float, radius),
+    (Float, height),
+    (Arr2<LayerId>, layers),
+    (Arr2<NCoord2D>, locations),
+    (Arr2<bool>, flipped),
+    (PadstackId, solderJoints),
+    (BondingWireType, type)
     )
 };
 
@@ -54,7 +93,7 @@ private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (PadstackId, padstack),
-    (IdArr2<StackupLayer>, layerRange)
+    (Arr2<StackupLayerId>, layerRange)
     )
 };
 
