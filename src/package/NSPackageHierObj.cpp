@@ -29,8 +29,18 @@ NS_SERIALIZATION_FUNCTIONS_IMP(CellInst)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-CellInst::CellInst(std::string name, CellId cell)
- : NamedObj(std::move(name))
+HierObj::HierObj(HierObjId parent)
+{
+    m_.parent = parent;
+}
+
+HierObjId HierObj::AddChild(HierObjId child)
+{
+    return m_.children.Add(child);
+}
+
+CellInst::CellInst(std::string name, CellId cell, CellInstId parent)
+ : NamedObj(std::move(name)), HierObj(parent)
 {
     m_.cell = cell;
 }
@@ -38,6 +48,11 @@ CellInst::CellInst(std::string name, CellId cell)
 CellId CellInst::GetCell() const
 {
     return m_.cell;
+}
+
+CellInstId CellInst::AddCellInst(CellInstId cellInst)
+{
+    return CellInstId(AddChild(cellInst));
 }
 
 } // namespace nano::package
