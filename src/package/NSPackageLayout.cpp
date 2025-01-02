@@ -26,9 +26,29 @@ void Layout::SetBoundary(ShapeId boundary)
     m_.boundary = boundary;
 }
 
-void Layout::AddNet(NetId net)
+NetId Layout::AddNet(NetId net)
 {
-    m_.nets.emplace_back(net);
+    return m_.nets.Add(net);
 }
 
-} // namespace package
+ConnObjId Layout::AddConnObj(ConnObjId connObj)
+{
+    m_.connObjs.Add(connObj);
+    if (auto net = connObj->GetNet(); net)
+        net->AddConnObj(connObj);
+    
+    if (auto bw = connObj->GetBondingWire(); bw) {
+        if (auto sLayer = bw->GetStartLayer(); sLayer)
+            sLayer->AddStartBondingWire(bw);
+        if (auto eLayer = bw->GetEndLayer(); eLayer)
+            eLayer->AddEndBondingWire(bw);
+    }
+    else if (auto rw = connObj->GetRoutingWire(); rw) {
+        if (auto layer = rw->GetStackupLayer(); layer)
+            layer->AddRoutingWire(rw);
+    }
+
+    return connObj;
+}
+
+} // namespace nano::package

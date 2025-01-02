@@ -14,14 +14,16 @@ public:
 
     CellId GetCell() const { return m_.cell; }
 
-    void AddNet(NetId net);
+    NetId AddNet(NetId net);
+    ConnObjId AddConnObj(ConnObjId connObj);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
     (CellId, cell),
     (ShapeId, boundary),
-    (IdVec<Net, NameLut>, nets)
+    (IdVec<Net, NameLut>, nets),
+    (IdVec<ConnObj>, connObjs)
     )
 };
 

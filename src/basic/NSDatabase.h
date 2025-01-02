@@ -253,7 +253,9 @@ public:
 
     template <typename Other>
     Id<Other> GetBind() const;
-    ///
+
+protected:
+    Id<T> GetId() const { return Id<T>(m_id); }
 private:
     void SetId(Id<T> id) { m_id = IdType(id); }
 public:

@@ -165,6 +165,29 @@ LayoutId CreateBaseLayout(PackageId pkg)
     baseLayout->AddNet(nano::Create<Net>("Drain", baseLayout));
     baseLayout->AddNet(nano::Create<Net>("Source", baseLayout));
     baseLayout->AddNet(nano::Create<Net>("Kelvin", baseLayout));
+    auto noNet = baseLayout->AddNet(nano::Create<Net>("NoNet", baseLayout));
+
+    std::vector<FCoord2D> dPLoc{
+        {-3, 24}, {-3, 23.275}, {-3, 22.55}, {-4, 23.275}, {-4, 22.55}, {-3, 6.525}, {-3, 5.8}, {-3, 5.075}, {-4, 6.525}, {-4, 5.8},
+    };
+    std::vector<FCoord2D> sPLoc{
+        {3, 24}, {3, 23.275}, {3, 22.55}, {4, 21.825}, {3, 21.825}, {3, 6.525}, {3, 5.8}, {3, 5.075}, {3, 7.25}, {4, 7.25},
+    };
+
+    auto topCuLayer = pkg->FindStackupLayer("TopCuLayer");
+    BOOST_CHECK(topCuLayer);
+    for (size_t i = 0; i < dPLoc.size(); ++i) {
+        auto bw1 = nano::Create<BondingWire>("DS1_" + std::to_string(i), noNet, 0.15);
+        bw1->SetStartLayer(topCuLayer, coordUnit.toCoord(dPLoc[i]), false);
+        bw1->SetEndLayer(topCuLayer, coordUnit.toCoord(sPLoc[i]), false);
+        baseLayout->AddConnObj(bw1);
+
+        dPLoc[i][1] *= -1; sPLoc[i][1] *= -1;
+        auto bw2 = nano::Create<BondingWire>("DS2_" + std::to_string(i), noNet, 0.15);
+        bw2->SetStartLayer(topCuLayer, coordUnit.toCoord(dPLoc[i]), false);
+        bw2->SetEndLayer(topCuLayer, coordUnit.toCoord(sPLoc[i]), false);
+        baseLayout->AddConnObj(bw2);
+    }
 
     return baseLayout;
 

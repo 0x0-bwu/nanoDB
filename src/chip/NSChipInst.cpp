@@ -25,7 +25,7 @@ Inst::Inst(std::string name, BlockId block)
 
 void Inst::AddITerm(ITermId iterm)
 {
-    m_.iterms.emplace_back(iterm);
+    m_.iterms.Add(iterm);
 }
 
 } // namespace nano::design

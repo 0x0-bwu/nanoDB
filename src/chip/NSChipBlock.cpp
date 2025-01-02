@@ -27,19 +27,19 @@ Block::Block(std::string name, char hierSep)
 void Block::AddBTerm(BTermId bterm)
 {
     NS_ASSERT(Identical(bterm->GetBlock()));
-    m_.bterms.emplace_back(bterm);
+    m_.bterms.Add(bterm);
 }
 
 void Block::AddInst(InstId inst)
 {
     NS_ASSERT(Identical(inst->GetBlock()));
-    m_.insts.emplace_back(inst);
+    m_.insts.Add(inst);
 }
 
 void Block::AddNet(NetId net)
 {
     NS_ASSERT(Identical(net->GetBlock()));
-    m_.nets.emplace_back(net);
+    m_.nets.Add(net);
 }
 
 NetId Block::GetNet(size_t i) const

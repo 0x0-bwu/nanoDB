@@ -14,20 +14,30 @@ enum class LayerType : int8_t
 class Layer : public NamedObj, public Entity<Layer>
 {
 public:
+    friend class Layout;
+    friend class BondingWire;
     Layer(std::string name, LayerType type);
     Layer() = default;
 
     LayerType GetLayerType() const { return m_.type; }
 private:
+    void AddStartBondingWire(BondingWireId bw) { m_.startBondingWires.Add(bw); }
+    void AddEndBondingWire(BondingWireId bw) { m_.endBondingWires.Add(bw); }
+    void RemoveStartBondingWire(BondingWireId bw) { m_.startBondingWires.Remove(bw); }
+    void RemoveEndBondingWire(BondingWireId bw) { m_.endBondingWires.Remove(bw); }
+private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (LayerType, type)
+    (LayerType, type),
+    (IdVec<BondingWire>, startBondingWires),
+    (IdVec<BondingWire>, endBondingWires)
     )
 };
 
 class StackupLayer : public Layer, public Entity<StackupLayer>
 {
 public:
+    friend class Layout;
     StackupLayer(std::string name, LayerType type, 
         Float elevation, Float thickness, MaterialId conductingMat, MaterialId dielectricMat);
     StackupLayer();
@@ -45,12 +55,17 @@ public:
     MaterialId GetDielectricMaterial() const;
 
 private:
+    void AddRoutingWire(RoutingWireId wire) { m_.routingWires.Add(wire); }
+
+private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (Float, elevation),
     (Float, thickness),
     (MaterialId, conductingMat),
-    (MaterialId, dielectricMat))
+    (MaterialId, dielectricMat),
+    (IdVec<RoutingWire>, routingWires)
+    )
 };
 
 class ComponentLayer : public Layer, public Entity<ComponentLayer>
