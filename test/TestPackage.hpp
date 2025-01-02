@@ -315,6 +315,9 @@ void t_create_package()
     auto baseLayout = detail::CreateBaseLayout(pkg);
     auto driverLayout = detail::CreateDriverLayout(pkg);
 
+    auto base = nano::Create<CellInst>("Base", baseLayout->GetCell());
+    auto driver = base->AddCellInst(nano::Create<CellInst>("Driver", driverLayout->GetCell(), base));
+
 
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/CAS300M12BM2.xml";
     Database::SaveCurrent(filename, ArchiveFormat::XML);
