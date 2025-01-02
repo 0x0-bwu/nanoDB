@@ -7,10 +7,12 @@ fanin
 fanout
 hana
 insts
+jedec
 kohm
 levelized
 luts
 nwell
+padstack
 pwell
 rohm
 unate

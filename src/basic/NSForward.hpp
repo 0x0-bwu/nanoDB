@@ -77,6 +77,9 @@ class SignalPin;
 class Timing;
 class Voltage;
 
+using LutId           = Id<Lut>;
+using OutputCurrentId = Id<OutputCurrent>;
+
 using LutNumbers = std::vector<Float>;
 using LutIndices = std::vector<LutNumbers>;
 
