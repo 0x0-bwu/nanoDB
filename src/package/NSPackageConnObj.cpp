@@ -55,19 +55,34 @@ ConnObj::ConnObj(NetId net)
     m_.net = net;
 }
 
-BondingWireId ConnObj::GetBondingWire() const
+Id<BondingWire> ConnObj::GetBondingWire()
 {
-    return BondingWireId(GetId());
+    return Id<BondingWire>(Entity<ConnObj>::GetId());
 }
 
-RoutingWireId ConnObj::GetRoutingWire() const
+CId<BondingWire> ConnObj::GetBondingWire() const
 {
-    return RoutingWireId(GetId());
+    return CId<BondingWire>(Entity<ConnObj>::GetCId());
 }
 
-PadstackInstId ConnObj::GetPadstackInst() const
+Id<RoutingWire> ConnObj::GetRoutingWire()
 {
-    return PadstackInstId(GetId());
+    return Id<RoutingWire>(Entity<ConnObj>::GetId());
+}
+
+CId<RoutingWire> ConnObj::GetRoutingWire() const
+{
+    return CId<RoutingWire>(Entity<ConnObj>::GetCId());
+}
+
+Id<PadstackInst> ConnObj::GetPadstackInst()
+{
+    return Id<PadstackInst>(Entity<ConnObj>::GetId());
+}
+
+CId<PadstackInst> ConnObj::GetPadstackInst() const
+{
+    return CId<PadstackInst>(Entity<ConnObj>::GetCId());
 }
 
 BondingWire::BondingWire(std::string name, NetId net, LayerId start, LayerId end, Float radius)

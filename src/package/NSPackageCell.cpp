@@ -57,7 +57,12 @@ LayoutId CircuitCell::SetLayout(LayoutId layout)
     return m_.layout;
 }
 
-LayoutId CircuitCell::GetLayout() const
+CId<Layout> CircuitCell::GetLayout() const
+{
+    return m_.layout;
+}
+
+LayoutId CircuitCell::GetLayout()
 {
     return m_.layout;
 }
