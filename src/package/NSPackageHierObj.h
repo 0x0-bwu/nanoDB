@@ -7,7 +7,7 @@ namespace nano::package {
 class HierObj : public Entity<HierObj>
 {
 public:
-    HierObj(HierObjId parent);
+    HierObj(CId<HierObj> parent);
     HierObj() = default;
 
     HierObjId AddChild(HierObjId child);
@@ -15,7 +15,7 @@ public:
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (HierObjId, parent),
+    (CId<HierObj>, parent),
     (IdVec<HierObj>, children)
     )
 };
@@ -23,7 +23,7 @@ private:
 class CellInst : public Transformable2D, public NamedObj, public HierObj, public Entity<CellInst>
 {
 public:
-    CellInst(std::string name, CellId cell, CellInstId parent = CellInstId());
+    CellInst(std::string name, CellId cell, CId<CellInst> parent = CId<CellInst>());
     CellInst() = default;
     CellId GetCell() const;
     CellInstId AddCellInst(CellInstId cellInst);

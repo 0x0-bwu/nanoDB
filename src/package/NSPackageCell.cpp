@@ -39,13 +39,13 @@ NS_SERIALIZATION_FUNCTIONS_IMP(FootprintCell)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Cell::Cell(std::string name, PackageId package)
+Cell::Cell(std::string name, CId<Package> package)
  : NamedObj(std::move(name))
 {
     m_.package = package;
 }
 
-CircuitCell::CircuitCell(std::string name, PackageId package)
+CircuitCell::CircuitCell(std::string name, CId<Package> package)
  : Cell(std::move(name), package)
 {
 }
@@ -62,7 +62,7 @@ LayoutId CircuitCell::GetLayout() const
     return m_.layout;
 }
 
-FootprintCell::FootprintCell(std::string name, PackageId package)
+FootprintCell::FootprintCell(std::string name, CId<Package> package)
  : Cell(std::move(name), package)
 {
     m_.compType = ComponentType::INVALID;

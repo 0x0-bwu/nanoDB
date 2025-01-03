@@ -14,7 +14,7 @@ public:
     void SetFilename(std::string_view filename);
     std::string_view GetFilename() const;
 
-    void AddCell(const Id<Cell> cell);
+    void AddCell(Id<Cell> cell);
 
     size_t NumOfCells() const;
 private:

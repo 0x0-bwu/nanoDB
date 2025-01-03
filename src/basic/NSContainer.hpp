@@ -60,12 +60,12 @@ public:
         hana::for_each(m_luts, [&](auto & c){ hana::second(c).Build(data); });
     }
 
-    void Add(const Id<T> id)
+    void Add(Id<T> id)
     {
         hana::for_each(m_luts, [&](auto & c){ hana::second(c).Add(id); });
     }
 
-    void Remove(const Id<T> id)
+    void Remove(Id<T> id)
     {
         hana::for_each(m_luts, [&](auto & c){ hana::second(c).Remove(id); });
     }
@@ -156,9 +156,9 @@ public:
         std::sort(m_data.begin(), m_data.end(), std::forward<Func>(func));
     }
 
-    Id<T> Add(const Id<T> id) { return emplace_back(id); }
+    Id<T> Add(Id<T> id) { return emplace_back(id); }
 
-    void Remove(const Id<T> id)
+    void Remove(Id<T> id)
     {
         m_luts.Remove(id);
         m_data.erase(std::remove(m_data.begin(), m_data.end(), id), m_data.end());
