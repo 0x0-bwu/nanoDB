@@ -6,10 +6,10 @@ namespace nano::chip {
 class Inst : public NamedObj, public Entity<Inst>
 {
 public:
-    Inst(std::string name, BlockId block);
+    Inst(std::string name, Id<Block> block);
     Inst() = default;
 
-    BlockId GetBlock() const;
+    Id<Block> GetBlock() const;
 
     template <typename Range>
     void AddITerms(const Range & range)
@@ -17,16 +17,16 @@ public:
         for (auto iterm : range) AddITerm(iterm);
     }
 
-    void AddITerm(ITermId iterm);
+    void AddITerm(Id<ITerm> iterm);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (BlockId, block),
+    (Id<Block>, block),
     (IdVec<ITerm>, iterms))
 };
 
-inline BlockId Inst::GetBlock() const
+inline Id<Block> Inst::GetBlock() const
 {
     return m_.block;
 }

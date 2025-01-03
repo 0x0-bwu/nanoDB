@@ -50,7 +50,7 @@ CircuitCell::CircuitCell(std::string name, CId<Package> package)
 {
 }
 
-LayoutId CircuitCell::SetLayout(LayoutId layout)
+Id<Layout> CircuitCell::SetLayout(Id<Layout> layout)
 {
     NS_ASSERT(Entity<Cell>::Identical(layout->GetCell()));
     m_.layout = layout;
@@ -62,7 +62,7 @@ CId<Layout> CircuitCell::GetLayout() const
     return m_.layout;
 }
 
-LayoutId CircuitCell::GetLayout()
+Id<Layout> CircuitCell::GetLayout()
 {
     return m_.layout;
 }
@@ -76,7 +76,7 @@ FootprintCell::FootprintCell(std::string name, CId<Package> package)
 }
 
 FootprintCell::FootprintCell()
- : FootprintCell("", PackageId())
+ : FootprintCell("", Id<Package>())
 {
 }
 
@@ -95,17 +95,17 @@ void FootprintCell::SetSolderBallBumpHeight(Float height)
     m_.solderHeight = height;
 }
 
-void FootprintCell::SetSolderFillingMaterial(MaterialId material)
+void FootprintCell::SetSolderFillingMaterial(Id<Material> material)
 {
     m_.solderFillingMaterial = material;
 }
 
-void FootprintCell::SetBoundary(ShapeId boundary)
+void FootprintCell::SetBoundary(Id<Shape> boundary)
 {
     m_.boundary = boundary;
 }
 
-void FootprintCell::SetMaterial(MaterialId material)
+void FootprintCell::SetMaterial(Id<Material> material)
 {
     m_.material = material;
 }
@@ -115,7 +115,7 @@ void FootprintCell::SetHeight(Float height)
     m_.height = height;
 }
 
-void FootprintCell::AddPin(FootprintPinId pin)
+void FootprintCell::AddPin(Id<FootprintPin> pin)
 {
     m_.pins.Add(pin);
 }

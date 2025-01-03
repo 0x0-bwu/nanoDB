@@ -10,7 +10,7 @@ public:
     HierObj(CId<HierObj> parent);
     HierObj() = default;
 
-    HierObjId AddChild(HierObjId child);
+    Id<HierObj> AddChild(Id<HierObj> child);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
@@ -26,7 +26,7 @@ public:
     CellInst(std::string name, CId<Cell> cell, CId<CellInst> parent = CId<CellInst>());
     CellInst() = default;
     CId<Cell> GetCell() const;
-    CellInstId AddCellInst(CellInstId cellInst);
+    Id<CellInst> AddCellInst(Id<CellInst> cellInst);
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(

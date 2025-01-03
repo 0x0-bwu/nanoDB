@@ -21,17 +21,17 @@ Layout::Layout(CId<Cell> cell)
     m_.cell = cell;
 }
 
-void Layout::SetBoundary(ShapeId boundary)
+void Layout::SetBoundary(Id<Shape> boundary)
 {
     m_.boundary = boundary;
 }
 
-NetId Layout::AddNet(NetId net)
+Id<Net> Layout::AddNet(Id<Net> net)
 {
     return m_.nets.Add(net);
 }
 
-ConnObjId Layout::AddConnObj(ConnObjId connObj)
+Id<ConnObj> Layout::AddConnObj(Id<ConnObj> connObj)
 {
     m_.connObjs.Add(connObj);
     if (auto net = connObj->GetNet(); net)

@@ -50,7 +50,7 @@ void PadstackInst::serialize(Archive & ar, const unsigned int version)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-ConnObj::ConnObj(NetId net)
+ConnObj::ConnObj(Id<Net> net)
 {
     m_.net = net;
 }
@@ -85,7 +85,7 @@ CId<PadstackInst> ConnObj::GetPadstackInst() const
     return CId<PadstackInst>(Entity<ConnObj>::GetCId());
 }
 
-BondingWire::BondingWire(std::string name, NetId net, LayerId start, LayerId end, Float radius)
+BondingWire::BondingWire(std::string name, Id<Net> net, Id<Layer> start, Id<Layer> end, Float radius)
  : NamedObj(std::move(name)), ConnObj(net)
 {
     m_.layers[0] = start;
@@ -93,8 +93,8 @@ BondingWire::BondingWire(std::string name, NetId net, LayerId start, LayerId end
     m_.radius = radius;
 }
 
-BondingWire::BondingWire(std::string name, NetId net, Float radius)
- : BondingWire(std::move(name), net, LayerId(), LayerId(), radius)
+BondingWire::BondingWire(std::string name, Id<Net> net, Float radius)
+ : BondingWire(std::move(name), net, Id<Layer>(), Id<Layer>(), radius)
 {
 }
 
@@ -118,50 +118,50 @@ Float BondingWire::GetHeight() const
     return m_.height;
 }
 
-void BondingWire::SetStartLayer(LayerId layer, const NCoord2D & loc, bool flipped)
+void BondingWire::SetStartLayer(Id<Layer> layer, const NCoord2D & loc, bool flipped)
 {
     SetStartLayer(layer);
     m_.locations[0] = loc;
     m_.flipped[0] = flipped;
 }
 
-void BondingWire::SetStartLayer(LayerId layer)
+void BondingWire::SetStartLayer(Id<Layer> layer)
 {
     if (m_.layers[0])
         m_.layers[0]->RemoveStartBondingWire(Entity<BondingWire>::GetId());
     m_.layers[0] = layer;
 }
 
-LayerId BondingWire::GetStartLayer() const
+Id<Layer> BondingWire::GetStartLayer() const
 {
     return m_.layers[0];   
 }
 
-void BondingWire::SetEndLayer(LayerId layer, const NCoord2D & loc, bool flipped)
+void BondingWire::SetEndLayer(Id<Layer> layer, const NCoord2D & loc, bool flipped)
 {
     SetEndLayer(layer);
     m_.locations[1] = loc;
     m_.flipped[1] = flipped;
 }
 
-void BondingWire::SetEndLayer(LayerId layer)
+void BondingWire::SetEndLayer(Id<Layer> layer)
 {
     if (m_.layers[1])
         m_.layers[1]->RemoveEndBondingWire(Entity<BondingWire>::GetId());
     m_.layers[1] = layer;
 }
 
-LayerId BondingWire::GetEndLayer() const
+Id<Layer> BondingWire::GetEndLayer() const
 {
     return m_.layers[1];
 }
 
-void BondingWire::SetMaterial(MaterialId material)
+void BondingWire::SetMaterial(Id<Material> material)
 {
     m_.material = material;
 }
 
-MaterialId BondingWire::GetMaterial() const
+Id<Material> BondingWire::GetMaterial() const
 {
     return m_.material;
 }
@@ -176,12 +176,12 @@ BondingWireType BondingWire::GetBondingWireType() const
     return m_.type;
 }
 
-void BondingWire::SetSolderJoints(PadstackId solderJoints)
+void BondingWire::SetSolderJoints(Id<Padstack> solderJoints)
 {
     m_.solderJoints = solderJoints;
 }
 
-PadstackId BondingWire::GetSolderJoints() const
+Id<Padstack> BondingWire::GetSolderJoints() const
 {
     return m_.solderJoints;
 }
@@ -192,31 +192,31 @@ void BondingWire::Transform(const Transform2D & transform)
     generic::geometry::Transform(m_.locations[1], transform.GetTransform());
 }
 
-RoutingWire::RoutingWire(NetId net, StackupLayerId layer, ShapeId shape)
+RoutingWire::RoutingWire(Id<Net> net, Id<StackupLayer> layer, Id<Shape> shape)
  : ConnObj(net)
 {
     m_.layer = layer;
     m_.shape = shape;
 }
 
-StackupLayerId RoutingWire::GetStackupLayer() const
+Id<StackupLayer> RoutingWire::GetStackupLayer() const
 {
     return m_.layer;
 }
 
-PadstackInst::PadstackInst(PadstackId padstack, NetId net)
+PadstackInst::PadstackInst(Id<Padstack> padstack, Id<Net> net)
  : ConnObj(net)
 {
     m_.padstack = padstack;
 }
 
-void PadstackInst::SetLayerRange(StackupLayerId top, StackupLayerId bot)
+void PadstackInst::SetLayerRange(Id<StackupLayer> top, Id<StackupLayer> bot)
 {
     m_.layerRange[0] = top;
     m_.layerRange[1] = bot;
 }
     
-void PadstackInst::GetLayerRange(StackupLayerId & top, StackupLayerId & bot) const
+void PadstackInst::GetLayerRange(Id<StackupLayer> & top, Id<StackupLayer> & bot) const
 {
     top = m_.layerRange[0];
     bot = m_.layerRange[1];

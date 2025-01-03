@@ -45,7 +45,7 @@ Layer::Layer(std::string name, LayerType type)
 }
 
 StackupLayer::StackupLayer(std::string name,  LayerType type, 
-    Float elevation, Float thickness, MaterialId conductingMat, MaterialId dielectricMat)
+    Float elevation, Float thickness, Id<Material> conductingMat, Id<Material> dielectricMat)
  : Layer(std::move(name), type)
 {
     m_.elevation = elevation;
@@ -55,26 +55,26 @@ StackupLayer::StackupLayer(std::string name,  LayerType type,
 }
 
 StackupLayer::StackupLayer()
- : StackupLayer("", LayerType::INVALID, Float(0), Float(0), MaterialId(), MaterialId())
+ : StackupLayer("", LayerType::INVALID, Float(0), Float(0), Id<Material>(), Id<Material>())
 {
 }
 
-void StackupLayer::SetConductingMaterial(MaterialId conductingMat)
+void StackupLayer::SetConductingMaterial(Id<Material> conductingMat)
 {
     m_.conductingMat = conductingMat;
 }
 
-MaterialId StackupLayer::GetConductingMaterial() const
+Id<Material> StackupLayer::GetConductingMaterial() const
 {
     return m_.conductingMat;
 }
 
-void StackupLayer::SetDielectricMaterial(MaterialId dielectricMat)
+void StackupLayer::SetDielectricMaterial(Id<Material> dielectricMat)
 {
     m_.dielectricMat = dielectricMat;
 }
 
-MaterialId StackupLayer::GetDielectricMaterial() const
+Id<Material> StackupLayer::GetDielectricMaterial() const
 {
     return m_.dielectricMat;
 }

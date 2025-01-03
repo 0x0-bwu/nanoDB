@@ -6,27 +6,27 @@ namespace nano::chip {
 class ITerm : public NamedObj, public Entity<ITerm>
 {
 public:
-    ITerm(std::string name, InstId inst, NetId net, IOType ioType);
+    ITerm(std::string name, Id<Inst> inst, Id<Net> net, IOType ioType);
     ITerm() = default;
 
-    InstId GetInst() const;
+    Id<Inst> GetInst() const;
     
-    NetId GetNet() const;
+    Id<Net> GetNet() const;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (InstId, inst),
-    (NetId, net),
+    (Id<Inst>, inst),
+    (Id<Net>, net),
     (IOType, ioType))
 };
 
-inline InstId ITerm::GetInst() const
+inline Id<Inst> ITerm::GetInst() const
 {
     return m_.inst;
 }
 
-inline NetId ITerm::GetNet() const
+inline Id<Net> ITerm::GetNet() const
 {
     return m_.net;
 }

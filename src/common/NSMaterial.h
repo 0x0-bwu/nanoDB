@@ -53,7 +53,7 @@ public:
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (std::map<Float, MaterialPropId>, values))
+    (std::map<Float, Id<MaterialProp>>, values))
 };
 
 class MaterialPropPolynomial : public MaterialProp, public Entity<MaterialPropPolynomial>
@@ -103,8 +103,8 @@ public:
     Material();
 
     bool hasProperty(Prop prop) const;
-    void SetProperty(Prop prop, MaterialPropId value);
-    MaterialPropId GetProperty(Prop prop) const;
+    void SetProperty(Prop prop, Id<MaterialProp> value);
+    Id<MaterialProp> GetProperty(Prop prop) const;
     void RemoveProperty(Prop prop);
 
     void SetMaterialType(MaterialType type) { m_.type = type; }
@@ -114,7 +114,7 @@ private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
     (MaterialType, type),
-    (std::unordered_map<Prop, MaterialPropId>, props))
+    (std::unordered_map<Prop, Id<MaterialProp>>, props))
 };
 
 class MaterialLib : public NamedObj, public Entity<MaterialLib>
@@ -123,8 +123,8 @@ public:
     MaterialLib(std::string name);
     MaterialLib() = default;
 
-    void AddMaterial(MaterialId mat);
-    MaterialId FindMaterial(std::string_view name) const;
+    void AddMaterial(Id<Material> mat);
+    Id<Material> FindMaterial(std::string_view name) const;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;

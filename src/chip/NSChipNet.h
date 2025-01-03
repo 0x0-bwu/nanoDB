@@ -6,18 +6,18 @@ namespace nano::chip {
 class Net : public NamedObj, public Entity<Net>
 {
 public:
-    Net(std::string name, BlockId block);
+    Net(std::string name, Id<Block> block);
     Net() = default;
 
-    BlockId GetBlock() const;
+    Id<Block> GetBlock() const;
     
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (BlockId, block))
+    (Id<Block>, block))
 };
 
-inline BlockId Net::GetBlock() const
+inline Id<Block> Net::GetBlock() const
 {
     return m_.block;
 }

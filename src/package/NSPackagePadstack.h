@@ -11,7 +11,7 @@ public:
     public:
         Float rotation{0};
         NCoord2D offset{0, 0};
-        ShapeId shape;
+        Id<Shape> shape;
     #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
         template <typename Archive>
         void serialize(Archive & ar, const unsigned int version)
@@ -27,10 +27,10 @@ public:
     struct Pad
     {
     public:
-        StackupLayerId layer;
+        Id<StackupLayer> layer;
         Float rotation{0};
         NCoord2D offset{0, 0};
-        ShapeId shape;
+        Id<Shape> shape;
     #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
         template <typename Archive>
         void serialize(Archive & ar, const unsigned int version)
@@ -47,8 +47,8 @@ public:
     struct Bump
     {
         Float thickness{0};
-        ShapeId shape;
-        MaterialId material;
+        Id<Shape> shape;
+        Id<Material> material;
     #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
         template <typename Archive>
         void serialize(Archive & ar, const unsigned int version)
@@ -61,19 +61,19 @@ public:
     #endif//NANO_BOOST_SERIALIZATION_SUPPORT
     };
     using Ball = Bump;
-    Padstack(std::string name, PackageId package);
+    Padstack(std::string name, Id<Package> package);
     Padstack() = default;
 
-    void SetTopSolderBumpMaterial(MaterialId material);
-    void SetBotSolderBallMaterial(MaterialId material);
-    void SetTopSolderBumpParameters(ShapeId shape, Float thickness);
-    void SetBotSolderBallParameters(ShapeId shape, Float thickness);
+    void SetTopSolderBumpMaterial(Id<Material> material);
+    void SetBotSolderBallMaterial(Id<Material> material);
+    void SetTopSolderBumpParameters(Id<Shape> shape, Float thickness);
+    void SetBotSolderBallParameters(Id<Shape> shape, Float thickness);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (PackageId, package),
-    (MaterialId, material),
+    (Id<Package>, package),
+    (Id<Material>, material),
     (Bump, solderBump),
     (Ball, solderBall),
     (Via, via),

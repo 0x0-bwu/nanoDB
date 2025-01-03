@@ -22,18 +22,18 @@ Chip::Chip(std::string name)
 {
 }
 
-void Chip::AddBlock(BlockId block)
+void Chip::AddBlock(Id<Block> block)
 {
     m_.blocks.emplace_back(block);
 }
 
-void Chip::SetTop(BlockId block)
+void Chip::SetTop(Id<Block> block)
 {
     NS_ASSERT(std::find(m_.blocks.begin(), m_.blocks.end(), block) != m_.blocks.cend());
     m_.top = block;
 }
 
-BlockId Chip::GetTop() const
+Id<Block> Chip::GetTop() const
 {
     return m_.top;
 }

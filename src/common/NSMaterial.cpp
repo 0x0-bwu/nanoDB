@@ -206,12 +206,12 @@ bool Material::hasProperty(Prop prop) const
     return m_.props.find(prop) != m_.props.cend();
 }
 
-void Material::SetProperty(Prop prop, MaterialPropId value)
+void Material::SetProperty(Prop prop, Id<MaterialProp> value)
 {
     m_.props[prop] = value;
 }
 
-MaterialPropId Material::GetProperty(Prop prop) const
+Id<MaterialProp> Material::GetProperty(Prop prop) const
 {
     NS_ASSERT(hasProperty(prop));
     return m_.props.at(prop);
@@ -227,12 +227,12 @@ MaterialLib::MaterialLib(std::string name)
 {
 }
 
-void MaterialLib::AddMaterial(MaterialId mat)
+void MaterialLib::AddMaterial(Id<Material> mat)
 {
     m_.materials.Add(mat);
 }
 
-MaterialId MaterialLib::FindMaterial(std::string_view name) const
+Id<Material> MaterialLib::FindMaterial(std::string_view name) const
 {
     return m_.materials.Lookup<lut::Name>(name);
 }

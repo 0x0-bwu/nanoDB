@@ -21,10 +21,10 @@ public:
 
     LayerType GetLayerType() const { return m_.type; }
 private:
-    void AddStartBondingWire(BondingWireId bw) { m_.startBondingWires.Add(bw); }
-    void AddEndBondingWire(BondingWireId bw) { m_.endBondingWires.Add(bw); }
-    void RemoveStartBondingWire(BondingWireId bw) { m_.startBondingWires.Remove(bw); }
-    void RemoveEndBondingWire(BondingWireId bw) { m_.endBondingWires.Remove(bw); }
+    void AddStartBondingWire(Id<BondingWire> bw) { m_.startBondingWires.Add(bw); }
+    void AddEndBondingWire(Id<BondingWire> bw) { m_.endBondingWires.Add(bw); }
+    void RemoveStartBondingWire(Id<BondingWire> bw) { m_.startBondingWires.Remove(bw); }
+    void RemoveEndBondingWire(Id<BondingWire> bw) { m_.endBondingWires.Remove(bw); }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
@@ -39,7 +39,7 @@ class StackupLayer : public Layer, public Entity<StackupLayer>
 public:
     friend class Layout;
     StackupLayer(std::string name, LayerType type, 
-        Float elevation, Float thickness, MaterialId conductingMat, MaterialId dielectricMat);
+        Float elevation, Float thickness, Id<Material> conductingMat, Id<Material> dielectricMat);
     StackupLayer();
 
     void SetElevation(Float elevation) { m_.elevation = elevation; }
@@ -48,22 +48,22 @@ public:
     void SetThickness(Float thickness) { m_.thickness = thickness; }
     Float GetThickness() const { return m_.thickness; }
 
-    void SetConductingMaterial(MaterialId material);
-    MaterialId GetConductingMaterial() const;
+    void SetConductingMaterial(Id<Material> material);
+    Id<Material> GetConductingMaterial() const;
 
-    void SetDielectricMaterial(MaterialId material);
-    MaterialId GetDielectricMaterial() const;
+    void SetDielectricMaterial(Id<Material> material);
+    Id<Material> GetDielectricMaterial() const;
 
 private:
-    void AddRoutingWire(RoutingWireId wire) { m_.routingWires.Add(wire); }
+    void AddRoutingWire(Id<RoutingWire> wire) { m_.routingWires.Add(wire); }
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (Float, elevation),
     (Float, thickness),
-    (MaterialId, conductingMat),
-    (MaterialId, dielectricMat),
+    (Id<Material>, conductingMat),
+    (Id<Material>, dielectricMat),
     (IdVec<RoutingWire>, routingWires)
     )
 };

@@ -37,19 +37,19 @@ Id<StackupLayer> Package::AddStackupLayer(Id<StackupLayer> layer)
     return m_.stackupLayers.Add(layer);
 }
 
-ComponentLayerId Package::AddComponentLayer(ComponentLayerId layer)
+Id<ComponentLayer> Package::AddComponentLayer(Id<ComponentLayer> layer)
 {
     return m_.componentLayers.Add(layer);
 }
 
 void Package::SortStackupLayers(bool ascending)
 {
-    m_.stackupLayers.Sort([&](const StackupLayerId & lhs, const StackupLayerId & rhs) {
+    m_.stackupLayers.Sort([&](const Id<StackupLayer> & lhs, const Id<StackupLayer> & rhs) {
         return ascending ? lhs->GetElevation() < rhs->GetElevation() : lhs->GetElevation() > rhs->GetElevation();
     });
 }
 
-StackupLayerId Package::FindStackupLayer(const std::string & name) const
+Id<StackupLayer> Package::FindStackupLayer(const std::string & name) const
 {
     return m_.stackupLayers.Lookup<lut::Name>(name);
 }

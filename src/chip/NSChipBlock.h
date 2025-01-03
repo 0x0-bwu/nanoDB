@@ -15,7 +15,7 @@ public:
         for (auto term : range) AddBTerm(term);
     }
 
-    void AddBTerm(BTermId bterm);
+    void AddBTerm(Id<BTerm> bterm);
 
     template <typename Range>
     void AddInsts(const Range & range)
@@ -23,7 +23,7 @@ public:
         for (auto inst : range) AddInst(inst);
     }
 
-    void AddInst(InstId inst);
+    void AddInst(Id<Inst> inst);
 
     template <typename Range>
     void AddNets(const Range & range)
@@ -31,9 +31,9 @@ public:
         for (auto net : range) AddNet(net);
     }
 
-    void AddNet(NetId net);
+    void AddNet(Id<Net> net);
 
-    NetId GetNet(size_t i) const;
+    Id<Net> GetNet(size_t i) const;
 
     size_t NumOfInsts() const;
 

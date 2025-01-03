@@ -94,7 +94,7 @@ Float Net::GetCap(CapId c) const
     return m_.cap[c];
 }
 
-void Net::AddCouplingCap(CapId c1, NetId net, CapId c2, Float cap)
+void Net::AddCouplingCap(CapId c1, Id<Net> net, CapId c2, Float cap)
 {
     auto iter = m_.ccap.find(c1);
     if (iter == m_.ccap.end())

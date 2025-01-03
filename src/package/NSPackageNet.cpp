@@ -17,13 +17,13 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Net)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Net::Net(std::string name, LayoutId layout)
+Net::Net(std::string name, Id<Layout> layout)
  : NamedObj(std::move(name))
 {
     m_.layout = layout;
 }
 
-ConnObjId Net::AddConnObj(ConnObjId connObj)
+Id<ConnObj> Net::AddConnObj(Id<ConnObj> connObj)
 {
     return m_.connObjs.Add(connObj);
 }

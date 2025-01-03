@@ -7,7 +7,7 @@ using namespace ast;
 using namespace parser;
 using namespace grammar;
 
-chip::BlockId BuildBlock(const Netlist & netlist)
+Id<chip::Block> BuildBlock(const Netlist & netlist)
 {
     auto block = nano::Create<chip::Block>(netlist.name);
 
@@ -15,14 +15,14 @@ chip::BlockId BuildBlock(const Netlist & netlist)
     return block;
 }
 
-chip::ChipId ReadVerilog(std::string_view filename)
+Id<chip::Chip> ReadVerilog(std::string_view filename)
 {
     VerilogDescription ast;
     VerilogParser verilogParser(ast);
     auto res = verilogParser(filename);
     if (not res) {
         NS_ERROR(verilogParser.error);
-        return chip::ChipId();
+        return Id<chip::Chip>();
     }
     auto chip = nano::Create<chip::Chip>("nano");
     return chip;

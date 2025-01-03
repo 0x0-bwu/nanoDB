@@ -16,13 +16,6 @@ class MaterialPropTable;
 class MaterialPropPolynomial;
 enum class MaterialType;
 
-using MaterialId               = Id<Material>;
-using MaterialLibId            = Id<MaterialLib>;
-using MaterialPropId           = Id<MaterialProp>;
-using MaterialPropValueId      = Id<MaterialPropValue>;
-using MaterialPropTableId      = Id<MaterialPropTable>;
-using MaterialPropPolynomialId = Id<MaterialPropPolynomial>;
-
 class Shape;
 class ShapeCircle;
 class ShapeFromTemplate;
@@ -30,14 +23,6 @@ class ShapePath;
 class ShapePolygon;
 class ShapePolygonWithHoles;
 class ShapeRect;
-
-using ShapeId                 = Id<Shape>;
-using ShapeCircleId           = Id<ShapeCircle>;
-using ShapeFromTemplateId     = Id<ShapeFromTemplate>;
-using ShapePathId             = Id<ShapePath>;
-using ShapePolygonId          = Id<ShapePolygon>;
-using ShapePolygonWithHolesId = Id<ShapePolygonWithHoles>;
-using ShapeRectId             = Id<ShapeRect>;
 
 namespace chip {
 
@@ -47,13 +32,6 @@ class Chip;
 class Inst;
 class ITerm;
 class Net;
-
-using BlockId = Id<Block>;
-using BTermId = Id<BTerm>;
-using ChipId  = Id<Chip>;
-using InstId  = Id<Inst>;
-using ITermId = Id<ITerm>;
-using NetId   = Id<Net>;
 
 } // namespace chip
 
@@ -76,9 +54,6 @@ class PwrGndPin;
 class SignalPin;
 class Timing;
 class Voltage;
-
-using LutId           = Id<Lut>;
-using OutputCurrentId = Id<OutputCurrent>;
 
 using LutNumbers = std::vector<Float>;
 using LutIndices = std::vector<LutNumbers>;
@@ -106,34 +81,12 @@ class Pin;
 class RoutingWire;
 class StackupLayer;
 
-using BondingWireId    = Id<BondingWire>;
-using CellId           = Id<Cell>;
-using CellInstId       = Id<CellInst>;
-using CircuitCellId    = Id<CircuitCell>;
-using ConnObjId        = Id<ConnObj>;
-using ComponentLayerId = Id<ComponentLayer>;
-using FootprintCellId  = Id<FootprintCell>;
-using FootprintPinId   = Id<FootprintPin>;
-using HierObjId        = Id<HierObj>;
-using LayerId          = Id<Layer>;
-using LayoutId         = Id<Layout>;
-using NetId            = Id<Net>;
-using PackageId        = Id<Package>;
-using PadstackId       = Id<Padstack>;
-using PadstackInstId   = Id<PadstackInst>;
-using PinId            = Id<Pin>;
-using RoutingWireId    = Id<RoutingWire>;
-using StackupLayerId   = Id<StackupLayer>;
-
 } // namespace package
 
 namespace parasitic {
 
 class Net;
 class Parasitic;
-
-using NetId       = Id<Net>;
-using ParasiticId = Id<Parasitic>;
 
 } // namespace parasitic
 

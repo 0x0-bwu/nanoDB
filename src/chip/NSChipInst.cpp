@@ -17,13 +17,13 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Inst)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Inst::Inst(std::string name, BlockId block)
+Inst::Inst(std::string name, Id<Block> block)
  : NamedObj(std::move(name))
 {
     m_.block = block;
 }
 
-void Inst::AddITerm(ITermId iterm)
+void Inst::AddITerm(Id<ITerm> iterm)
 {
     m_.iterms.Add(iterm);
 }

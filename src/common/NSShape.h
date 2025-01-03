@@ -157,7 +157,7 @@ private:
 class ShapeFromTemplate : public Shape, public Entity<ShapeFromTemplate>
 {
 public:
-    explicit ShapeFromTemplate(ShapeId shape);
+    explicit ShapeFromTemplate(Id<Shape> shape);
     ShapeFromTemplate() = default;
 
     bool hasHole() const override;
@@ -168,12 +168,12 @@ public:
     ShapeType GetType() const override { return ShapeType::FROM_TEMPLATE; }
     bool isValid() const override;
 
-    void SetTemplate(ShapeId shape);
+    void SetTemplate(Id<Shape> shape);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (ShapeId, shape),
+    (Id<Shape>, shape),
     (Transform2D, transform))
 };
 

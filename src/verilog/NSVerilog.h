@@ -3,7 +3,7 @@
 #include "common/NSCommon.hpp"
 namespace nano::verilog {
 
-chip::ChipId ReadVerilog(std::string_view filename);
+Id<chip::Chip> ReadVerilog(std::string_view filename);
 
 
 } // namespace nano::verilog
