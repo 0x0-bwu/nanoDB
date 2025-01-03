@@ -29,7 +29,7 @@ NS_SERIALIZATION_FUNCTIONS_IMP(CellInst)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-HierObj::HierObj(HierObjId parent)
+HierObj::HierObj(CId<HierObj> parent)
 {
     m_.parent = parent;
 }
@@ -39,7 +39,7 @@ HierObjId HierObj::AddChild(HierObjId child)
     return m_.children.Add(child);
 }
 
-CellInst::CellInst(std::string name, CellId cell, CellInstId parent)
+CellInst::CellInst(std::string name, CellId cell, CId<CellInst> parent)
  : NamedObj(std::move(name)), HierObj(parent)
 {
     m_.cell = cell;

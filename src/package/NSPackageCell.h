@@ -6,20 +6,21 @@ namespace nano::package {
 class Cell : public NamedObj, public Entity<Cell>
 {
 protected:
-    Cell(std::string name, PackageId package);
+    Cell(std::string name, CId<Package> package);
     Cell() = default;
-
+public:
+    CId<Package> GetPackage() const { return m_.package; }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (PackageId, package)
+    (CId<Package>, package)
     )
 };
 
 class CircuitCell : public Cell, public Entity<CircuitCell>
 {
 public:
-    CircuitCell(std::string name, PackageId package);
+    CircuitCell(std::string name, CId<Package> package);
     CircuitCell() = default;
 
     LayoutId SetLayout(LayoutId layout);
@@ -46,7 +47,7 @@ enum class ComponentType
 class FootprintCell : public Cell, public Entity<FootprintCell>
 {
 public:
-    FootprintCell(std::string name, PackageId package);
+    FootprintCell(std::string name, CId<Package> package);
     FootprintCell();
 
     void SetComponentType(ComponentType type);

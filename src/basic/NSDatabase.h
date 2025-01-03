@@ -55,14 +55,14 @@ public:
     ~Container() { Reset(); }
 
     template <typename Derived>
-    Derived & operator[] (const Id<Derived> id)
+    Derived & operator[] (Id<Derived> id)
     { 
         static_assert(std::is_same_v<traits::BaseOf<Derived>, T>, "should be derived class or self");
         return (Derived&)(*m_data[IdType(id)]);
     }   
 
     template <typename Derived>
-    const Derived & operator[] (const Id<Derived> id) const
+    const Derived & operator[] (Id<Derived> id) const
     { 
         static_assert(std::is_same_v<traits::BaseOf<Derived>, T>, "should be derived class or self");
         return (Derived&)(*m_data[IdType(id)]);
@@ -238,7 +238,7 @@ public:
     bool isValid() const { return m_id != Id<T>::INVALID_ID; }
 
     template <typename Derived>
-    bool Identical(const Id<Derived> id) const
+    bool Identical(Id<Derived> id) const
     {
         static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
         return &Get<T>(Id<T>(id)) == static_cast<const T*>(this);
@@ -246,13 +246,16 @@ public:
     
     /// binds
     template <typename Other>
-    void Bind(const Id<Other> other);
+    void Bind(CId<Other> other);
+
+    template <typename Other>
+    void Bind(Id<Other> other);
 
     template <typename Other>
     void Unbind();
 
     template <typename Other>
-    Id<Other> GetBind() const;
+    CId<Other> GetBind() const;
 
 protected:
     Id<T> GetId() const { return Id<T>(m_id); }
@@ -285,7 +288,7 @@ public:
     static traits::NameIndexMap nameIndexMap;
     static traits::IndexNameMap indexNameMap; 
     template <typename T>
-    void Set(const Id<T> other)
+    void Set(CId<T> other)
     {
         m_bindingMap.emplace(typeid(T), IdType(other));
     }
@@ -297,11 +300,11 @@ public:
     }
 
     template <typename T>
-    Id<T> Get() const
+    CId<T> Get() const
     {
         auto iter = m_bindingMap.find(std::type_index(typeid(T)));
-        if (iter == m_bindingMap.cend()) Id<T>();
-        return Id<T>(iter->second);
+        if (iter == m_bindingMap.cend()) CId<T>();
+        return CId<T>(iter->second);
     }
 public:
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
@@ -323,15 +326,21 @@ inline Id<T> Create(Args &&... args)
 }
 
 template <typename T>
-inline bool Remove(const Id<T> id)
+inline bool Remove(Id<T> id)
 {
     return Database::Current().Remove<T>(id);
 }
 
 template <typename T>
-inline T & Get(const Id<T> id)
+inline T & Get(Id<T> id)
 {
     return Database::Current().Get<T>()[id];
+}
+
+template <typename T>
+inline T & Get(CId<T> id)
+{
+    return Get<T>(id.ConstCast());
 }
 
 template <typename T>
@@ -346,36 +355,63 @@ public:
     explicit Id(SizeType id) : Index<Id<T>>(id) {}
 
     template <typename Derived, typename std::enable_if_t<std::is_base_of_v<T, Derived>, bool> = true>
-    Id(Id<Derived> derived) : Id(SizeType(derived)) // implicit convert from derived to base
-    {
-    }
+    Id(Id<Derived> derived) : Id(SizeType(derived)) {}// implicit convert from derived to base
 
     template <typename Base, typename std::enable_if_t<not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>, bool> = true>
     explicit Id(Id<Base> base) // explicit convert from base to derivied, will do dynamic cast check
     {
-        if (dynamic_cast<const T *>(base.operator->()))
-            m_id = SizeType(base);
-        else m_id = INVALID_ID;
+        m_id = dynamic_cast<T *>(base.operator->()) ? SizeType(base) : INVALID_ID;
     }
 
-    bool isNull() const
-    {
-        return m_id == Id<T>::INVALID_ID  or nullptr == this->operator->(); 
-    }
+    bool isNull() const { return m_id == INVALID_ID or nullptr == this->operator->(); }
 
     operator bool() const override { return not isNull(); }
 
     bool operator!() const { return isNull(); }
 
-    T & operator * () const noexcept
+    T & operator * () const noexcept { return  nano::Get<T>(*this); }
+    T * operator-> () const noexcept { return &nano::Get<T>(*this); }
+
+#ifdef NANO_BOOST_SERIALIZATION_SUPPORT
+    template <typename Archive>
+    void serialize(Archive & ar, const unsigned int)
     {
-        return nano::Get<T>(*this);
+        ar & boost::serialization::make_nvp("id", boost::serialization::base_object<Index<Id<T>>>(*this));
+    }
+#endif//NANO_BOOST_SERIALIZATION_SUPPORT
+};
+
+template <typename T>
+class CId : public Index<Id<T>>
+{
+public:
+    using Index<Id<T>>::m_id;
+    using Index<Id<T>>::INVALID_ID;
+    using SizeType = typename Index<Id<T>>::SizeType;
+
+    CId() : Index<Id<T>>() {}
+    CId(Id<T> id) : CId(SizeType(id)) {}
+    explicit CId(SizeType id) : Index<Id<T>>(id) {}
+
+    template <typename Derived, typename std::enable_if_t<std::is_base_of_v<T, Derived>, bool> = true>
+    CId(CId<Derived> derived) : CId(SizeType(derived)) {}// implicit convert from derived to base
+
+    template <typename Base, typename std::enable_if_t<not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>, bool> = true>
+    explicit CId(CId<Base> base) // explicit convert from base to derivied, will do dynamic cast check
+    {
+        m_id = dynamic_cast<const T *>(base.operator->()) ? SizeType(base) : INVALID_ID;
     }
 
-    T * operator-> () const noexcept
-    {
-        return &nano::Get<T>(*this);
-    }
+    bool isNull() const { return m_id == INVALID_ID or nullptr == this->operator->(); }
+
+    operator bool() const override { return not isNull(); }
+
+    bool operator!() const { return isNull(); }
+
+    Id<T> ConstCast() const { return Id<T>(m_id); }
+
+    const T & operator * () const noexcept { return  nano::Get<T>(*this); }
+    const T * operator-> () const noexcept { return &nano::Get<T>(*this); }
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     template <typename Archive>
@@ -389,11 +425,18 @@ public:
 /// binds
 template <typename T>
 template <typename Other>
-void Entity<T>::Bind(const Id<Other> other)
+void Entity<T>::Bind(CId<Other> other)
 {
     if (m_binding == Id<T>::INVALID_ID)
         m_binding = IdType(nano::Create<Binding>());
     Id<Binding>(m_binding)->Set<Other>(other);
+}
+
+template <typename T>
+template <typename Other>
+void Entity<T>::Bind(Id<Other> other)
+{
+    Bind(CId<Other>(other));
 }
 
 template <typename T>
@@ -406,11 +449,11 @@ void Entity<T>::Unbind()
 
 template <typename T>
 template <typename Other>
-Id<Other> Entity<T>::GetBind() const
+CId<Other> Entity<T>::GetBind() const
 {
     if(m_binding != Index<T>::INVALID_ID)
-        return Id<Binding>(m_binding)->Get<Other>();
-    return Id<Other>();
+        return CId<Binding>(m_binding)->Get<Other>();
+    return CId<Other>();
 }
 ///
 

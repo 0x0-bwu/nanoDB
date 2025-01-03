@@ -48,6 +48,7 @@ template <typename T> using Arr4 = std::array<T, 4>;
 template <typename T> using Arr9 = std::array<T, 9>;
 
 template <typename T> class Id;
+template <typename T> class CId;
 template <typename T> using IdSet = std::unordered_set<Id<T>>;
 
 using NCoord = Int;
