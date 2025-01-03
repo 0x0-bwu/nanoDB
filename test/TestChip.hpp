@@ -35,7 +35,7 @@ void t_create_chip_design()
     auto inst1 = Create<Inst>("inst1", block);
     auto inst2 = Create<Inst>("inst2", block);
     auto inst3 = Create<Inst>("inst3", block);
-    block->AddInsts(std::vector<InstId>{inst1, inst2, inst3});
+    block->AddInsts(std::vector<Id<Inst>>{inst1, inst2, inst3});
     BOOST_CHECK(block->NumOfInsts() == 3);
 
     auto n1 = Create<Net>("n1", block);
@@ -45,14 +45,14 @@ void t_create_chip_design()
     auto n5 = Create<Net>("n5", block);
     auto n6 = Create<Net>("n6", block);
     auto n7 = Create<Net>("n7", block);
-    block->AddNets(std::vector<NetId>{n1, n2, n3, n4, n5, n6, n7});
+    block->AddNets(std::vector<Id<Net>>{n1, n2, n3, n4, n5, n6, n7});
 
     auto bterm1 = Create<BTerm>("IN1", n1, IOType::INPUT);
     auto bterm2 = Create<BTerm>("IN2", n2, IOType::INPUT);
     auto bterm3 = Create<BTerm>("IN3", n3, IOType::INPUT);
     auto bterm4 = Create<BTerm>("IN4", n4, IOType::INPUT);
     auto bterm5 = Create<BTerm>("OUT", n5, IOType::OUTPUT);
-    block->AddBTerms(std::vector<BTermId>{bterm1, bterm2, bterm3, bterm4, bterm5});
+    block->AddBTerms(std::vector<Id<BTerm>>{bterm1, bterm2, bterm3, bterm4, bterm5});
     auto inst1a = Create<ITerm>("a", inst1, n1, IOType::INPUT);
     auto inst1b = Create<ITerm>("b", inst1, n2, IOType::INPUT);
     auto inst1o = Create<ITerm>("o", inst1, n5, IOType::OUTPUT);

@@ -35,7 +35,7 @@ Pin::Pin(std::string name, NCoord2D location, IOType ioType)
     m_.ioType = ioType;
 }
 
-FootprintPin::FootprintPin(std::string name, FootprintCellId cell, NCoord2D location, IOType ioType)
+FootprintPin::FootprintPin(std::string name, Id<FootprintCell> cell, NCoord2D location, IOType ioType)
  : Pin(std::move(name), location, ioType)
 {
     m_.cell = cell;

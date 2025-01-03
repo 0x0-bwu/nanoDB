@@ -17,29 +17,29 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Padstack)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Padstack::Padstack(std::string name, PackageId package)
+Padstack::Padstack(std::string name, Id<Package> package)
  : NamedObj(std::move(name))
 {
     m_.package = package;
 }
 
-void Padstack::SetTopSolderBumpMaterial(MaterialId material)
+void Padstack::SetTopSolderBumpMaterial(Id<Material> material)
 {
     m_.solderBump.material = material;
 }
 
-void Padstack::SetBotSolderBallMaterial(MaterialId material)
+void Padstack::SetBotSolderBallMaterial(Id<Material> material)
 {
     m_.solderBall.material = material;
 }
 
-void Padstack::SetTopSolderBumpParameters(ShapeId shape, Float thickness)
+void Padstack::SetTopSolderBumpParameters(Id<Shape> shape, Float thickness)
 {
     m_.solderBump.shape = shape;
     m_.solderBump.thickness = thickness;
 }
 
-void Padstack::SetBotSolderBallParameters(ShapeId shape, Float thickness)
+void Padstack::SetBotSolderBallParameters(Id<Shape> shape, Float thickness)
 {
     m_.solderBall.shape = shape;
     m_.solderBall.thickness = thickness;

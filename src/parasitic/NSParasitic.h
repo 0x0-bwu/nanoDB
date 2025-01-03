@@ -4,16 +4,16 @@
 #include "common/NSCommon.hpp"
 namespace nano::parasitic {
 
-ParasiticId ReadSpef(std::string_view filename);
+Id<Parasitic> ReadSpef(std::string_view filename);
 
 class Parasitic : public Entity<Parasitic>
 {
 public:
-    friend ParasiticId ReadSpef(std::string_view filename);
+    friend Id<Parasitic> ReadSpef(std::string_view filename);
     explicit Parasitic(std::string filename);
     Parasitic() = default;
 
-    NetId FindNet(std::string_view name) const;
+    Id<Net> FindNet(std::string_view name) const;
 
     void ClearNets(bool remove);
 private:

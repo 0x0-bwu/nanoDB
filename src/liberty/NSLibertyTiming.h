@@ -20,12 +20,12 @@ private:
     (Id<SignalPin>, relatedPin),
     (TimingSense, timingSense),
     (TimingType, timingType),
-    (Arr2<LutId>, delayTable),
-    (Arr2<LutId>, oslewTable),
-    (Arr2<LutId>, receiverCapacitance1),
-    (Arr2<LutId>, receiverCapacitance2),
-    (Arr2<OutputCurrentId>, outputCurrent))
-    // Arr2 = [fall, rise]
+    (IdArr2<Lut>, delayTable),
+    (IdArr2<Lut>, oslewTable),
+    (IdArr2<Lut>, receiverCapacitance1),
+    (IdArr2<Lut>, receiverCapacitance2),
+    (IdArr2<OutputCurrent>, outputCurrent))
+    // IdArr2 = [fall, rise]
 };
 
 } // namespace nano::liberty

@@ -34,7 +34,7 @@ HierObj::HierObj(CId<HierObj> parent)
     m_.parent = parent;
 }
 
-HierObjId HierObj::AddChild(HierObjId child)
+Id<HierObj> HierObj::AddChild(Id<HierObj> child)
 {
     return m_.children.Add(child);
 }
@@ -50,9 +50,9 @@ CId<Cell> CellInst::GetCell() const
     return m_.cell;
 }
 
-CellInstId CellInst::AddCellInst(CellInstId cellInst)
+Id<CellInst> CellInst::AddCellInst(Id<CellInst> cellInst)
 {
-    return CellInstId(AddChild(cellInst));
+    return Id<CellInst>(AddChild(cellInst));
 }
 
 } // namespace nano::package

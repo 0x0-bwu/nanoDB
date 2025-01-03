@@ -9,13 +9,13 @@ public:
     explicit Layout(CId<Cell> cell);
     Layout() = default;
 
-    void SetBoundary(ShapeId boundary);
-    ShapeId GetBoundary() const { return m_.boundary; }
+    void SetBoundary(Id<Shape> boundary);
+    Id<Shape> GetBoundary() const { return m_.boundary; }
 
     CId<Cell> GetCell() const { return m_.cell; }
 
-    NetId AddNet(NetId net);
-    ConnObjId AddConnObj(ConnObjId connObj);
+    Id<Net> AddNet(Id<Net> net);
+    Id<ConnObj> AddConnObj(Id<ConnObj> connObj);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;

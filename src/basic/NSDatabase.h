@@ -255,9 +255,9 @@ public:
     template <typename Other>
     CId<Other> GetBind() const;
     
-    CId<T> GetCId() const { return CId<T>(m_id); }
 protected:
     Id<T> GetId() { return Id<T>(m_id); }
+    CId<T> GetCId() const { return CId<T>(m_id); }
 private:
     void SetId(Id<T> id) { m_id = IdType(id); }
 public:
@@ -363,6 +363,8 @@ public:
     {
         m_id = dynamic_cast<T *>(base.operator->()) ? SizeType(base) : INVALID_ID;
     }
+
+    CId<T> GetCId() const { return CId<T>(m_id); }
 
     bool isNull() const { return m_id == INVALID_ID or nullptr == this->operator->(); }
 

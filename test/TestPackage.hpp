@@ -12,7 +12,7 @@ using namespace boost::unit_test;
 namespace detail {
 
 using namespace package;
-void SetupMaterials(PackageId pkg)
+void SetupMaterials(Id<Package> pkg)
 {
     pkg->SetMaterialLib(nano::Create<MaterialLib>("mat_lib"));
     BOOST_CHECK(pkg->GetMaterialLib());
@@ -59,7 +59,7 @@ void SetupMaterials(PackageId pkg)
     matLib->AddMaterial(matSolder);
 }
 
-PadstackId CreateBondingWireSolderJoints(PackageId pkg, std::string name, Float bwRadius)
+Id<Padstack> CreateBondingWireSolderJoints(Id<Package> pkg, std::string name, Float bwRadius)
 {
     auto padstack = nano::Create<Padstack>(std::move(name), pkg);
     pkg->AddPadstack(padstack);
@@ -74,7 +74,7 @@ PadstackId CreateBondingWireSolderJoints(PackageId pkg, std::string name, Float 
     return padstack; 
 }
 
-FootprintCellId CreateSicFootprintCell(PackageId pkg)
+Id<FootprintCell> CreateSicFootprintCell(Id<Package> pkg)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
     auto sicDie = nano::Create<FootprintCell>("SicDie", pkg);
@@ -100,7 +100,7 @@ FootprintCellId CreateSicFootprintCell(PackageId pkg)
     return sicDie;
 }
 
-FootprintCellId CreateDiodeFootprintCell(PackageId pkg)
+Id<FootprintCell> CreateDiodeFootprintCell(Id<Package> pkg)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
     auto diode = nano::Create<FootprintCell>("Diode", pkg);
@@ -130,7 +130,7 @@ FootprintCellId CreateDiodeFootprintCell(PackageId pkg)
     return diode;
 }
 
-FootprintCellId CreateGateResistanceFootprintCell(PackageId pkg)
+Id<FootprintCell> CreateGateResistanceFootprintCell(Id<Package> pkg)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
     auto res = nano::Create<FootprintCell>("Rg", pkg);
@@ -145,11 +145,11 @@ FootprintCellId CreateGateResistanceFootprintCell(PackageId pkg)
     return res;
 }
 
-LayoutId CreateBaseLayout(PackageId pkg)
+Id<Layout> CreateBaseLayout(Id<Package> pkg)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
     auto cell = pkg->AddCell(nano::Create<CircuitCell>("base", pkg));
-    auto layout = CircuitCellId(cell)->SetLayout(nano::Create<Layout>(cell->GetCId()));
+    auto layout = Id<CircuitCell>(cell)->SetLayout(nano::Create<Layout>(cell.GetCId()));
     BOOST_CHECK(layout);
 
     auto boundary = nano::Create<ShapePolygonWithHoles>();
@@ -246,7 +246,7 @@ LayoutId CreateBaseLayout(PackageId pkg)
     return layout;
 }
 
-LayoutId CreateDriverLayout(PackageId pkg)
+Id<Layout> CreateDriverLayout(Id<Package> pkg)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
     auto cell = nano::Create<CircuitCell>("driver", pkg);

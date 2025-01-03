@@ -26,7 +26,7 @@ Parasitic::Parasitic(std::string filename)
     m_.filename = std::move(filename);
 }
 
-NetId Parasitic::FindNet(std::string_view name) const
+Id<Net> Parasitic::FindNet(std::string_view name) const
 {
     return m_.nets.Lookup<lut::Name>(name);
 }
@@ -84,7 +84,7 @@ bool ParseCapUnit(std::string_view s, CapUnit & cu)
 }
 
 // using namespace grammar;
-ParasiticId ReadSpef(std::string_view filename)
+Id<Parasitic> ReadSpef(std::string_view filename)
 {
     using namespace ast;
     SpefDescription ast;
@@ -92,7 +92,7 @@ ParasiticId ReadSpef(std::string_view filename)
     auto res = spefParser(filename.data());
     if (not res) {
         NS_ERROR(spefParser.error);
-        return ParasiticId();
+        return Id<Parasitic>();
     }
 
     auto parasitic = nano::Create<Parasitic>(filename.data());
@@ -103,7 +103,7 @@ ParasiticId ReadSpef(std::string_view filename)
     auto divider = ast.header.divider; boost::trim(divider);
     const auto & nameMap = ast.nameMap;
     std::unordered_map<std::string_view, size_t> pin2id;
-    std::unordered_map<std::string_view, NetId> pin2net;
+    std::unordered_map<std::string_view, Id<Net>> pin2net;
     auto getName = [&](const SpefName & spefName) -> std::string {
         if (auto * index = boost::get<int>(&spefName); index) {
             auto iter = nameMap.find(*index);
@@ -191,7 +191,7 @@ ParasiticId ReadSpef(std::string_view filename)
         for (const auto & scap : snet.capacitances) {
             if (not scap.n2.has_value()) continue;
             const auto & node2 = scap.n2.value();
-            NetId net2Id;
+            Id<Net> net2Id;
             if (node2.isInternal()) {
                 auto netName = getName(node2.name);
                 net2Id = parasitic->FindNet(netName.c_str());

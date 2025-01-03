@@ -284,7 +284,7 @@ void ShapePolygonWithHoles::AddHole(NPolygon hole)
     m_.shape.holes.emplace_back(std::move(hole));
 }
 
-ShapeFromTemplate::ShapeFromTemplate(ShapeId shape)
+ShapeFromTemplate::ShapeFromTemplate(Id<Shape> shape)
 {
     SetTemplate(shape);
 }
@@ -324,7 +324,7 @@ bool ShapeFromTemplate::isValid() const
     return m_.shape and m_.shape->isValid();
 }
 
-void ShapeFromTemplate::SetTemplate(ShapeId shape)
+void ShapeFromTemplate::SetTemplate(Id<Shape> shape)
 {
     NS_ASSERT(shape and ShapeType::FROM_TEMPLATE != shape->GetType());
     m_.shape = shape;

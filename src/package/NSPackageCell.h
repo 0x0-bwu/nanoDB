@@ -23,15 +23,15 @@ public:
     CircuitCell(std::string name, CId<Package> package);
     CircuitCell() = default;
 
-    LayoutId SetLayout(LayoutId layout);
+    Id<Layout> SetLayout(Id<Layout> layout);
     CId<Layout> GetLayout() const;
-    LayoutId GetLayout();
+    Id<Layout> GetLayout();
     
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (LayoutId, layout))
+    (Id<Layout>, layout))
 };
 
 enum class ComponentType
@@ -56,22 +56,22 @@ public:
     ComponentType GetComponentType() const;
 
     void SetSolderBallBumpHeight(Float height);
-    void SetSolderFillingMaterial(MaterialId material);
-    void SetBoundary(ShapeId boundary);
-    void SetMaterial(MaterialId material);
+    void SetSolderFillingMaterial(Id<Material> material);
+    void SetBoundary(Id<Shape> boundary);
+    void SetMaterial(Id<Material> material);
     void SetHeight(Float height);
 
-    void AddPin(FootprintPinId pin);
+    void AddPin(Id<FootprintPin> pin);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (ComponentType, compType),
-    (ShapeId, boundary),
+    (Id<Shape>, boundary),
     (Float, height),
     (Float, solderHeight),
-    (MaterialId, material),
-    (MaterialId, solderFillingMaterial),
+    (Id<Material>, material),
+    (Id<Material>, solderFillingMaterial),
     (IdVec<FootprintPin, NameLut>, pins)
     )
 };

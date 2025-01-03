@@ -13,23 +13,23 @@ public:
     void SetCoordUnit(const CoordUnit & unit) { m_.coordUnit = unit; }
     const CoordUnit & GetCoordUnit() const { return m_.coordUnit; }
 
-    void SetMaterialLib(MaterialLibId matLib) { m_.matLib = matLib; }
-    MaterialLibId GetMaterialLib() { return m_.matLib; }
+    void SetMaterialLib(Id<MaterialLib> matLib) { m_.matLib = matLib; }
+    Id<MaterialLib> GetMaterialLib() { return m_.matLib; }
     CId<MaterialLib> GetMaterialLib() const { return m_.matLib; }
 
-    CellId AddCell(CellId cell);
-    PadstackId AddPadstack(PadstackId padstack);
-    StackupLayerId AddStackupLayer(StackupLayerId layer);
-    ComponentLayerId AddComponentLayer(ComponentLayerId layer);
+    Id<Cell> AddCell(Id<Cell> cell);
+    Id<Padstack> AddPadstack(Id<Padstack> padstack);
+    Id<StackupLayer> AddStackupLayer(Id<StackupLayer> layer);
+    Id<ComponentLayer> AddComponentLayer(Id<ComponentLayer> layer);
     void SortStackupLayers(bool ascending = false);
 
-    StackupLayerId FindStackupLayer(const std::string & name) const;
+    Id<StackupLayer> FindStackupLayer(const std::string & name) const;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
     (CoordUnit, coordUnit),
-    (MaterialLibId, matLib),
+    (Id<MaterialLib>, matLib),
     (IdVec<Cell, NameLut>, cells),
     (IdVec<Padstack, NameLut>, padstacks),
     (IdVec<ComponentLayer>, componentLayers),

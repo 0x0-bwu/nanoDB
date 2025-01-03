@@ -10,16 +10,16 @@ public:
     Chip(std::string name);
     Chip() = default;
 
-    void AddBlock(BlockId block);
+    void AddBlock(Id<Block> block);
 
-    void SetTop(BlockId block);
+    void SetTop(Id<Block> block);
 
-    BlockId GetTop() const;
+    Id<Block> GetTop() const;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (BlockId, top),
+    (Id<Block>, top),
     (IdVec<Block>, blocks))
 };
 

@@ -7,18 +7,18 @@ class Net : public NamedObj, public Entity<Net>
 {
 public:
     friend class Layout;
-    Net(std::string name, LayoutId layout);
+    Net(std::string name, Id<Layout> layout);
     Net() = default;
 
-    LayoutId GetLayout() const { return m_.layout; }
+    Id<Layout> GetLayout() const { return m_.layout; }
     
 private:
-    ConnObjId AddConnObj(ConnObjId connObj);
+    Id<ConnObj> AddConnObj(Id<ConnObj> connObj);
     
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (LayoutId, layout),
+    (Id<Layout>, layout),
     (IdVec<ConnObj>, connObjs)
     )
 };

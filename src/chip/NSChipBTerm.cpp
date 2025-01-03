@@ -18,16 +18,16 @@ NS_SERIALIZATION_FUNCTIONS_IMP(BTerm)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-BTerm::BTerm(std::string name, NetId net, IOType type)
+BTerm::BTerm(std::string name, Id<Net> net, IOType type)
  : NamedObj(std::move(name))
 {
     m_.net = net;
     m_.ioType = type;
 }
 
-BlockId BTerm::GetBlock() const
+Id<Block> BTerm::GetBlock() const
 {
-    if (m_.net.isNull()) return BlockId();
+    if (m_.net.isNull()) return Id<Block>();
     return m_.net->GetBlock();
 }
 

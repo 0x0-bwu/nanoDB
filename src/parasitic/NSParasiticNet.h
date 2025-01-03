@@ -15,11 +15,11 @@ using DirectedGraph = generic::graph::model::DirectedGraph;
 
 struct CouplingCap
 {
-    NetId net;
+    Id<Net> net;
     CapId cap;
     Float value{0};
     CouplingCap() = default;
-    CouplingCap(NetId net, CapId cap, Float value)
+    CouplingCap(Id<Net> net, CapId cap, Float value)
      : net(net), cap(cap), value(value) {}
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
 };
@@ -37,11 +37,11 @@ struct ConnectedPin
 
 using ConnectedPins = std::vector<ConnectedPin>;
 
-ParasiticId ReadSpef(std::string_view filename);
+Id<Parasitic> ReadSpef(std::string_view filename);
 class Net : public NamedObj, public DirectedGraph, public Entity<Net>
 {
 public:
-    friend ParasiticId ReadSpef(std::string_view filename);
+    friend Id<Parasitic> ReadSpef(std::string_view filename);
     Net(std::string name, size_t nodes);
     Net() = default;
 
@@ -56,7 +56,7 @@ public:
     void SetCap(CapId c, Float cap);
     Float GetCap(CapId c) const;
 
-    void AddCouplingCap(CapId c1, NetId net, CapId c2, Float cap);
+    void AddCouplingCap(CapId c1, Id<Net> net, CapId c2, Float cap);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;

@@ -20,15 +20,15 @@ private:
 class FootprintPin : public Pin, public Entity<FootprintPin>
 {
 public:
-    FootprintPin(std::string name, FootprintCellId cell, NCoord2D location, IOType ioType);
+    FootprintPin(std::string name, Id<FootprintCell> cell, NCoord2D location, IOType ioType);
     FootprintPin() = default;
 
 private:
-    NS_SERIALIZATION_FUNCTIONS_DECLARATION;
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (FootprintCellId, cell),
-    (PadstackId, padstack),
-    (StackupLayerId, layer))
+    (Id<FootprintCell>, cell),
+    (Id<StackupLayer>, layer),
+    (Id<Padstack>, padstack))
 };
 
 } // namespace nano::package

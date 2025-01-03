@@ -36,7 +36,7 @@ void t_save_design()
     auto inst1 = Create<chip::Inst>("inst1", block);
     auto inst2 = Create<chip::Inst>("inst2", block);
     auto inst3 = Create<chip::Inst>("inst3", block);
-    block->AddInsts(std::vector<chip::InstId>{inst1, inst2, inst3});
+    block->AddInsts(std::vector<Id<chip::Inst>>{inst1, inst2, inst3});
 
     auto n1 = Create<chip::Net>("n1", block);
     auto n2 = Create<chip::Net>("n2", block);
@@ -45,7 +45,7 @@ void t_save_design()
     auto n5 = Create<chip::Net>("n5", block);
     auto n6 = Create<chip::Net>("n6", block);
     auto n7 = Create<chip::Net>("n7", block);
-    block->AddNets(std::vector<chip::NetId>{n1, n2, n3, n4, n5, n6, n7});
+    block->AddNets(std::vector<Id<chip::Net>>{n1, n2, n3, n4, n5, n6, n7});
 
     auto bterm1 = Create<chip::BTerm>("IN1", n1, IOType::INPUT);
     auto bterm2 = Create<chip::BTerm>("IN2", n2, IOType::INPUT);

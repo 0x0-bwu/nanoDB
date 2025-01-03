@@ -24,25 +24,25 @@ Block::Block(std::string name, char hierSep)
     m_.hierSep = hierSep;
 }
 
-void Block::AddBTerm(BTermId bterm)
+void Block::AddBTerm(Id<BTerm> bterm)
 {
     NS_ASSERT(Identical(bterm->GetBlock()));
     m_.bterms.Add(bterm);
 }
 
-void Block::AddInst(InstId inst)
+void Block::AddInst(Id<Inst> inst)
 {
     NS_ASSERT(Identical(inst->GetBlock()));
     m_.insts.Add(inst);
 }
 
-void Block::AddNet(NetId net)
+void Block::AddNet(Id<Net> net)
 {
     NS_ASSERT(Identical(net->GetBlock()));
     m_.nets.Add(net);
 }
 
-NetId Block::GetNet(size_t i) const
+Id<Net> Block::GetNet(size_t i) const
 {
     return m_.nets[i];
 }
