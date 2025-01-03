@@ -22,17 +22,17 @@ Package::Package(std::string name)
 {
 }
 
-CellId Package::AddCell(CellId cell)
+Id<Cell> Package::AddCell(Id<Cell> cell)
 {
     return m_.cells.Add(cell);
 }
 
-PadstackId Package::AddPadstack(PadstackId padstack)
+Id<Padstack> Package::AddPadstack(Id<Padstack> padstack)
 {
     return m_.padstacks.Add(padstack);
 }
 
-StackupLayerId Package::AddStackupLayer(StackupLayerId layer)
+Id<StackupLayer> Package::AddStackupLayer(Id<StackupLayer> layer)
 {
     return m_.stackupLayers.Add(layer);
 }

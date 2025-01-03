@@ -24,7 +24,9 @@ public:
     CircuitCell() = default;
 
     LayoutId SetLayout(LayoutId layout);
-    LayoutId GetLayout() const;
+    CId<Layout> GetLayout() const;
+    LayoutId GetLayout();
+    
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;

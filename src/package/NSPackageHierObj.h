@@ -23,14 +23,14 @@ private:
 class CellInst : public Transformable2D, public NamedObj, public HierObj, public Entity<CellInst>
 {
 public:
-    CellInst(std::string name, CellId cell, CId<CellInst> parent = CId<CellInst>());
+    CellInst(std::string name, CId<Cell> cell, CId<CellInst> parent = CId<CellInst>());
     CellInst() = default;
-    CellId GetCell() const;
+    CId<Cell> GetCell() const;
     CellInstId AddCellInst(CellInstId cellInst);
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (CellId, cell)
+    (CId<Cell>, cell)
     )
 };
 

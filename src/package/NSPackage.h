@@ -14,7 +14,8 @@ public:
     const CoordUnit & GetCoordUnit() const { return m_.coordUnit; }
 
     void SetMaterialLib(MaterialLibId matLib) { m_.matLib = matLib; }
-    MaterialLibId GetMaterialLib() const { return m_.matLib; }
+    MaterialLibId GetMaterialLib() { return m_.matLib; }
+    CId<MaterialLib> GetMaterialLib() const { return m_.matLib; }
 
     CellId AddCell(CellId cell);
     PadstackId AddPadstack(PadstackId padstack);

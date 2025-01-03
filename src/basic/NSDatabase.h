@@ -238,27 +238,26 @@ public:
     bool isValid() const { return m_id != Id<T>::INVALID_ID; }
 
     template <typename Derived>
-    bool Identical(Id<Derived> id) const
+    bool Identical(const Index<Id<Derived>> & id) const
     {
         static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
-        return &Get<T>(Id<T>(id)) == static_cast<const T*>(this);
+        using SizeType = typename Id<Derived>::SizeType;
+        return &Get<T>(Id<T>(SizeType(id))) == static_cast<const T*>(this);
     }
     
     /// binds
     template <typename Other>
-    void Bind(CId<Other> other);
-
-    template <typename Other>
-    void Bind(Id<Other> other);
+    void Bind(const Index<Id<Other>> & other);
 
     template <typename Other>
     void Unbind();
 
     template <typename Other>
     CId<Other> GetBind() const;
-
+    
+    CId<T> GetCId() const { return CId<T>(m_id); }
 protected:
-    Id<T> GetId() const { return Id<T>(m_id); }
+    Id<T> GetId() { return Id<T>(m_id); }
 private:
     void SetId(Id<T> id) { m_id = IdType(id); }
 public:
@@ -286,9 +285,10 @@ public:
     using Key = std::type_index; 
     using BindingMap = std::unordered_map<std::type_index, IdType>;
     static traits::NameIndexMap nameIndexMap;
-    static traits::IndexNameMap indexNameMap; 
+    static traits::IndexNameMap indexNameMap;
+
     template <typename T>
-    void Set(CId<T> other)
+    void Set(const Index<Id<T>> & other)
     {
         m_bindingMap.emplace(typeid(T), IdType(other));
     }
@@ -352,13 +352,14 @@ public:
     using SizeType = typename Index<Id<T>>::SizeType;
 
     Id() : Index<Id<T>>() {}
+    Id(const Index<Id<T>> & id) = delete;
     explicit Id(SizeType id) : Index<Id<T>>(id) {}
 
     template <typename Derived, typename std::enable_if_t<std::is_base_of_v<T, Derived>, bool> = true>
-    Id(Id<Derived> derived) : Id(SizeType(derived)) {}// implicit convert from derived to base
+    Id(const Id<Derived> & derived) : Id(SizeType(derived)) {}// implicit convert from derived to base
 
     template <typename Base, typename std::enable_if_t<not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>, bool> = true>
-    explicit Id(Id<Base> base) // explicit convert from base to derivied, will do dynamic cast check
+    explicit Id(const Id<Base> & base) // explicit convert from base to derivied, will do dynamic cast check
     {
         m_id = dynamic_cast<T *>(base.operator->()) ? SizeType(base) : INVALID_ID;
     }
@@ -390,14 +391,15 @@ public:
     using SizeType = typename Index<Id<T>>::SizeType;
 
     CId() : Index<Id<T>>() {}
-    CId(Id<T> id) : CId(SizeType(id)) {}
+    CId(const Index<Id<T>> & id) = delete;
+    CId(const Id<T> & id) : CId(SizeType(id)) {}
     explicit CId(SizeType id) : Index<Id<T>>(id) {}
 
     template <typename Derived, typename std::enable_if_t<std::is_base_of_v<T, Derived>, bool> = true>
-    CId(CId<Derived> derived) : CId(SizeType(derived)) {}// implicit convert from derived to base
+    CId(const CId<Derived> & derived) : CId(SizeType(derived)) {}// implicit convert from derived to base
 
     template <typename Base, typename std::enable_if_t<not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>, bool> = true>
-    explicit CId(CId<Base> base) // explicit convert from base to derivied, will do dynamic cast check
+    explicit CId(const CId<Base> & base) // explicit convert from base to derivied, will do dynamic cast check
     {
         m_id = dynamic_cast<const T *>(base.operator->()) ? SizeType(base) : INVALID_ID;
     }
@@ -425,18 +427,11 @@ public:
 /// binds
 template <typename T>
 template <typename Other>
-void Entity<T>::Bind(CId<Other> other)
+void Entity<T>::Bind(const Index<Id<Other>> & other)
 {
     if (m_binding == Id<T>::INVALID_ID)
         m_binding = IdType(nano::Create<Binding>());
     Id<Binding>(m_binding)->Set<Other>(other);
-}
-
-template <typename T>
-template <typename Other>
-void Entity<T>::Bind(Id<Other> other)
-{
-    Bind(CId<Other>(other));
 }
 
 template <typename T>

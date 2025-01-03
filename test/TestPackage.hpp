@@ -14,9 +14,10 @@ namespace detail {
 using namespace package;
 void SetupMaterials(PackageId pkg)
 {
-    auto matLib = nano::Create<MaterialLib>("mat_lib");
-    pkg->SetMaterialLib(matLib);
+    pkg->SetMaterialLib(nano::Create<MaterialLib>("mat_lib"));
     BOOST_CHECK(pkg->GetMaterialLib());
+    auto matLib = pkg->GetMaterialLib();
+    BOOST_CHECK(matLib and matLib->GetName() == "mat_lib");
     
     auto matAl = nano::Create<Material>("Al");
     matAl->SetProperty(Material::THERMAL_CONDUCTIVITY, nano::Create<MaterialPropValue>(238));
@@ -148,7 +149,8 @@ LayoutId CreateBaseLayout(PackageId pkg)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
     auto cell = pkg->AddCell(nano::Create<CircuitCell>("base", pkg));
-    auto layout = CircuitCellId(cell)->SetLayout(nano::Create<Layout>(cell));
+    auto layout = CircuitCellId(cell)->SetLayout(nano::Create<Layout>(cell->GetCId()));
+    BOOST_CHECK(layout);
 
     auto boundary = nano::Create<ShapePolygonWithHoles>();
     auto outline = ShapePolygon(coordUnit, {{-52.2, -29.7}, {52.2, -29.7}, {52.5, 29.7}, {-52.2, 29.7}}, 5.3).GetOutline();
@@ -248,7 +250,8 @@ LayoutId CreateDriverLayout(PackageId pkg)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
     auto cell = nano::Create<CircuitCell>("driver", pkg);
-    auto layout = nano::Create<Layout>(cell);
+    auto layout = cell->SetLayout(nano::Create<Layout>(CId<CircuitCell>(cell)));
+    BOOST_CHECK(layout);
 
     auto boundary = nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-5.5, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {-5.5, 14.725}});
     layout->SetBoundary(boundary);
@@ -317,7 +320,6 @@ void t_create_package()
 
     auto base = nano::Create<CellInst>("Base", baseLayout->GetCell());
     auto driver = base->AddCellInst(nano::Create<CellInst>("Driver", driverLayout->GetCell(), base));
-
 
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/CAS300M12BM2.xml";
     Database::SaveCurrent(filename, ArchiveFormat::XML);

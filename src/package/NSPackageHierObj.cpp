@@ -39,13 +39,13 @@ HierObjId HierObj::AddChild(HierObjId child)
     return m_.children.Add(child);
 }
 
-CellInst::CellInst(std::string name, CellId cell, CId<CellInst> parent)
+CellInst::CellInst(std::string name, CId<Cell> cell, CId<CellInst> parent)
  : NamedObj(std::move(name)), HierObj(parent)
 {
     m_.cell = cell;
 }
 
-CellId CellInst::GetCell() const
+CId<Cell> CellInst::GetCell() const
 {
     return m_.cell;
 }

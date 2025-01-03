@@ -6,19 +6,24 @@ namespace nano::package {
 class ConnObj : public Entity<ConnObj>
 {
 public:
-    explicit ConnObj(NetId net);
+    explicit ConnObj(Id<Net> net);
     ConnObj() = default;
 
     NetId GetNet() const { return m_.net; }
 
-    BondingWireId GetBondingWire() const;
-    RoutingWireId GetRoutingWire() const;
-    PadstackInstId GetPadstackInst() const;
+    Id<BondingWire> GetBondingWire();
+    CId<BondingWire> GetBondingWire() const;
+    
+    Id<RoutingWire> GetRoutingWire();
+    CId<RoutingWire> GetRoutingWire() const;
+
+    Id<PadstackInst> GetPadstackInst();
+    CId<PadstackInst> GetPadstackInst() const;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (NetId, net)
+    (Id<Net>, net)
     )
 };
 
