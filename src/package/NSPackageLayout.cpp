@@ -16,7 +16,7 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Layout)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Layout::Layout(CId<Cell> cell)
+Layout::Layout(CId<CircuitCell> cell)
 {
     m_.cell = cell;
 }

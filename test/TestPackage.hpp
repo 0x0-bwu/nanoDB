@@ -148,8 +148,9 @@ Id<FootprintCell> CreateGateResistanceFootprintCell(Id<Package> pkg)
 Id<Layout> CreateBaseLayout(Id<Package> pkg)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
-    auto cell = pkg->AddCell(nano::Create<CircuitCell>("base", pkg));
-    auto layout = Id<CircuitCell>(cell)->SetLayout(nano::Create<Layout>(cell.GetCId()));
+    auto cell = pkg->AddCell(nano::Create<CircuitCell>("Base", pkg));
+    auto ccell = CId<CircuitCell>(cell);
+    auto layout = Id<CircuitCell>(cell)->SetLayout(nano::Create<Layout>(CId<CircuitCell>(cell)));
     BOOST_CHECK(layout);
 
     auto boundary = nano::Create<ShapePolygonWithHoles>();
@@ -249,7 +250,7 @@ Id<Layout> CreateBaseLayout(Id<Package> pkg)
 Id<Layout> CreateDriverLayout(Id<Package> pkg)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
-    auto cell = nano::Create<CircuitCell>("driver", pkg);
+    auto cell = nano::Create<CircuitCell>("Driver", pkg);
     auto layout = cell->SetLayout(nano::Create<Layout>(CId<CircuitCell>(cell)));
     BOOST_CHECK(layout);
 
@@ -281,10 +282,56 @@ Id<Layout> CreateDriverLayout(Id<Package> pkg)
     return layout;
 }
 
+Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & compLoc)
+{
+    const auto & coordUnit = pkg->GetCoordUnit();
+    auto cell = nano::Create<CircuitCell>("BotBridge", pkg);
+    auto layout = cell->SetLayout(nano::Create<Layout>(CId<CircuitCell>(cell)));
+    BOOST_CHECK(layout);
+
+    auto boundary = nano::Create<ShapeRect>(coordUnit, FCoord2D(-16.75, -12.5), FCoord2D(16.75, 12.5));
+    layout->SetBoundary(boundary);
+
+    auto noNet = layout->AddNet(nano::Create<Net>("NoNet", layout));
+    auto layer1 = pkg->FindStackupLayer("TopCuLayer");
+    auto layer2 = pkg->FindStackupLayer("CeramicLayer");
+    auto layer3 = pkg->FindStackupLayer("BotCuLayer");
+    auto layer4 = pkg->FindStackupLayer("SolderLayer");
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-15.45, -11.2}, {13.35, -11.2}, {13.95, -11.6}, {15.45, -11.6},
+                        {15.45, -10.8}, {-15.05, -10.8}, {-15.05, -1.3}, {-14.7, -0.7}, {-14.7, 11.45}, {-15.45, 11.45}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-14.2, -10.4}, {15.45, -10.4}, {15.45, -9.6}, {13.95, -9.6},
+                        {13.35, -10}, {-13.8, -10}, {-13.8, -2.55}, {-11.1, -2.55}, {-11.1, 11.45}, {-11.85, 11.45}, {-11.85, -2}, {-14.2, -2}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-12.6, -8.8}, {12.35, -8.8}, {12.95, -8.4}, {15.45, -8.4},
+                        {15.45, -5.97}, {7.95, -5.97}, {7.95, 9.03}, {15.45, 9.03}, {15.45, 11.45}, {-9.75, 11.45}, {-9.75, -3.75}, {-12.6, -3.75}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-13.65, -0.7}, {-12.9, -0.7}, {-12.9, 2.6}, {-13.65, 2.6}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-13.65, 3.725}, {-12.9, 3.725}, {-12.9, 7.025}, {-13.65, 7.025}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-13.65, 8.15}, {-12.9, 8.15}, {-12.9, 11.45}, {-13.65, 11.45}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{9.5, -4.77}, {15.8, -4.77}, {15.8, 7.83}, {9.5, 7.83}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer2,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.75, -12.5}, {16.75, -12.5}, {16.75, 12.5}, {-16.75, 12.5}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer3,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.25, -12}, {16.25, -12}, {16.25, 12}, {-16.25, 12}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer4,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.75, -12.5}, {16.75, -12.5}, {16.75, 12.5}, {-16.75, 12.5}}, 0.25)));
+    
+    return layout;
+}
 } // namespace detail
 
 void t_create_package()
 {
+    std::vector<Float> parameters = {
+        -5.23, 8.93, -5.23, 3.86, -5.23, -1.21, 3.71, 8.08, 3.71, 1.33, 3.71, -5.42,
+        5.23, 8.08, 5.23, 1.33, 5.23, -5.42, -3.7, 8.08, -3.7, 1.33, -3.7, -5.42,
+    };
+
     using namespace nano::package;
     Database::Create("CAS300M12BM2");
     auto pkg = nano::Create<Package>("CAS300M12BM2");
@@ -316,10 +363,16 @@ void t_create_package()
     auto gateResDef = detail::CreateGateResistanceFootprintCell(pkg);
 
     auto baseLayout = detail::CreateBaseLayout(pkg);
-    auto driverLayout = detail::CreateDriverLayout(pkg);
-
     auto base = nano::Create<CellInst>("Base", baseLayout->GetCell());
-    auto driver = base->AddCellInst(nano::Create<CellInst>("Driver", driverLayout->GetCell(), base));
+
+    auto driverLayout = detail::CreateDriverLayout(pkg); 
+    auto driver = nano::Create<CellInst>("Driver", driverLayout->GetCell(), base);
+    driver->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {44, 0}, Mirror2D::XY));
+
+    std::vector<FCoord2D> botCompLoc;
+    for (size_t i = 0; i < 6; ++i)
+        botCompLoc.emplace_back(parameters.at(i * 2), parameters.at(i * 2 + 1));
+    auto botBridgeLayout = detail::CreateBotBridgeLayout(pkg, botCompLoc);
 
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/CAS300M12BM2.xml";
     Database::SaveCurrent(filename, ArchiveFormat::XML);

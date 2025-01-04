@@ -67,6 +67,7 @@ class Cell;
 class CellInst;
 class CircuitCell;
 class ConnObj;
+class Component;
 class ComponentLayer;
 class FootprintCell;
 class FootprintPin;
@@ -123,6 +124,7 @@ using Content = Collection<
     ///
     package::Cell,
     package::ConnObj,
+    package::Component,
     package::HierObj,
     package::Layer,
     package::Layout,
@@ -182,6 +184,7 @@ inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<package::CellInst                >, "PackageCellInst"sv                ),
     hana::make_pair(hana::type_c<package::CircuitCell             >, "PackageCircuitCell"sv             ),
     hana::make_pair(hana::type_c<package::ConnObj                 >, "PackageConnObj"sv                 ),
+    hana::make_pair(hana::type_c<package::Component               >, "PackageComponent"sv               ),
     hana::make_pair(hana::type_c<package::ComponentLayer          >, "PackageComponentLayer"sv          ),
     hana::make_pair(hana::type_c<package::FootprintCell           >, "PackageFootprintCell"sv           ),
     hana::make_pair(hana::type_c<package::FootprintPin            >, "PackageFootpinrtPin"sv            ),

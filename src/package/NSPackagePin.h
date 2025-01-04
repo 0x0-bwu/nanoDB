@@ -17,7 +17,7 @@ private:
     (IOType, ioType))
 };
 
-class FootprintPin : public Pin, public Entity<FootprintPin>
+class FootprintPin : public Pin
 {
 public:
     FootprintPin(std::string name, Id<FootprintCell> cell, NCoord2D location, IOType ioType);

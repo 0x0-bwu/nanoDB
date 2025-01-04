@@ -94,6 +94,11 @@ public:
         return NCoord2D(toCoord(coord[0]), toCoord(coord[1]));
     }
 
+    FCoord2D toCoordF(const FCoord2D & coord) const
+    {
+        return FCoord2D(toCoord(coord[0]), toCoord(coord[1]));
+    }
+
     std::vector<NCoord2D> toCoord(const std::vector<FCoord2D> & coords) const
     {
         std::vector<NCoord2D> res; res.reserve(coords.size());

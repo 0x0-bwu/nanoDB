@@ -17,7 +17,7 @@ private:
     )
 };
 
-class CircuitCell : public Cell, public Entity<CircuitCell>
+class CircuitCell : public Cell
 {
 public:
     CircuitCell(std::string name, CId<Package> package);
@@ -46,7 +46,7 @@ enum class ComponentType
     MOLDING
 };
 
-class FootprintCell : public Cell, public Entity<FootprintCell>
+class FootprintCell : public Cell
 {
 public:
     FootprintCell(std::string name, CId<Package> package);
@@ -57,7 +57,10 @@ public:
 
     void SetSolderBallBumpHeight(Float height);
     void SetSolderFillingMaterial(Id<Material> material);
+    
     void SetBoundary(Id<Shape> boundary);
+    Id<Shape> GetBoundary() const;
+
     void SetMaterial(Id<Material> material);
     void SetHeight(Float height);
 

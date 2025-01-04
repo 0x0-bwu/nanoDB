@@ -10,8 +10,16 @@ public:
     HierObj(CId<HierObj> parent);
     HierObj() = default;
 
+    void SetParent(CId<HierObj> parent);
+    CId<HierObj> GetParent() const;    
+
+    const IdVec<HierObj> & GetChildren() const;
     Id<HierObj> AddChild(Id<HierObj> child);
 
+    virtual void Flatten();
+
+protected:
+    virtual void FlattenImpl() = 0;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
@@ -20,18 +28,23 @@ private:
     )
 };
 
-class CellInst : public Transformable2D, public NamedObj, public HierObj, public Entity<CellInst>
+class CellInst : public NamedObj, public Transformable2D, public HierObj
 {
 public:
-    CellInst(std::string name, CId<Cell> cell, CId<CellInst> parent = CId<CellInst>());
+    CellInst(std::string name, CId<CircuitCell> cell, CId<CellInst> parent = CId<CellInst>());
     CellInst() = default;
-    CId<Cell> GetCell() const;
+
+    CId<CircuitCell> GetCell() const;
     Id<CellInst> AddCellInst(Id<CellInst> cellInst);
+
+protected:
+    void FlattenImpl() override {}
+
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (CId<Cell>, cell)
-    )
+    (CId<CircuitCell>, cell),
+    (Id<Layout>, flattenedLayout))
 };
 
 } // namespace nano::package

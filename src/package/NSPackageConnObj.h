@@ -35,7 +35,7 @@ enum class BondingWireType
     // JEDEC5
 };
 
-class BondingWire : public NamedObj, public ConnObj, public Entity<BondingWire>
+class BondingWire : public NamedObj, public ConnObj
 {
 public:
     BondingWire(std::string name, Id<Net> net, Id<Layer> start, Id<Layer> end, Float radius);
@@ -81,7 +81,7 @@ private:
     )
 };
 
-class RoutingWire : public ConnObj, public Entity<RoutingWire>
+class RoutingWire : public ConnObj
 {
 public:
     RoutingWire(Id<Net> net, Id<StackupLayer> layer, Id<Shape> shape);
@@ -97,7 +97,7 @@ private:
     )
 };
 
-class PadstackInst : public ConnObj, public Transformable2D, public Entity<PadstackInst>
+class PadstackInst : public ConnObj, public Transformable2D
 {
 public:
     PadstackInst(Id<Padstack> padstack, Id<Net> net);

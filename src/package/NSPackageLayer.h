@@ -34,7 +34,7 @@ private:
     )
 };
 
-class StackupLayer : public Layer, public Entity<StackupLayer>
+class StackupLayer : public Layer
 {
 public:
     friend class Layout;
@@ -68,7 +68,7 @@ private:
     )
 };
 
-class ComponentLayer : public Layer, public Entity<ComponentLayer>
+class ComponentLayer : public Layer
 {
 public:
     ComponentLayer(std::string name);

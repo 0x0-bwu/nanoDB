@@ -2,6 +2,7 @@
 #include "generic/geometry/Transform.hpp"
 #include "generic/geometry/Point.hpp"
 #include "generic/math/MathUtility.hpp"
+#include "NSUnit.hpp"
 #include <list>
 
 namespace nano  {
@@ -152,6 +153,8 @@ class Transformable2D
     }
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 public:
+    explicit Transformable2D(Transform2D transform) : m_transform(std::move(transform)) {}
+    Transformable2D() = default;
     Transform2D & GetTransform() { return m_transform; }
     const Transform2D & GetTransform() const { return m_transform; }
     void SetTransform(const Transform2D & transform) { m_transform = transform; }
@@ -159,5 +162,15 @@ public:
 private:
     Transform2D m_transform;
 };
+
+inline Transform2D CreateTransform2D(const CoordUnit & coordUnit, Float scale, Float rotation, const FCoord2D & offset, Mirror2D mirror = Mirror2D::NO)
+{
+    Transform2D transform;
+    transform.Scale() = scale;
+    transform.Rotation() = rotation;
+    transform.Offset() = coordUnit.toCoordF(offset);
+    transform.Mirror() = mirror;
+    return transform;
+}
 
 } // namespace nano

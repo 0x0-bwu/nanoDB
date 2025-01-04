@@ -21,7 +21,6 @@ template <typename Archive>
 void MaterialPropValue::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(MaterialPropValue);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(MaterialProp);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
@@ -31,7 +30,6 @@ template <typename Archive>
 void MaterialPropTable::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(MaterialPropTable);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(MaterialProp);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
@@ -41,7 +39,6 @@ template <typename Archive>
 void MaterialPropPolynomial::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(MaterialPropPolynomial);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(MaterialProp);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }

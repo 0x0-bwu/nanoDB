@@ -20,7 +20,6 @@ template <typename Archive>
 void FootprintPin::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(FootprintPin);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Pin);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }

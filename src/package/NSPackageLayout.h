@@ -6,13 +6,13 @@ namespace nano::package {
 class Layout : public Entity<Layout>
 {
 public:
-    explicit Layout(CId<Cell> cell);
+    explicit Layout(CId<CircuitCell> cell);
     Layout() = default;
 
     void SetBoundary(Id<Shape> boundary);
     Id<Shape> GetBoundary() const { return m_.boundary; }
 
-    CId<Cell> GetCell() const { return m_.cell; }
+    CId<CircuitCell> GetCell() const { return m_.cell; }
 
     Id<Net> AddNet(Id<Net> net);
     Id<ConnObj> AddConnObj(Id<ConnObj> connObj);
@@ -20,7 +20,7 @@ public:
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
-    (CId<Cell>, cell),
+    (CId<CircuitCell>, cell),
     (Id<Shape>, boundary),
     (IdVec<Net, NameLut>, nets),
     (IdVec<ConnObj>, connObjs)

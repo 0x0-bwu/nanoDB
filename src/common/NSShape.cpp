@@ -27,7 +27,6 @@ template <typename Archive>
 void ShapeRect::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(ShapeRect);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Shape);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
@@ -37,7 +36,6 @@ template <typename Archive>
 void ShapePath::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(ShapePath);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Shape);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
@@ -47,7 +45,6 @@ template <typename Archive>
 void ShapeCircle::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(ShapeCircle);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Shape);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
@@ -57,7 +54,6 @@ template <typename Archive>
 void ShapePolygon::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(ShapePolygon);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Shape);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
@@ -67,7 +63,6 @@ template <typename Archive>
 void ShapePolygonWithHoles::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(ShapePolygonWithHoles);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Shape);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
@@ -77,7 +72,6 @@ template <typename Archive>
 void ShapeFromTemplate::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(ShapeFromTemplate);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Shape);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
@@ -127,6 +121,13 @@ bool ShapeRect::isValid() const
     return m_.shape.isValid();
 }
 
+Ptr<ShapeRect> ShapeRect::CloneImpl() const
+{
+    auto clone = new ShapeRect();
+    clone->m_ = m_;
+    return clone;
+}
+
 NBox2D ShapePath::GetBBox() const
 {
     return Extent(GetContour());
@@ -157,6 +158,13 @@ bool ShapePath::isValid() const
 void ShapePath::SetPoints(std::vector<NCoord2D> points)
 {
     m_.shape = std::move(points);
+}
+
+Ptr<ShapePath> ShapePath::CloneImpl() const
+{
+    auto clone = new ShapePath();
+    clone->m_ = m_;
+    return clone;
 }
 
 ShapeCircle::ShapeCircle(const CoordUnit & coordUnit, FCoord2D o, FCoord r)
@@ -203,6 +211,13 @@ bool ShapeCircle::isValid() const
     return generic::math::GT<NCoord>(m_.radius, 0);
 }
 
+Ptr<ShapeCircle> ShapeCircle::CloneImpl() const
+{
+    auto clone = new ShapeCircle();
+    clone->m_ = m_;
+    return clone;
+}
+
 ShapePolygon::ShapePolygon(const CoordUnit & coordUnit, std::vector<FCoord2D> outline, FCoord cornerR)
  : ShapePolygon(coordUnit.toCoord(outline), coordUnit.toCoord(cornerR))
 {
@@ -242,6 +257,13 @@ void ShapePolygon::Transform(const Transform2D & trans)
 bool ShapePolygon::isValid() const
 {
     return m_.shape.Size() >= 3;
+}
+
+Ptr<ShapePolygon> ShapePolygon::CloneImpl() const
+{
+    auto clone = new ShapePolygon();
+    clone->m_ = m_;
+    return clone;
 }
 
 bool ShapePolygonWithHoles::hasHole() const
@@ -284,6 +306,13 @@ void ShapePolygonWithHoles::AddHole(NPolygon hole)
     m_.shape.holes.emplace_back(std::move(hole));
 }
 
+Ptr<ShapePolygonWithHoles> ShapePolygonWithHoles::CloneImpl() const
+{
+    auto clone = new ShapePolygonWithHoles();
+    clone->m_ = m_;
+    return clone;
+}
+
 ShapeFromTemplate::ShapeFromTemplate(Id<Shape> shape)
 {
     SetTemplate(shape);
@@ -324,9 +353,16 @@ bool ShapeFromTemplate::isValid() const
     return m_.shape and m_.shape->isValid();
 }
 
-void ShapeFromTemplate::SetTemplate(Id<Shape> shape)
+void ShapeFromTemplate::SetTemplate(CId<Shape> shape)
 {
     NS_ASSERT(shape and ShapeType::FROM_TEMPLATE != shape->GetType());
     m_.shape = shape;
+}
+
+Ptr<ShapeFromTemplate> ShapeFromTemplate::CloneImpl() const
+{
+    auto clone = new ShapeFromTemplate();
+    clone->m_ = m_;
+    return clone;
 }
 } // namespace nano
