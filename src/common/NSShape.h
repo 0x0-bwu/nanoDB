@@ -30,7 +30,7 @@ enum class ShapeType
     FROM_TEMPLATE
 };
 
-class Shape : public Entity<Shape>
+class Shape : public Clonable<Shape>, public Entity<Shape>
 {
 public:
     virtual ~Shape() = default;
@@ -47,7 +47,7 @@ private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
 };
 
-class ShapeRect : public Shape, public Entity<ShapeRect>
+class ShapeRect : public Shape
 {
 public:
     ShapeRect(const CoordUnit & coordUnit, FCoord2D ll, FCoord2D ur);
@@ -62,13 +62,16 @@ public:
     void Transform(const Transform2D & trans) override;
     ShapeType GetType() const override { return ShapeType::RECTANGLE; }
     bool isValid() const override;
+
+protected:
+    Ptr<ShapeRect> CloneImpl() const override;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (NBox2D, shape))
 };
 
-class ShapePath : public Shape, public Entity<ShapePath>
+class ShapePath : public Shape
 {
 public:
     ShapePath() = default;
@@ -84,6 +87,9 @@ public:
     void SetPoints(std::vector<NCoord2D> points);
     void SetWidth(NCoord width) { m_.width = width;}
     NCoord GetWidth() const { return m_.width; }
+
+protected:
+    Ptr<ShapePath> CloneImpl() const override;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
@@ -91,7 +97,7 @@ private:
     (NCoord, width))
 };
 
-class ShapeCircle : public Shape, public Entity<ShapeCircle>
+class ShapeCircle : public Shape
 {
 public:
     ShapeCircle(const CoordUnit & coordUnit, FCoord2D o, FCoord r);
@@ -105,6 +111,12 @@ public:
     void Transform(const Transform2D & trans) override;
     ShapeType GetType() const override { return ShapeType::CIRCLE; }
     bool isValid() const override;
+
+    NCoord2D GetCenter() const { return m_.center; }
+    NCoord GetRadius() const { return m_.radius; }
+
+protected:
+    Ptr<ShapeCircle> CloneImpl() const override;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
@@ -112,7 +124,7 @@ private:
     (NCoord, radius))
 };
 
-class ShapePolygon : public Shape, public Entity<ShapePolygon>
+class ShapePolygon : public Shape
 {
 public:
     ShapePolygon(const CoordUnit & coordUnit, std::vector<FCoord2D> outline, FCoord cornerR = 0);
@@ -126,13 +138,15 @@ public:
     void Transform(const Transform2D & trans) override;
     ShapeType GetType() const override { return ShapeType::POLYGON; }
     bool isValid() const override;
+protected:
+    Ptr<ShapePolygon> CloneImpl() const override;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (NPolygon, shape))
 };
 
-class ShapePolygonWithHoles : public Shape, public Entity<ShapePolygonWithHoles>
+class ShapePolygonWithHoles : public Shape
 {
 public:
     ShapePolygonWithHoles() = default;
@@ -148,13 +162,15 @@ public:
     void SetOutline(NPolygon outline);
     void AddHole(NPolygon hole);
 
+protected:
+    Ptr<ShapePolygonWithHoles> CloneImpl() const override;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (NPolygonWithHoles, shape))
 };
 
-class ShapeFromTemplate : public Shape, public Entity<ShapeFromTemplate>
+class ShapeFromTemplate : public Shape
 {
 public:
     explicit ShapeFromTemplate(Id<Shape> shape);
@@ -168,12 +184,13 @@ public:
     ShapeType GetType() const override { return ShapeType::FROM_TEMPLATE; }
     bool isValid() const override;
 
-    void SetTemplate(Id<Shape> shape);
-
+    void SetTemplate(CId<Shape> shape);
+protected:
+    Ptr<ShapeFromTemplate> CloneImpl() const override;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (Id<Shape>, shape),
+    (CId<Shape>, shape),
     (Transform2D, transform))
 };
 

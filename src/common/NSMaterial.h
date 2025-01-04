@@ -18,7 +18,7 @@ private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
 };
 
-class MaterialPropValue : public MaterialProp, public Entity<MaterialPropValue>
+class MaterialPropValue : public MaterialProp
 {
 public:
     explicit MaterialPropValue(const Arr9<Float> & values);
@@ -44,7 +44,7 @@ private:
     (std::vector<Float>, values))
 };
 
-class MaterialPropTable : public MaterialProp, public Entity<MaterialPropTable>
+class MaterialPropTable : public MaterialProp
 {
 public:
     // todo
@@ -56,7 +56,7 @@ private:
     (std::map<Float, Id<MaterialProp>>, values))
 };
 
-class MaterialPropPolynomial : public MaterialProp, public Entity<MaterialPropPolynomial>
+class MaterialPropPolynomial : public MaterialProp
 {
 public:
     explicit MaterialPropPolynomial(std::vector<std::vector<Float>> coefficients);

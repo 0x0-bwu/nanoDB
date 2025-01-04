@@ -21,7 +21,6 @@ template <typename Archive>
 void BondingWire::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(BondingWire);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(NamedObj);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(ConnObj);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
@@ -32,7 +31,6 @@ template <typename Archive>
 void RoutingWire::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(RoutingWire);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(ConnObj);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
@@ -42,7 +40,6 @@ template <typename Archive>
 void PadstackInst::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(PadstackInst);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(ConnObj);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Transformable2D);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
@@ -128,7 +125,7 @@ void BondingWire::SetStartLayer(Id<Layer> layer, const NCoord2D & loc, bool flip
 void BondingWire::SetStartLayer(Id<Layer> layer)
 {
     if (m_.layers[0])
-        m_.layers[0]->RemoveStartBondingWire(Entity<BondingWire>::GetId());
+        m_.layers[0]->RemoveStartBondingWire(Id<BondingWire>(GetId()));
     m_.layers[0] = layer;
 }
 
@@ -147,7 +144,7 @@ void BondingWire::SetEndLayer(Id<Layer> layer, const NCoord2D & loc, bool flippe
 void BondingWire::SetEndLayer(Id<Layer> layer)
 {
     if (m_.layers[1])
-        m_.layers[1]->RemoveEndBondingWire(Entity<BondingWire>::GetId());
+        m_.layers[1]->RemoveEndBondingWire(Id<BondingWire>(GetId()));
     m_.layers[1] = layer;
 }
 

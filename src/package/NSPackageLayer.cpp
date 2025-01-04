@@ -21,7 +21,6 @@ template <typename Archive>
 void StackupLayer::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(StackupLayer);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Layer);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
@@ -31,7 +30,6 @@ template <typename Archive>
 void ComponentLayer::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(ComponentLayer);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Layer);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }

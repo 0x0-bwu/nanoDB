@@ -21,9 +21,8 @@ template <typename Archive>
 void CircuitCell::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(CircuitCell);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Cell);
-    // NS_SERIALIZATION_CLASS_MEMBERS(ar);
+    NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
 NS_SERIALIZATION_FUNCTIONS_IMP(CircuitCell)
 
@@ -31,9 +30,8 @@ template <typename Archive>
 void FootprintCell::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(FootprintCell);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Cell);
-    // NS_SERIALIZATION_CLASS_MEMBERS(ar);
+    NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
 NS_SERIALIZATION_FUNCTIONS_IMP(FootprintCell)
 
@@ -103,6 +101,11 @@ void FootprintCell::SetSolderFillingMaterial(Id<Material> material)
 void FootprintCell::SetBoundary(Id<Shape> boundary)
 {
     m_.boundary = boundary;
+}
+
+Id<Shape> FootprintCell::GetBoundary() const
+{
+    return m_.boundary;
 }
 
 void FootprintCell::SetMaterial(Id<Material> material)
