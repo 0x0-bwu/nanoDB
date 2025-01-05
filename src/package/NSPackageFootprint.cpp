@@ -1,23 +1,23 @@
 #include <core/package>
-NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::Interface)
+NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::Footprint)
 
 namespace nano::package {
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
 
 template <typename Archive>
-void Interface::serialize(Archive & ar, const unsigned int version)
+void Footprint::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(Interface);
+    ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(Footprint);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(NamedObj);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
-NS_SERIALIZATION_FUNCTIONS_IMP(Interface)
+NS_SERIALIZATION_FUNCTIONS_IMP(Footprint)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Interface::Interface(std::string name, CId<FootprintCell> footprint, InterfaceLocation location)
+Footprint::Footprint(std::string name, CId<FootprintCell> footprint, FootprintLocation location)
  : NamedObj(std::move(name))
 {
     m_.footprint = footprint;
@@ -25,27 +25,27 @@ Interface::Interface(std::string name, CId<FootprintCell> footprint, InterfaceLo
     m_.solderHeight = 0;
 }
 
-void Interface::SetSolderFillingMaterial(CId<Material> material)
+void Footprint::SetSolderFillingMaterial(CId<Material> material)
 {
     m_.solderFillingMaterial = material;
 }
 
-void Interface::SetSolderMaterial(CId<Material> material)
+void Footprint::SetSolderMaterial(CId<Material> material)
 {
     m_.solderMaterial = material;
 }
 
-void Interface::SetSolderBallBumpHeight(Float height)
+void Footprint::SetSolderBallBumpHeight(Float height)
 {
     m_.solderHeight = height;
 }
 
-void Interface::SetBoundary(CId<Shape> boundary)
+void Footprint::SetBoundary(CId<Shape> boundary)
 {
     m_.boundary = boundary;
 }
 
-Id<FootprintPin> Interface::AddPin(Id<FootprintPin> pin)
+Id<FootprintPin> Footprint::AddPin(Id<FootprintPin> pin)
 {
     return m_.pins.Add(pin);
 }

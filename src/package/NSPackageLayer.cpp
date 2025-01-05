@@ -77,11 +77,11 @@ Id<Material> StackupLayer::GetDielectricMaterial() const
     return m_.dielectricMat;
 }
 
-ComponentLayer::ComponentLayer(std::string name, CId<Component> component, CId<Interface> interface)
+ComponentLayer::ComponentLayer(std::string name, CId<Component> component, CId<Footprint> footprint)
  : Layer(std::move(name), LayerType::COMPONENT)
 {
     m_.component = component;
-    m_.interface = interface;
+    m_.footprint = footprint;
 }
 
 Id<ComponentPin> ComponentLayer::AddPin(Id<ComponentPin> pin)

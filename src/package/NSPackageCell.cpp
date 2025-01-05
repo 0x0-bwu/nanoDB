@@ -107,14 +107,14 @@ void FootprintCell::SetHeight(Float height)
     m_.height = height;
 }
 
-Id<Interface> FootprintCell::AddInterface(Id<Interface> interface)
+Id<Footprint> FootprintCell::AddFootprint(Id<Footprint> footprint)
 {
-    return m_.interfaces.Add(interface);
+    return m_.footprints.Add(footprint);
 }
 
-CId<Interface> FootprintCell::FindInterface(std::string_view name) const
+CId<Footprint> FootprintCell::FindFootprint(std::string_view name) const
 {
-    return m_.interfaces.Lookup<lut::Name>(name);
+    return m_.footprints.Lookup<lut::Name>(name);
 }
 
 } // namespace nano::package

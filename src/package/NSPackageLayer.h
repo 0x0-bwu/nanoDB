@@ -71,7 +71,7 @@ private:
 class ComponentLayer : public Layer
 {
 public:
-    ComponentLayer(std::string name, CId<Component> component, CId<Interface> interface);
+    ComponentLayer(std::string name, CId<Component> component, CId<Footprint> footprint);
     ComponentLayer() = default;
 
     Id<ComponentPin> AddPin(Id<ComponentPin> pin);
@@ -83,7 +83,7 @@ private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (CId<Component>, component),
-    (CId<Interface>, interface),
+    (CId<Footprint>, footprint),
     (IdVec<ComponentPin>, pins),
     (CId<Layer>, connectedLayer)
     )

@@ -21,13 +21,13 @@ private:
 class FootprintPin : public Pin
 {
 public:
-    FootprintPin(std::string name, CId<Interface> interface, NCoord2D location, IOType ioType);
+    FootprintPin(std::string name, CId<Footprint> footprint, NCoord2D location, IOType ioType);
     FootprintPin() = default;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (CId<Interface>, interface),
+    (CId<Footprint>, footprint),
     (CId<Padstack>, padstack),
     (NCoord2D, location))
 };
