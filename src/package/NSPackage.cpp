@@ -49,9 +49,24 @@ void Package::SortStackupLayers(bool ascending)
     });
 }
 
-Id<StackupLayer> Package::FindStackupLayer(const std::string & name) const
+CId<StackupLayer> Package::FindStackupLayer(std::string_view name) const
 {
     return m_.stackupLayers.Lookup<lut::Name>(name);
+}
+
+Id<StackupLayer> Package::FindStackupLayer(std::string_view name)
+{
+    return m_.stackupLayers.Lookup<lut::Name>(name);
+}
+
+CId<Cell> Package::FindCellByName(std::string_view name) const
+{
+    return m_.cells.Lookup<lut::Name>(name);
+}
+
+Id<Cell> Package::FindCellByName(std::string_view name)
+{
+    return m_.cells.Lookup<lut::Name>(name);
 }
 
 } // namespace nano::package

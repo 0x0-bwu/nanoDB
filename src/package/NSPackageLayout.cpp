@@ -51,4 +51,10 @@ Id<ConnObj> Layout::AddConnObj(Id<ConnObj> connObj)
     return connObj;
 }
 
+Id<Component> Layout::AddComponent(Id<Component> component)
+{
+    return m_.components.Add(component);
+}
+
+
 } // namespace nano::package

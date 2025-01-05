@@ -16,6 +16,7 @@ public:
 
     Id<Net> AddNet(Id<Net> net);
     Id<ConnObj> AddConnObj(Id<ConnObj> connObj);
+    Id<Component> AddComponent(Id<Component> component);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
@@ -23,7 +24,8 @@ private:
     (CId<CircuitCell>, cell),
     (Id<Shape>, boundary),
     (IdVec<Net, NameLut>, nets),
-    (IdVec<ConnObj>, connObjs)
+    (IdVec<ConnObj>, connObjs),
+    (IdVec<Component>, components)
     )
 };
 

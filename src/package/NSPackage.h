@@ -14,8 +14,8 @@ public:
     const CoordUnit & GetCoordUnit() const { return m_.coordUnit; }
 
     void SetMaterialLib(Id<MaterialLib> matLib) { m_.matLib = matLib; }
-    Id<MaterialLib> GetMaterialLib() { return m_.matLib; }
     CId<MaterialLib> GetMaterialLib() const { return m_.matLib; }
+    Id<MaterialLib> GetMaterialLib() { return m_.matLib; }
 
     Id<Cell> AddCell(Id<Cell> cell);
     Id<Padstack> AddPadstack(Id<Padstack> padstack);
@@ -23,7 +23,11 @@ public:
     Id<ComponentLayer> AddComponentLayer(Id<ComponentLayer> layer);
     void SortStackupLayers(bool ascending = false);
 
-    Id<StackupLayer> FindStackupLayer(const std::string & name) const;
+    CId<StackupLayer> FindStackupLayer(std::string_view name) const;
+    Id<StackupLayer> FindStackupLayer(std::string_view name);
+
+    CId<Cell> FindCellByName(std::string_view name) const;
+    Id<Cell> FindCellByName(std::string_view name);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;

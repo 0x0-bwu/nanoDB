@@ -22,7 +22,6 @@ Component::Component(std::string name, CId<FootprintCell> footprint, CId<Layout>
 {
     m_.footprint = footprint;
     m_.layout = layout;
-    m_.boundary = nano::Clone<Shape>(footprint->GetBoundary());
 }
 
 CId<FootprintCell> Component::GetFootprint() const
@@ -55,9 +54,11 @@ bool Component::isFlipped() const
     return m_.flipped;
 }
 
-CId<Shape> Component::GetBoundary() const
+UPtr<Shape> Component::GetBoundary() const
 {
-    return Id<Shape>();//todo
+    auto shape = m_.footprint->GetBoundary()->UniqueClone();
+    shape->Transform(GetTransform());
+    return shape;
 }
 
 } // namespace nano::package 

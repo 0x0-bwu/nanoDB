@@ -19,12 +19,7 @@ public:
     void SetFlipped(bool flipped);
     bool isFlipped() const;
 
-    CId<Shape> GetBoundary() const;
-
-
-
-
-
+    UPtr<Shape> GetBoundary() const;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(

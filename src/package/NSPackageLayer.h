@@ -71,13 +71,13 @@ private:
 class ComponentLayer : public Layer
 {
 public:
-    ComponentLayer(std::string name);
+    ComponentLayer(std::string name, CId<Component> component);
     ComponentLayer() = default;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (size_t, dummy)
+    (CId<Component>, component)
     )
 };
 
