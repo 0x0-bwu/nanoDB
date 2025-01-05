@@ -282,7 +282,7 @@ Id<Layout> CreateDriverLayout(Id<Package> pkg)
     return layout;
 }
 
-Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & compLoc)
+Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & compLocs)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
     auto cell = nano::Create<CircuitCell>("BotBridge", pkg);
@@ -321,14 +321,36 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer4,
                        nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.75, -12.5}, {16.75, -12.5}, {16.75, 12.5}, {-16.75, 12.5}}, 0.25)));
 
-    IdArr3<Component> dieComp;
+    IdArr3<Component> dieComps;
     auto sicDie = CId<FootprintCell>(pkg->FindCellByName("SicDie"));
     BOOST_CHECK(sicDie);
-    for (size_t i = 0; i < dieComp.size(); ++i) {
-        dieComp[i] = layout->AddComponent(nano::Create<Component>("Die" + std::to_string(i + 1), sicDie, layout));
-        dieComp[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, compLoc.at(i)));
+    for (size_t i = 0; i < dieComps.size(); ++i) {
+        dieComps[i] = layout->AddComponent(nano::Create<Component>("Die" + std::to_string(i + 1), sicDie, layout));
+        dieComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, compLocs.at(i)));
+        dieComps[i]->SetLayer(layer1);
+    }
+
+    IdArr3<Component> diodeComps;
+    auto diode = CId<FootprintCell>(pkg->FindCellByName("Diode"));
+    BOOST_CHECK(diode);
+    for (size_t i = 0; i < diodeComps.size(); ++i) {
+        diodeComps[i] = layout->AddComponent(nano::Create<Component>("Diode" + std::to_string(i + 1), diode, layout));
+        diodeComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, compLocs.at(i)));
+        diodeComps[i]->SetLayer(layer1);
     }
     
+    auto rg = CId<FootprintCell>(pkg->FindCellByName("Rg"));
+    BOOST_CHECK(rg);
+    std::vector<FCoord2D> resLocs{{-14.17, 10.5}, {-14.17, 6.075}, {-14.17, 1.65}};
+    for (size_t i = 0; i < resLocs.size(); ++i) {
+        auto res = layout->AddComponent(nano::Create<Component>("R1", rg, layout));
+        res->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, resLocs.at(i)));
+        res->SetLayer(layer1);
+    }
+
+    
+
+
     return layout;
 }
 } // namespace detail
@@ -377,10 +399,10 @@ void t_create_package()
     auto driver = nano::Create<CellInst>("Driver", driverLayout->GetCell(), base);
     driver->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {44, 0}, Mirror2D::XY));
 
-    std::vector<FCoord2D> botCompLoc;
+    std::vector<FCoord2D> botCompLocs;
     for (size_t i = 0; i < 6; ++i)
-        botCompLoc.emplace_back(parameters.at(i * 2), parameters.at(i * 2 + 1));
-    auto botBridgeLayout = detail::CreateBotBridgeLayout(pkg, botCompLoc);
+        botCompLocs.emplace_back(parameters.at(i * 2), parameters.at(i * 2 + 1));
+    auto botBridgeLayout = detail::CreateBotBridgeLayout(pkg, botCompLocs);
 
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/CAS300M12BM2.xml";
     Database::SaveCurrent(filename, ArchiveFormat::XML);
