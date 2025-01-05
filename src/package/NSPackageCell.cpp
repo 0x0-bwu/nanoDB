@@ -70,7 +70,6 @@ FootprintCell::FootprintCell(std::string name, CId<Package> package)
 {
     m_.compType = ComponentType::INVALID;
     m_.height = 0;
-    m_.solderHeight = 0;
 }
 
 FootprintCell::FootprintCell()
@@ -86,16 +85,6 @@ void FootprintCell::SetComponentType(ComponentType type)
 ComponentType FootprintCell::GetComponentType() const
 {
     return m_.compType;
-}
-
-void FootprintCell::SetSolderBallBumpHeight(Float height)
-{
-    m_.solderHeight = height;
-}
-
-void FootprintCell::SetSolderFillingMaterial(Id<Material> material)
-{
-    m_.solderFillingMaterial = material;
 }
 
 void FootprintCell::SetBoundary(Id<Shape> boundary)
@@ -118,9 +107,14 @@ void FootprintCell::SetHeight(Float height)
     m_.height = height;
 }
 
-void FootprintCell::AddPin(Id<FootprintPin> pin)
+Id<Interface> FootprintCell::AddInterface(Id<Interface> interface)
 {
-    m_.pins.Add(pin);
+    return m_.interfaces.Add(interface);
 }
 
-} // namespace package
+CId<Interface> FootprintCell::FindInterface(std::string_view name) const
+{
+    return m_.interfaces.Lookup<lut::Name>(name);
+}
+
+} // namespace nano::package

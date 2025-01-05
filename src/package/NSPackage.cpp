@@ -36,11 +36,6 @@ Id<StackupLayer> Package::AddStackupLayer(Id<StackupLayer> layer)
     return m_.stackupLayers.Add(layer);
 }
 
-Id<ComponentLayer> Package::AddComponentLayer(Id<ComponentLayer> layer)
-{
-    return m_.componentLayers.Add(layer);
-}
-
 void Package::SortStackupLayers(bool ascending)
 {
     m_.stackupLayers.Sort([&](const Id<StackupLayer> & lhs, const Id<StackupLayer> & rhs) {

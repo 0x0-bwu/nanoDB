@@ -54,6 +54,11 @@ bool Component::isFlipped() const
     return m_.flipped;
 }
 
+Id<ComponentLayer> Component::AddComponentLayer(Id<ComponentLayer> componentLayer)
+{
+    return m_.componentLayers.Add(componentLayer);
+}
+
 UPtr<Shape> Component::GetBoundary() const
 {
     auto shape = m_.footprint->GetBoundary()->UniqueClone();

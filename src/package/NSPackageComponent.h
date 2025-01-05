@@ -19,11 +19,14 @@ public:
     void SetFlipped(bool flipped);
     bool isFlipped() const;
 
+    Id<ComponentLayer> AddComponentLayer(Id<ComponentLayer> componentLayer);
+
     UPtr<Shape> GetBoundary() const;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (CId<FootprintCell>, footprint),
+    (IdVec<ComponentLayer, NameLut>, componentLayers),
     (CId<Layout>, layout),
     (CId<Layer>, layer),
     (Id<Shape>, boundary),

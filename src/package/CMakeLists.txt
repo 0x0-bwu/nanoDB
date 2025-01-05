@@ -4,6 +4,7 @@ add_library(nanoPackage
     NSPackageConnObj.cpp
     NSPackageComponent.cpp
     NSPackageHierObj.cpp
+    NSPackageInterface.cpp
     NSPackageLayer.cpp
     NSPackageLayout.cpp
     NSPackageNet.cpp
