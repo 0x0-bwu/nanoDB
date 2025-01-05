@@ -320,6 +320,14 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
                        nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.25, -12}, {16.25, -12}, {16.25, 12}, {-16.25, 12}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer4,
                        nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.75, -12.5}, {16.75, -12.5}, {16.75, 12.5}, {-16.75, 12.5}}, 0.25)));
+
+    IdArr3<Component> dieComp;
+    auto sicDie = CId<FootprintCell>(pkg->FindCellByName("SicDie"));
+    BOOST_CHECK(sicDie);
+    for (size_t i = 0; i < dieComp.size(); ++i) {
+        dieComp[i] = layout->AddComponent(nano::Create<Component>("Die" + std::to_string(i + 1), sicDie, layout));
+        dieComp[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, compLoc.at(i)));
+    }
     
     return layout;
 }

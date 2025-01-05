@@ -249,10 +249,14 @@ class Clonable
 {
 public:
     virtual ~Clonable() = default;
-    virtual Id<T> Clone() const
+    Id<T> Clone() const
     {
         return Database::Current().Get<T>().Register(CloneImpl());
     }
+
+    SPtr<T> SharedClone() const { return SPtr<T>(CloneImpl()); }
+    UPtr<T> UniqueClone() const { return UPtr<T>(CloneImpl()); }
+    
 protected:
     virtual Ptr<T> CloneImpl() const = 0;
 };
