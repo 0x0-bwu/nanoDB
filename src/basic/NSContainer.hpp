@@ -3,6 +3,39 @@
 
 namespace nano {
 
+template <typename IdContainer, bool Mutable = true>
+class IdIterator
+{
+public:
+    using Iterator = typename IdContainer::const_iterator;
+    using ObjectType = typename IdContainer::object_type;
+    using ValueType = std::conditional_t<Mutable, Id<ObjectType>, CId<ObjectType>>; 
+    explicit IdIterator(const IdContainer & container)
+     : m_curr(container.cbegin())
+     , m_end(container.cend())
+    {}
+    
+    ValueType Next() // return current and advance one
+    {
+        if (m_curr == m_end) return ValueType();
+        auto iter = m_curr; m_curr++;
+        return ValueType(*iter);
+    }
+
+    ValueType Current() const
+    {
+        if (m_curr == m_end) return ValueType();
+        return ValueType(*m_curr);
+    }
+
+    ValueType operator*  () const noexcept { return Current(); }
+    ValueType operator-> () const noexcept { return Current(); }
+
+private:
+    Iterator m_curr;
+    const Iterator m_end;
+};
+
 namespace lut {
 
 template <typename T, typename KeyFn>
@@ -105,6 +138,12 @@ class IdVec
 {
 public:
     // std-style APIs
+    using reference = Id<T>&;
+    using value_type = Id<T>;
+    using iterator = typename std::vector<Id<T>>::iterator;
+    using const_iterator = typename std::vector<Id<T>>::const_iterator;
+    using object_type = T;
+
     Id<T> & operator[] (size_t i) { return m_data[i]; }
     const Id<T> & operator[] (size_t i) const { return m_data[i]; }
 
@@ -144,6 +183,12 @@ public:
 
     size_t size() const { return m_data.size(); }
 
+    ///
+    using Iter = IdIterator<IdVec<T, Luts>>;
+    using CIter = IdIterator<IdVec<T, Luts>, false>;
+    Iter GetIter() const { return Iter(*this); }
+    CIter GetCIter() const { return CIter(*this); }
+    
     template <template <typename> class Lut, typename Key>
     Id<T> Lookup(Key && key) const 
     {

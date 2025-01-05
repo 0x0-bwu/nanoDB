@@ -44,7 +44,7 @@ void t_basic()
         BOOST_CHECK(&((*ccsLut)--) == dynamic_cast<liberty::Lut *>(&(*ccsLut)));
     }
 
-    //clone
+    // clone
     {
         auto circle = Create<ShapeCircle>(NCoord2D(0, 0), 10);
         Id<Shape> shape = circle;
@@ -52,6 +52,28 @@ void t_basic()
         BOOST_CHECK(not shape->Identical(clone));
         BOOST_CHECK(circle->GetRadius() == Id<ShapeCircle>(clone)->GetRadius());
         BOOST_CHECK(circle->GetCenter() == Id<ShapeCircle>(clone)->GetCenter());
+    }
+
+    // iterator
+    {
+        IdVec<package::Package> pkgs;
+        pkgs.emplace_back(nano::Create<package::Package>("pkg1"));
+        pkgs.emplace_back(nano::Create<package::Package>("pkg2"));
+        pkgs.emplace_back(nano::Create<package::Package>("pkg3"));
+
+        auto iter = pkgs.GetIter();
+        BOOST_CHECK(iter.Current() && iter->GetName() == "pkg1");
+        static_assert(std::is_same_v<decltype(iter.Current()), Id<package::Package>>);
+        size_t count = 0;
+        while(iter.Next()) { count++; }
+        BOOST_CHECK(count == 3);
+        BOOST_CHECK(not (*iter));
+        auto citer = pkgs.GetCIter();
+        static_assert(std::is_same_v<decltype(citer.Current()), CId<package::Package>>);
+        count = 0;
+        while(citer.Next()) { count++; }
+        BOOST_CHECK(count == 3);
+        BOOST_CHECK(not (*citer));
     }
     Database::Shutdown();
 }
