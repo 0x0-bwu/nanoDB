@@ -1,10 +1,11 @@
 #pragma once
 #include "basic/NSContainer.hpp"
 #include "common/NSUnit.hpp"
+#include "NSPackageCell.h"
 
 namespace nano::package {
 
-class Package : public NamedObj, public Entity<Package>
+class Package : public FootprintCell
 {
 public:
     Package(std::string name);
@@ -42,3 +43,4 @@ private:
 };
 } // namespace nano::package
 NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::package::Package)
+NS_INHERITANCE(nano::package::Package, nano::package::FootprintCell, nano::package::Cell)

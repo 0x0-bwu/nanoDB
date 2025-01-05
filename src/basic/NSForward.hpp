@@ -129,7 +129,6 @@ using Content = Collection<
     package::Layer,
     package::Layout,
     package::Net,
-    package::Package,
     package::Padstack,
     package::Pin,
     ///
@@ -224,6 +223,7 @@ inline constexpr static auto inheritanceMap = hana::make_map(
     hana::make_pair(hana::type_c<package::ComponentLayer          >, hana::type_c<package::Layer       >),
     hana::make_pair(hana::type_c<package::FootprintCell           >, hana::type_c<package::Cell        >),
     hana::make_pair(hana::type_c<package::FootprintPin            >, hana::type_c<package::Pin         >),
+    hana::make_pair(hana::type_c<package::Package                 >, hana::type_c<package::Cell        >),
     hana::make_pair(hana::type_c<package::PadstackInst            >, hana::type_c<package::ConnObj     >),
     hana::make_pair(hana::type_c<package::RoutingWire             >, hana::type_c<package::ConnObj     >),
     hana::make_pair(hana::type_c<package::StackupLayer            >, hana::type_c<package::Layer       >)
