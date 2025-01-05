@@ -77,10 +77,26 @@ Id<Material> StackupLayer::GetDielectricMaterial() const
     return m_.dielectricMat;
 }
 
-ComponentLayer::ComponentLayer(std::string name, CId<Component> component)
+ComponentLayer::ComponentLayer(std::string name, CId<Component> component, CId<Interface> interface)
  : Layer(std::move(name), LayerType::COMPONENT)
 {
     m_.component = component;
+    m_.interface = interface;
+}
+
+Id<ComponentPin> ComponentLayer::AddPin(Id<ComponentPin> pin)
+{
+    return m_.pins.Add(pin);
+}
+
+void ComponentLayer::SetConnectedLayer(CId<Layer> layer)
+{
+    m_.connectedLayer = layer;
+}
+
+CId<Layer> ComponentLayer::GetConnectedLayer() const
+{
+    return m_.connectedLayer;
 }
     
 } // namespace nano::package

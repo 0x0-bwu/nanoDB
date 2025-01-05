@@ -21,7 +21,6 @@ public:
     Id<Cell> AddCell(Id<Cell> cell);
     Id<Padstack> AddPadstack(Id<Padstack> padstack);
     Id<StackupLayer> AddStackupLayer(Id<StackupLayer> layer);
-    Id<ComponentLayer> AddComponentLayer(Id<ComponentLayer> layer);
     void SortStackupLayers(bool ascending = false);
 
     CId<StackupLayer> FindStackupLayer(std::string_view name) const;
@@ -37,7 +36,6 @@ private:
     (Id<MaterialLib>, matLib),
     (IdVec<Cell, NameLut>, cells),
     (IdVec<Padstack, NameLut>, padstacks),
-    (IdVec<ComponentLayer>, componentLayers),
     (IdVec<StackupLayer, NameLut>, stackupLayers)
     )
 };

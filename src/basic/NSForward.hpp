@@ -69,9 +69,11 @@ class CircuitCell;
 class ConnObj;
 class Component;
 class ComponentLayer;
+class ComponentPin;
 class FootprintCell;
 class FootprintPin;
 class HierObj;
+class Interface;
 class Layer;
 class Layout;
 class Net;
@@ -126,6 +128,7 @@ using Content = Collection<
     package::ConnObj,
     package::Component,
     package::HierObj,
+    package::Interface,
     package::Layer,
     package::Layout,
     package::Net,
@@ -185,9 +188,11 @@ inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<package::ConnObj                 >, "PackageConnObj"sv                 ),
     hana::make_pair(hana::type_c<package::Component               >, "PackageComponent"sv               ),
     hana::make_pair(hana::type_c<package::ComponentLayer          >, "PackageComponentLayer"sv          ),
+    hana::make_pair(hana::type_c<package::ComponentPin            >, "PackageComponentPin"sv            ),
     hana::make_pair(hana::type_c<package::FootprintCell           >, "PackageFootprintCell"sv           ),
     hana::make_pair(hana::type_c<package::FootprintPin            >, "PackageFootpinrtPin"sv            ),
     hana::make_pair(hana::type_c<package::HierObj                 >, "PackageHierObj"sv                 ),
+    hana::make_pair(hana::type_c<package::Interface               >, "PackageInterface"sv               ),
     hana::make_pair(hana::type_c<package::Layer                   >, "PackageLayer"sv                   ),
     hana::make_pair(hana::type_c<package::Layout                  >, "PackageLayout"sv                  ),
     hana::make_pair(hana::type_c<package::Net                     >, "PackageNet"sv                     ),
@@ -221,6 +226,7 @@ inline constexpr static auto inheritanceMap = hana::make_map(
     hana::make_pair(hana::type_c<package::CellInst                >, hana::type_c<package::HierObj     >),
     hana::make_pair(hana::type_c<package::CircuitCell             >, hana::type_c<package::Cell        >),
     hana::make_pair(hana::type_c<package::ComponentLayer          >, hana::type_c<package::Layer       >),
+    hana::make_pair(hana::type_c<package::ComponentPin            >, hana::type_c<package::Pin         >),
     hana::make_pair(hana::type_c<package::FootprintCell           >, hana::type_c<package::Cell        >),
     hana::make_pair(hana::type_c<package::FootprintPin            >, hana::type_c<package::Pin         >),
     hana::make_pair(hana::type_c<package::Package                 >, hana::type_c<package::Cell        >),

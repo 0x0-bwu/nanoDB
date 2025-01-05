@@ -54,17 +54,17 @@ public:
 
     void SetComponentType(ComponentType type);
     ComponentType GetComponentType() const;
-
-    void SetSolderBallBumpHeight(Float height);
-    void SetSolderFillingMaterial(Id<Material> material);
     
     void SetBoundary(Id<Shape> boundary);
     Id<Shape> GetBoundary() const;
 
     void SetMaterial(Id<Material> material);
+
     void SetHeight(Float height);
 
-    void AddPin(Id<FootprintPin> pin);
+    Id<Interface> AddInterface(Id<Interface> interface);
+
+    CId<Interface> FindInterface(std::string_view name) const;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
@@ -72,10 +72,8 @@ private:
     (ComponentType, compType),
     (Id<Shape>, boundary),
     (Float, height),
-    (Float, solderHeight),
     (Id<Material>, material),
-    (Id<Material>, solderFillingMaterial),
-    (IdVec<FootprintPin, NameLut>, pins)
+    (IdVec<Interface, NameLut>, interfaces)
     )
 };
 

@@ -1,6 +1,7 @@
 #include <core/package>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::Pin)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::FootprintPin)
+NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::ComponentPin)
 
 namespace nano::package {
 
@@ -25,19 +26,39 @@ void FootprintPin::serialize(Archive & ar, const unsigned int version)
 }
 NS_SERIALIZATION_FUNCTIONS_IMP(FootprintPin)
 
+template <typename Archive>
+void ComponentPin::serialize(Archive & ar, const unsigned int version)
+{
+    NS_UNUSED(version);
+    ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Pin);
+    NS_SERIALIZATION_CLASS_MEMBERS(ar);
+}
+
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Pin::Pin(std::string name, NCoord2D location, IOType ioType)
+Pin::Pin(std::string name, IOType ioType)
  : NamedObj(std::move(name))
 {
-    m_.location = location;
     m_.ioType = ioType;
 }
 
-FootprintPin::FootprintPin(std::string name, Id<FootprintCell> cell, NCoord2D location, IOType ioType)
- : Pin(std::move(name), location, ioType)
+IOType Pin::GetIOType() const
 {
-    m_.cell = cell;
+    return m_.ioType;
+}
+
+FootprintPin::FootprintPin(std::string name, CId<Interface> interface, NCoord2D location, IOType ioType)
+ : Pin(std::move(name), ioType)
+{
+    m_.interface = interface;
+    m_.location = location;
+}
+
+ComponentPin::ComponentPin(std::string name, CId<ComponentLayer> componentLayer, CId<FootprintPin> footprintPin)
+ : Pin(std::move(name), footprintPin->GetIOType())
+{
+    m_.componentLayer = componentLayer;
+    m_.footprintPin = footprintPin;
 }
 
 } // namespace nano::package
