@@ -98,6 +98,11 @@ Id<FootprintCell> CreateSicFootprintCell(Id<Package> pkg)
     topFootprint->AddPin(nano::Create<FootprintPin>("C", topFootprint, coordUnit.toCoord(FCoord2D( 1.25,  0.0)), IOType::INPUT));
     topFootprint->AddPin(nano::Create<FootprintPin>("E", topFootprint, coordUnit.toCoord(FCoord2D( 1.25, -1.0)), IOType::INPUT));
     topFootprint->AddPin(nano::Create<FootprintPin>("K", topFootprint, coordUnit.toCoord(FCoord2D(-2.00, -0.5)), IOType::INPUT));
+
+    auto botFootprint = sicDie->AddFootprint(nano::Create<Footprint>("Bot", sicDie, FootprintLocation::BOT));
+    botFootprint->SetSolderBallBumpHeight(0.1);
+    botFootprint->SetSolderMaterial(solder);
+    botFootprint->AddPin(nano::Create<FootprintPin>("GND", botFootprint, coordUnit.toCoord(FCoord2D(0,  0)), IOType::INPUT));
     
     pkg->AddCell(sicDie);
     return sicDie;
@@ -132,6 +137,12 @@ Id<FootprintCell> CreateDiodeFootprintCell(Id<Package> pkg)
     topFootprint->AddPin(nano::Create<FootprintPin>("I", topFootprint, coordUnit.toCoord(FCoord2D( 1.125, -0.75)), IOType::INPUT));
     topFootprint->AddPin(nano::Create<FootprintPin>("J", topFootprint, coordUnit.toCoord(FCoord2D( 1.125, -1.50)), IOType::INPUT));
 
+    auto botFootprint = diode->AddFootprint(nano::Create<Footprint>("Bot", diode, FootprintLocation::BOT));
+    botFootprint->SetSolderBallBumpHeight(0.1);
+    botFootprint->SetSolderMaterial(solder);
+    botFootprint->SetBoundary(boundary);
+    botFootprint->AddPin(nano::Create<FootprintPin>("GND", botFootprint, coordUnit.toCoord(FCoord2D(0,  0)), IOType::INPUT));
+
     pkg->AddCell(diode);
     return diode;
 }
@@ -146,6 +157,11 @@ Id<FootprintCell> CreateGateResistanceFootprintCell(Id<Package> pkg)
     auto sic = pkg->GetMaterialLib()->FindMaterial("SiC");
     res->SetMaterial(sic);
     res->SetHeight(0.5);
+
+    auto solder = pkg->GetMaterialLib()->FindMaterial("Solder");
+    auto botFootprint = res->AddFootprint(nano::Create<Footprint>("Bot", res, FootprintLocation::BOT));
+    botFootprint->SetSolderBallBumpHeight(0.1);
+    botFootprint->SetSolderMaterial(solder);
     
     pkg->AddCell(res);
     return res;
@@ -328,35 +344,54 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
                        nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.75, -12.5}, {16.75, -12.5}, {16.75, 12.5}, {-16.75, 12.5}}, 0.25)));
 
     IdArr3<Component> dieComps;
-    auto sicDie = CId<FootprintCell>(pkg->FindCellByName("SicDie"));
+    auto sicDie = CId<FootprintCell>(pkg->FindCell("SicDie"));
     BOOST_CHECK(sicDie);
+    auto sicBotFp = sicDie->FindFootprint("Bot");
+    BOOST_CHECK(sicBotFp);
+    auto sicTopFp = sicDie->FindFootprint("Top");
+    BOOST_CHECK(sicTopFp);
+    std::vector<std::string> diePinNames{"G", "B", "D", "A", "C", "E", "K"};
     for (size_t i = 0; i < dieComps.size(); ++i) {
         dieComps[i] = layout->AddComponent(nano::Create<Component>("Die" + std::to_string(i + 1), sicDie, layout));
         dieComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, compLocs.at(i)));
-        dieComps[i]->SetLayer(layer1);
+        auto botLayer = dieComps[i]->AddComponentLayer(nano::Create<ComponentLayer>("Bot", dieComps[i], sicBotFp));
+        botLayer->AddPin(nano::Create<ComponentPin>("GND", botLayer, sicBotFp->FindPin("GND")));
+        botLayer->SetConnectedLayer(layer1);
+
+        auto topLayer = dieComps[i]->AddComponentLayer(nano::Create<ComponentLayer>("Top", dieComps[i], sicTopFp));
+        for (const auto & pin : diePinNames)
+            topLayer->AddPin(nano::Create<ComponentPin>(pin, topLayer, sicTopFp->FindPin(pin.c_str())));
     }
 
     IdArr3<Component> diodeComps;
-    auto diode = CId<FootprintCell>(pkg->FindCellByName("Diode"));
+    auto diode = CId<FootprintCell>(pkg->FindCell("Diode"));
     BOOST_CHECK(diode);
+    auto diodeBotFp = diode->FindFootprint("Bot");
+    BOOST_CHECK(diodeBotFp);
+    auto diodeTopFp = diode->FindFootprint("Top");
+    BOOST_CHECK(diodeTopFp);
+    std::vector<std::string> diodePinNames{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
     for (size_t i = 0; i < diodeComps.size(); ++i) {
         diodeComps[i] = layout->AddComponent(nano::Create<Component>("Diode" + std::to_string(i + 1), diode, layout));
         diodeComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, compLocs.at(i)));
-        diodeComps[i]->SetLayer(layer1);
+        auto botLayer = diodeComps[i]->AddComponentLayer(nano::Create<ComponentLayer>("Bot", diodeComps[i], diodeBotFp));
+        botLayer->AddPin(nano::Create<ComponentPin>("GND", botLayer, diodeBotFp->FindPin("GND")));
+        botLayer->SetConnectedLayer(layer1);
+
+        auto topLayer = diodeComps[i]->AddComponentLayer(nano::Create<ComponentLayer>("Top", diodeComps[i], diodeTopFp));
+        for (const auto & pin : diodePinNames)
+            topLayer->AddPin(nano::Create<ComponentPin>(pin, topLayer, diodeTopFp->FindPin(pin.c_str())));
     }
     
-    auto rg = CId<FootprintCell>(pkg->FindCellByName("Rg"));
+    auto rg = CId<FootprintCell>(pkg->FindCell("Rg"));
     BOOST_CHECK(rg);
     std::vector<FCoord2D> resLocs{{-14.17, 10.5}, {-14.17, 6.075}, {-14.17, 1.65}};
     for (size_t i = 0; i < resLocs.size(); ++i) {
         auto res = layout->AddComponent(nano::Create<Component>("R1", rg, layout));
         res->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, resLocs.at(i)));
-        res->SetLayer(layer1);
+        auto compLayer = res->AddComponentLayer(nano::Create<ComponentLayer>("Bot", res, rg->FindFootprint("Bot")));
+        compLayer->SetConnectedLayer(layer1);
     }
-
-
-
-
     return layout;
 }
 } // namespace detail

@@ -37,6 +37,9 @@ class ComponentPin : public Pin
 public:
     ComponentPin(std::string name, CId<ComponentLayer> componentLayer, CId<FootprintPin> footprintPin);
     ComponentPin() = default;
+
+    CId<ComponentLayer> GetComponentLayer() const { return m_.componentLayer; }
+    
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(

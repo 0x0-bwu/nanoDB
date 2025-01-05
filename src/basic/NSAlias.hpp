@@ -53,6 +53,9 @@ template <typename T> using IdSet = std::unordered_set<Id<T>>;
 template <typename T> using IdArr2 = Arr2<Id<T>>;
 template <typename T> using IdArr3 = Arr3<Id<T>>;
 template <typename T> using IdArr4 = Arr4<Id<T>>;
+template <typename T> using CIdArr2 = Arr2<CId<T>>;
+template <typename T> using CIdArr3 = Arr3<CId<T>>;
+template <typename T> using CIdArr4 = Arr4<CId<T>>;
 
 using NCoord = Int;
 using FCoord = Float;

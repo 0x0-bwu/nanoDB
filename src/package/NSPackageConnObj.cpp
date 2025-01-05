@@ -47,7 +47,7 @@ void PadstackInst::serialize(Archive & ar, const unsigned int version)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-ConnObj::ConnObj(Id<Net> net)
+ConnObj::ConnObj(CId<Net> net)
 {
     m_.net = net;
 }
@@ -82,7 +82,7 @@ CId<PadstackInst> ConnObj::GetPadstackInst() const
     return CId<PadstackInst>(Entity<ConnObj>::GetCId());
 }
 
-BondingWire::BondingWire(std::string name, Id<Net> net, Id<Layer> start, Id<Layer> end, Float radius)
+BondingWire::BondingWire(std::string name, CId<Net> net, CId<Layer> start, CId<Layer> end, Float radius)
  : NamedObj(std::move(name)), ConnObj(net)
 {
     m_.layers[0] = start;
@@ -90,8 +90,8 @@ BondingWire::BondingWire(std::string name, Id<Net> net, Id<Layer> start, Id<Laye
     m_.radius = radius;
 }
 
-BondingWire::BondingWire(std::string name, Id<Net> net, Float radius)
- : BondingWire(std::move(name), net, Id<Layer>(), Id<Layer>(), radius)
+BondingWire::BondingWire(std::string name, CId<Net> net, Float radius)
+ : BondingWire(std::move(name), net, CId<Layer>(), CId<Layer>(), radius)
 {
 }
 
@@ -115,50 +115,66 @@ Float BondingWire::GetHeight() const
     return m_.height;
 }
 
-void BondingWire::SetStartLayer(Id<Layer> layer, const NCoord2D & loc, bool flipped)
+void BondingWire::SetStartPin(CId<ComponentPin> connectedPin, bool flipped)
 {
+    SetStartLayer(connectedPin->GetComponentLayer());
+    m_.connectedPins[0] = connectedPin;
+    m_.flipped[0] = flipped;
+}
+
+void BondingWire::SetStartLayer(CId<Layer> layer, const NCoord2D & loc, bool flipped)
+{
+    NS_ASSERT(CId<StackupLayer>(layer));
     SetStartLayer(layer);
     m_.locations[0] = loc;
     m_.flipped[0] = flipped;
 }
 
-void BondingWire::SetStartLayer(Id<Layer> layer)
+void BondingWire::SetStartLayer(CId<Layer> layer)
 {
     if (m_.layers[0])
-        m_.layers[0]->RemoveStartBondingWire(Id<BondingWire>(GetId()));
+        m_.layers[0].ConstCast()->RemoveStartBondingWire(Id<BondingWire>(GetId()));
     m_.layers[0] = layer;
 }
 
-Id<Layer> BondingWire::GetStartLayer() const
+CId<Layer> BondingWire::GetStartLayer() const
 {
     return m_.layers[0];   
 }
 
-void BondingWire::SetEndLayer(Id<Layer> layer, const NCoord2D & loc, bool flipped)
+void BondingWire::SetEndPin(CId<ComponentPin> connectedPin, bool flipped)
 {
+    SetEndLayer(connectedPin->GetComponentLayer());
+    m_.connectedPins[1] = connectedPin;
+    m_.flipped[1] = flipped;
+}
+
+void BondingWire::SetEndLayer(CId<Layer> layer, const NCoord2D & loc, bool flipped)
+{
+    NS_ASSERT(CId<StackupLayer>(layer));
     SetEndLayer(layer);
     m_.locations[1] = loc;
     m_.flipped[1] = flipped;
 }
 
-void BondingWire::SetEndLayer(Id<Layer> layer)
+void BondingWire::SetEndLayer(CId<Layer> layer)
 {
     if (m_.layers[1])
-        m_.layers[1]->RemoveEndBondingWire(Id<BondingWire>(GetId()));
+        m_.layers[1].ConstCast()->RemoveEndBondingWire(Id<BondingWire>(GetId()));
     m_.layers[1] = layer;
 }
 
-Id<Layer> BondingWire::GetEndLayer() const
+CId<Layer> BondingWire::GetEndLayer() const
 {
     return m_.layers[1];
 }
 
-void BondingWire::SetMaterial(Id<Material> material)
+void BondingWire::SetMaterial(CId<Material> material)
 {
     m_.material = material;
 }
 
-Id<Material> BondingWire::GetMaterial() const
+CId<Material> BondingWire::GetMaterial() const
 {
     return m_.material;
 }
@@ -173,12 +189,12 @@ BondingWireType BondingWire::GetBondingWireType() const
     return m_.type;
 }
 
-void BondingWire::SetSolderJoints(Id<Padstack> solderJoints)
+void BondingWire::SetSolderJoints(CId<Padstack> solderJoints)
 {
     m_.solderJoints = solderJoints;
 }
 
-Id<Padstack> BondingWire::GetSolderJoints() const
+CId<Padstack> BondingWire::GetSolderJoints() const
 {
     return m_.solderJoints;
 }
@@ -189,31 +205,31 @@ void BondingWire::Transform(const Transform2D & transform)
     generic::geometry::Transform(m_.locations[1], transform.GetTransform());
 }
 
-RoutingWire::RoutingWire(Id<Net> net, Id<StackupLayer> layer, Id<Shape> shape)
+RoutingWire::RoutingWire(CId<Net> net, CId<StackupLayer> layer, CId<Shape> shape)
  : ConnObj(net)
 {
     m_.layer = layer;
     m_.shape = shape;
 }
 
-Id<StackupLayer> RoutingWire::GetStackupLayer() const
+CId<StackupLayer> RoutingWire::GetStackupLayer() const
 {
     return m_.layer;
 }
 
-PadstackInst::PadstackInst(Id<Padstack> padstack, Id<Net> net)
+PadstackInst::PadstackInst(CId<Padstack> padstack, CId<Net> net)
  : ConnObj(net)
 {
     m_.padstack = padstack;
 }
 
-void PadstackInst::SetLayerRange(Id<StackupLayer> top, Id<StackupLayer> bot)
+void PadstackInst::SetLayerRange(CId<StackupLayer> top, CId<StackupLayer> bot)
 {
     m_.layerRange[0] = top;
     m_.layerRange[1] = bot;
 }
     
-void PadstackInst::GetLayerRange(Id<StackupLayer> & top, Id<StackupLayer> & bot) const
+void PadstackInst::GetLayerRange(CId<StackupLayer> & top, CId<StackupLayer> & bot) const
 {
     top = m_.layerRange[0];
     bot = m_.layerRange[1];

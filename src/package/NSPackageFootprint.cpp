@@ -50,5 +50,10 @@ Id<FootprintPin> Footprint::AddPin(Id<FootprintPin> pin)
     return m_.pins.Add(pin);
 }
 
+CId<FootprintPin> Footprint::FindPin(std::string_view name) const
+{
+    return m_.pins.Lookup<lut::Name>(name);
+}
+
 
 } // namespace nano::package

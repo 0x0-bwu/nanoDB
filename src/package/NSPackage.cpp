@@ -53,12 +53,12 @@ Id<StackupLayer> Package::FindStackupLayer(std::string_view name)
     return m_.stackupLayers.Lookup<lut::Name>(name);
 }
 
-CId<Cell> Package::FindCellByName(std::string_view name) const
+CId<Cell> Package::FindCell(std::string_view name) const
 {
     return m_.cells.Lookup<lut::Name>(name);
 }
 
-Id<Cell> Package::FindCellByName(std::string_view name)
+Id<Cell> Package::FindCell(std::string_view name)
 {
     return m_.cells.Lookup<lut::Name>(name);
 }

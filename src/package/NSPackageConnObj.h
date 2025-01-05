@@ -6,10 +6,10 @@ namespace nano::package {
 class ConnObj : public Entity<ConnObj>
 {
 public:
-    explicit ConnObj(Id<Net> net);
+    explicit ConnObj(CId<Net> net);
     ConnObj() = default;
 
-    Id<Net> GetNet() const { return m_.net; }
+    CId<Net> GetNet() const { return m_.net; }
 
     Id<BondingWire> GetBondingWire();
     CId<BondingWire> GetBondingWire() const;
@@ -23,7 +23,7 @@ public:
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (Id<Net>, net)
+    (CId<Net>, net)
     )
 };
 
@@ -38,8 +38,8 @@ enum class BondingWireType
 class BondingWire : public NamedObj, public ConnObj
 {
 public:
-    BondingWire(std::string name, Id<Net> net, Id<Layer> start, Id<Layer> end, Float radius);
-    BondingWire(std::string name, Id<Net> net, Float radius);
+    BondingWire(std::string name, CId<Net> net, CId<Layer> start, CId<Layer> end, Float radius);
+    BondingWire(std::string name, CId<Net> net, Float radius);
     BondingWire() = default;
 
     void SetRadius(Float radius);
@@ -48,35 +48,38 @@ public:
     void SetHeight(Float height);
     Float GetHeight() const;
 
-    void SetStartLayer(Id<Layer> layer, const NCoord2D & loc, bool flipped);
-    void SetStartLayer(Id<Layer> layer);
-    Id<Layer> GetStartLayer() const;
+    void SetStartPin(CId<ComponentPin> connectedPin, bool flipped);
+    void SetStartLayer(CId<Layer> layer, const NCoord2D & loc, bool flipped);
+    void SetStartLayer(CId<Layer> layer);
+    CId<Layer> GetStartLayer() const;
 
-    void SetEndLayer(Id<Layer> layer, const NCoord2D & loc, bool flipped);
-    void SetEndLayer(Id<Layer> layer);
-    Id<Layer> GetEndLayer() const;
+    void SetEndPin(CId<ComponentPin> connectedPin, bool flipped);
+    void SetEndLayer(CId<Layer> layer, const NCoord2D & loc, bool flipped);
+    void SetEndLayer(CId<Layer> layer);
+    CId<Layer> GetEndLayer() const;
 
-    void SetMaterial(Id<Material> material);
-    Id<Material> GetMaterial() const;
+    void SetMaterial(CId<Material> material);
+    CId<Material> GetMaterial() const;
 
     void SetBondingWireType(BondingWireType type);
     BondingWireType GetBondingWireType() const;
 
-    void SetSolderJoints(Id<Padstack> solderJoints);
-    Id<Padstack> GetSolderJoints() const;
+    void SetSolderJoints(CId<Padstack> solderJoints);
+    CId<Padstack> GetSolderJoints() const;
 
     void Transform(const Transform2D & transform);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (Id<Material>, material),
+    (CId<Material>, material),
     (Float, radius),
     (Float, height),
-    (Arr2<Id<Layer>>, layers),
+    (CIdArr2<Layer>, layers),
+    (CIdArr2<ComponentPin>, connectedPins),
     (Arr2<NCoord2D>, locations),
     (Arr2<bool>, flipped),
-    (Id<Padstack>, solderJoints),
+    (CId<Padstack>, solderJoints),
     (BondingWireType, type)
     )
 };
@@ -84,33 +87,33 @@ private:
 class RoutingWire : public ConnObj
 {
 public:
-    RoutingWire(Id<Net> net, Id<StackupLayer> layer, Id<Shape> shape);
+    RoutingWire(CId<Net> net, CId<StackupLayer> layer, CId<Shape> shape);
     RoutingWire() = default;
 
-    Id<StackupLayer> GetStackupLayer() const;
+    CId<StackupLayer> GetStackupLayer() const;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (Id<StackupLayer>, layer),
-    (Id<Shape>, shape)
+    (CId<StackupLayer>, layer),
+    (CId<Shape>, shape)
     )
 };
 
 class PadstackInst : public ConnObj, public Transformable2D
 {
 public:
-    PadstackInst(Id<Padstack> padstack, Id<Net> net);
+    PadstackInst(CId<Padstack> padstack, CId<Net> net);
     PadstackInst() = default;
 
-    void SetLayerRange(Id<StackupLayer> top, Id<StackupLayer> bot);
-    void GetLayerRange(Id<StackupLayer> & top, Id<StackupLayer> & bot) const;
+    void SetLayerRange(CId<StackupLayer> top, CId<StackupLayer> bot);
+    void GetLayerRange(CId<StackupLayer> & top, CId<StackupLayer> & bot) const;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (Id<Padstack>, padstack),
-    (Arr2<Id<StackupLayer>>, layerRange)
+    (CId<Padstack>, padstack),
+    (CIdArr2<StackupLayer>, layerRange)
     )
 };
 
