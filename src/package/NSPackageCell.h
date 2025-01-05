@@ -62,9 +62,9 @@ public:
 
     void SetHeight(Float height);
 
-    Id<Interface> AddInterface(Id<Interface> interface);
+    Id<Footprint> AddFootprint(Id<Footprint> interface);
 
-    CId<Interface> FindInterface(std::string_view name) const;
+    CId<Footprint> FindFootprint(std::string_view name) const;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
@@ -73,7 +73,7 @@ private:
     (Id<Shape>, boundary),
     (Float, height),
     (Id<Material>, material),
-    (IdVec<Interface, NameLut>, interfaces)
+    (IdVec<Footprint, NameLut>, footprints)
     )
 };
 

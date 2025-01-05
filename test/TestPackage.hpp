@@ -85,19 +85,19 @@ Id<FootprintCell> CreateSicFootprintCell(Id<Package> pkg)
     sicDie->SetMaterial(sic);
     sicDie->SetHeight(0.18);
 
-    auto topInterface = sicDie->AddInterface(nano::Create<Interface>("Top", sicDie, InterfaceLocation::TOP));
-    topInterface->SetSolderBallBumpHeight(0.1);
+    auto topFootprint = sicDie->AddFootprint(nano::Create<Footprint>("Top", sicDie, FootprintLocation::TOP));
+    topFootprint->SetSolderBallBumpHeight(0.1);
     auto solder = pkg->GetMaterialLib()->FindMaterial("Solder");
-    topInterface->SetSolderMaterial(solder);
-    topInterface->SetBoundary(boundary);
+    topFootprint->SetSolderMaterial(solder);
+    topFootprint->SetBoundary(boundary);
 
-    topInterface->AddPin(nano::Create<FootprintPin>("G", topInterface, coordUnit.toCoord(FCoord2D(-1.25,  1.0)), IOType::INPUT));
-    topInterface->AddPin(nano::Create<FootprintPin>("B", topInterface, coordUnit.toCoord(FCoord2D(-1.25,  0.0)), IOType::INPUT));
-    topInterface->AddPin(nano::Create<FootprintPin>("D", topInterface, coordUnit.toCoord(FCoord2D(-1.25, -1.0)), IOType::INPUT));
-    topInterface->AddPin(nano::Create<FootprintPin>("A", topInterface, coordUnit.toCoord(FCoord2D( 1.25,  1.0)), IOType::INPUT));
-    topInterface->AddPin(nano::Create<FootprintPin>("C", topInterface, coordUnit.toCoord(FCoord2D( 1.25,  0.0)), IOType::INPUT));
-    topInterface->AddPin(nano::Create<FootprintPin>("E", topInterface, coordUnit.toCoord(FCoord2D( 1.25, -1.0)), IOType::INPUT));
-    topInterface->AddPin(nano::Create<FootprintPin>("K", topInterface, coordUnit.toCoord(FCoord2D(-2.00, -0.5)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("G", topFootprint, coordUnit.toCoord(FCoord2D(-1.25,  1.0)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("B", topFootprint, coordUnit.toCoord(FCoord2D(-1.25,  0.0)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("D", topFootprint, coordUnit.toCoord(FCoord2D(-1.25, -1.0)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("A", topFootprint, coordUnit.toCoord(FCoord2D( 1.25,  1.0)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("C", topFootprint, coordUnit.toCoord(FCoord2D( 1.25,  0.0)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("E", topFootprint, coordUnit.toCoord(FCoord2D( 1.25, -1.0)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("K", topFootprint, coordUnit.toCoord(FCoord2D(-2.00, -0.5)), IOType::INPUT));
     
     pkg->AddCell(sicDie);
     return sicDie;
@@ -114,23 +114,23 @@ Id<FootprintCell> CreateDiodeFootprintCell(Id<Package> pkg)
     diode->SetMaterial(sic);
     diode->SetHeight(0.18);
 
-    auto topInterface = diode->AddInterface(nano::Create<Interface>("Top", diode, InterfaceLocation::TOP));
-    topInterface->SetSolderBallBumpHeight(0.1);
+    auto topFootprint = diode->AddFootprint(nano::Create<Footprint>("Top", diode, FootprintLocation::TOP));
+    topFootprint->SetSolderBallBumpHeight(0.1);
     auto solder = pkg->GetMaterialLib()->FindMaterial("Solder");
-    topInterface->SetSolderMaterial(solder);
-    topInterface->SetBoundary(boundary);
+    topFootprint->SetSolderMaterial(solder);
+    topFootprint->SetBoundary(boundary);
 
-    topInterface->AddPin(nano::Create<FootprintPin>("A", topInterface, coordUnit.toCoord(FCoord2D(-1.125,  1.50)), IOType::INPUT));
-    topInterface->AddPin(nano::Create<FootprintPin>("B", topInterface, coordUnit.toCoord(FCoord2D(-1.125,  0.75)), IOType::INPUT));
-    topInterface->AddPin(nano::Create<FootprintPin>("C", topInterface, coordUnit.toCoord(FCoord2D(-1.125,  0.00)), IOType::INPUT));
-    topInterface->AddPin(nano::Create<FootprintPin>("D", topInterface, coordUnit.toCoord(FCoord2D(-1.125, -0.75)), IOType::INPUT));
-    topInterface->AddPin(nano::Create<FootprintPin>("E", topInterface, coordUnit.toCoord(FCoord2D(-1.125, -1.50)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("A", topFootprint, coordUnit.toCoord(FCoord2D(-1.125,  1.50)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("B", topFootprint, coordUnit.toCoord(FCoord2D(-1.125,  0.75)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("C", topFootprint, coordUnit.toCoord(FCoord2D(-1.125,  0.00)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("D", topFootprint, coordUnit.toCoord(FCoord2D(-1.125, -0.75)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("E", topFootprint, coordUnit.toCoord(FCoord2D(-1.125, -1.50)), IOType::INPUT));
 
-    topInterface->AddPin(nano::Create<FootprintPin>("F", topInterface, coordUnit.toCoord(FCoord2D( 1.125,  1.50)), IOType::INPUT));
-    topInterface->AddPin(nano::Create<FootprintPin>("G", topInterface, coordUnit.toCoord(FCoord2D( 1.125,  0.75)), IOType::INPUT));
-    topInterface->AddPin(nano::Create<FootprintPin>("H", topInterface, coordUnit.toCoord(FCoord2D( 1.125,  0.00)), IOType::INPUT));
-    topInterface->AddPin(nano::Create<FootprintPin>("I", topInterface, coordUnit.toCoord(FCoord2D( 1.125, -0.75)), IOType::INPUT));
-    topInterface->AddPin(nano::Create<FootprintPin>("J", topInterface, coordUnit.toCoord(FCoord2D( 1.125, -1.50)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("F", topFootprint, coordUnit.toCoord(FCoord2D( 1.125,  1.50)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("G", topFootprint, coordUnit.toCoord(FCoord2D( 1.125,  0.75)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("H", topFootprint, coordUnit.toCoord(FCoord2D( 1.125,  0.00)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("I", topFootprint, coordUnit.toCoord(FCoord2D( 1.125, -0.75)), IOType::INPUT));
+    topFootprint->AddPin(nano::Create<FootprintPin>("J", topFootprint, coordUnit.toCoord(FCoord2D( 1.125, -1.50)), IOType::INPUT));
 
     pkg->AddCell(diode);
     return diode;

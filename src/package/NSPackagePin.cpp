@@ -47,10 +47,10 @@ IOType Pin::GetIOType() const
     return m_.ioType;
 }
 
-FootprintPin::FootprintPin(std::string name, CId<Interface> interface, NCoord2D location, IOType ioType)
+FootprintPin::FootprintPin(std::string name, CId<Footprint> footprint, NCoord2D location, IOType ioType)
  : Pin(std::move(name), ioType)
 {
-    m_.interface = interface;
+    m_.footprint = footprint;
     m_.location = location;
 }
 

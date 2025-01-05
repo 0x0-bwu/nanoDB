@@ -3,19 +3,18 @@
 
 namespace nano::package {
 
-enum class InterfaceLocation
+enum class FootprintLocation
 {
     INVALID = -1,
     TOP = 0,
     BOTTOM = 1,
     OTHER = 2,
 };
-
-class Interface : public NamedObj, public Entity<Interface>
+class Footprint : public NamedObj, public Entity<Footprint>
 {
 public:
-    Interface(std::string name, CId<FootprintCell> footprint, InterfaceLocation location);
-    Interface() = default;
+    Footprint(std::string name, CId<FootprintCell> footprint, FootprintLocation location);
+    Footprint() = default;
 
     void SetSolderFillingMaterial(CId<Material> material);
     void SetSolderMaterial(CId<Material> material);
@@ -28,7 +27,7 @@ private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (CId<FootprintCell>, footprint),
-    (InterfaceLocation, location),
+    (FootprintLocation, location),
     (IdVec<FootprintPin, NameLut>, pins),
     (CId<Shape>, boundary),
     (CId<Material>, solderFillingMaterial),
@@ -38,4 +37,4 @@ private:
 };
 
 } // nano::package
-NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::package::Interface);
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::package::Footprint);

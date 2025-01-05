@@ -3,8 +3,8 @@ add_library(nanoPackage
     NSPackageCell.cpp
     NSPackageConnObj.cpp
     NSPackageComponent.cpp
+    NSPackageFootprint.cpp
     NSPackageHierObj.cpp
-    NSPackageInterface.cpp
     NSPackageLayer.cpp
     NSPackageLayout.cpp
     NSPackageNet.cpp
