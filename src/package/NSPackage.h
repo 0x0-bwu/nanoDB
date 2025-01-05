@@ -26,8 +26,8 @@ public:
     CId<StackupLayer> FindStackupLayer(std::string_view name) const;
     Id<StackupLayer> FindStackupLayer(std::string_view name);
 
-    CId<Cell> FindCellByName(std::string_view name) const;
-    Id<Cell> FindCellByName(std::string_view name);
+    CId<Cell> FindCell(std::string_view name) const;
+    Id<Cell> FindCell(std::string_view name);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;

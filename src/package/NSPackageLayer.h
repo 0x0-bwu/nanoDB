@@ -39,7 +39,7 @@ class StackupLayer : public Layer
 public:
     friend class Layout;
     StackupLayer(std::string name, LayerType type, 
-        Float elevation, Float thickness, Id<Material> conductingMat, Id<Material> dielectricMat);
+        Float elevation, Float thickness, CId<Material> conductingMat, CId<Material> dielectricMat);
     StackupLayer();
 
     void SetElevation(Float elevation) { m_.elevation = elevation; }
@@ -48,11 +48,11 @@ public:
     void SetThickness(Float thickness) { m_.thickness = thickness; }
     Float GetThickness() const { return m_.thickness; }
 
-    void SetConductingMaterial(Id<Material> material);
-    Id<Material> GetConductingMaterial() const;
+    void SetConductingMaterial(CId<Material> material);
+    CId<Material> GetConductingMaterial() const;
 
-    void SetDielectricMaterial(Id<Material> material);
-    Id<Material> GetDielectricMaterial() const;
+    void SetDielectricMaterial(CId<Material> material);
+    CId<Material> GetDielectricMaterial() const;
 
 private:
     void AddRoutingWire(Id<RoutingWire> wire) { m_.routingWires.Add(wire); }
@@ -62,8 +62,8 @@ private:
     NS_DEFINE_CLASS_MEMBERS(
     (Float, elevation),
     (Float, thickness),
-    (Id<Material>, conductingMat),
-    (Id<Material>, dielectricMat),
+    (CId<Material>, conductingMat),
+    (CId<Material>, dielectricMat),
     (IdVec<RoutingWire>, routingWires)
     )
 };

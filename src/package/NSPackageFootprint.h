@@ -6,8 +6,8 @@ namespace nano::package {
 enum class FootprintLocation
 {
     INVALID = -1,
-    TOP = 0,
-    BOTTOM = 1,
+    BOT = 0,
+    TOP = 1,
     OTHER = 2,
 };
 class Footprint : public NamedObj, public Entity<Footprint>
@@ -22,6 +22,7 @@ public:
     void SetBoundary(CId<Shape> boundary);
 
     Id<FootprintPin> AddPin(Id<FootprintPin> pin);
+    CId<FootprintPin> FindPin(std::string_view name) const;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
