@@ -38,9 +38,8 @@ enum class BondingWireType
 class BondingWire : public NamedObj, public ConnObj
 {
 public:
-    BondingWire(std::string name, CId<Net> net, CId<Layer> start, CId<Layer> end, Float radius);
     BondingWire(std::string name, CId<Net> net, Float radius);
-    BondingWire() = default;
+    BondingWire();
 
     void SetRadius(Float radius);
     Float GetRadius() const;
@@ -48,13 +47,13 @@ public:
     void SetHeight(Float height);
     Float GetHeight() const;
 
-    void SetStartPin(CId<ComponentPin> connectedPin, bool flipped);
-    void SetStartLayer(CId<Layer> layer, const NCoord2D & loc, bool flipped);
+    void SetStartPin(CId<ComponentPin> connectedPin);
+    void SetStartLayer(CId<Layer> layer, const NCoord2D & loc);
     void SetStartLayer(CId<Layer> layer);
     CId<Layer> GetStartLayer() const;
 
-    void SetEndPin(CId<ComponentPin> connectedPin, bool flipped);
-    void SetEndLayer(CId<Layer> layer, const NCoord2D & loc, bool flipped);
+    void SetEndPin(CId<ComponentPin> connectedPin);
+    void SetEndLayer(CId<Layer> layer, const NCoord2D & loc);
     void SetEndLayer(CId<Layer> layer);
     CId<Layer> GetEndLayer() const;
 
@@ -78,7 +77,6 @@ private:
     (CIdArr2<Layer>, layers),
     (CIdArr2<ComponentPin>, connectedPins),
     (Arr2<NCoord2D>, locations),
-    (Arr2<bool>, flipped),
     (CId<Padstack>, solderJoints),
     (BondingWireType, type)
     )

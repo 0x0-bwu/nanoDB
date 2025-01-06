@@ -82,16 +82,14 @@ CId<PadstackInst> ConnObj::GetPadstackInst() const
     return CId<PadstackInst>(Entity<ConnObj>::GetCId());
 }
 
-BondingWire::BondingWire(std::string name, CId<Net> net, CId<Layer> start, CId<Layer> end, Float radius)
+BondingWire::BondingWire(std::string name, CId<Net> net, Float radius)
  : NamedObj(std::move(name)), ConnObj(net)
 {
-    m_.layers[0] = start;
-    m_.layers[1] = end;
     m_.radius = radius;
 }
 
-BondingWire::BondingWire(std::string name, CId<Net> net, Float radius)
- : BondingWire(std::move(name), net, CId<Layer>(), CId<Layer>(), radius)
+BondingWire::BondingWire()
+ : BondingWire("", CId<Net>(), 0)
 {
 }
 
@@ -115,19 +113,17 @@ Float BondingWire::GetHeight() const
     return m_.height;
 }
 
-void BondingWire::SetStartPin(CId<ComponentPin> connectedPin, bool flipped)
+void BondingWire::SetStartPin(CId<ComponentPin> connectedPin)
 {
     SetStartLayer(connectedPin->GetComponentLayer());
     m_.connectedPins[0] = connectedPin;
-    m_.flipped[0] = flipped;
 }
 
-void BondingWire::SetStartLayer(CId<Layer> layer, const NCoord2D & loc, bool flipped)
+void BondingWire::SetStartLayer(CId<Layer> layer, const NCoord2D & loc)
 {
     NS_ASSERT(CId<StackupLayer>(layer));
     SetStartLayer(layer);
     m_.locations[0] = loc;
-    m_.flipped[0] = flipped;
 }
 
 void BondingWire::SetStartLayer(CId<Layer> layer)
@@ -142,19 +138,17 @@ CId<Layer> BondingWire::GetStartLayer() const
     return m_.layers[0];   
 }
 
-void BondingWire::SetEndPin(CId<ComponentPin> connectedPin, bool flipped)
+void BondingWire::SetEndPin(CId<ComponentPin> connectedPin)
 {
     SetEndLayer(connectedPin->GetComponentLayer());
     m_.connectedPins[1] = connectedPin;
-    m_.flipped[1] = flipped;
 }
 
-void BondingWire::SetEndLayer(CId<Layer> layer, const NCoord2D & loc, bool flipped)
+void BondingWire::SetEndLayer(CId<Layer> layer, const NCoord2D & loc)
 {
     NS_ASSERT(CId<StackupLayer>(layer));
     SetEndLayer(layer);
     m_.locations[1] = loc;
-    m_.flipped[1] = flipped;
 }
 
 void BondingWire::SetEndLayer(CId<Layer> layer)
