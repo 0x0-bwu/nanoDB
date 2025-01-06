@@ -3,7 +3,7 @@
 
 namespace nano::package {
 
-class Layout : public Entity<Layout>
+class Layout : public Clonable<Layout>, public Entity<Layout>
 {
 public:
     explicit Layout(CId<CircuitCell> cell);
@@ -21,6 +21,8 @@ public:
     auto GetConnObjIter() { return m_.connObjs.GetIter<ConnObj>(); }
     auto GetConnObjIter() const { return m_.connObjs.GetCIter<ConnObj>(); }
 
+protected:
+    Ptr<Layout> CloneImpl() const override;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(

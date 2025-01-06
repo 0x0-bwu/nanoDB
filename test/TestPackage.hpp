@@ -626,7 +626,7 @@ void t_create_package()
     auto driverLayout = detail::CreateDriverLayout(pkg); 
     auto driver = nano::Create<CellInst>("Driver", driverLayout->GetCell(), base);
     driver->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {44, 0}, Mirror2D::XY));
-
+    base->AddCellInst(driver);
     std::vector<FCoord2D> botCompLocs;
     for (size_t i = 0; i < 6; ++i)
         botCompLocs.emplace_back(parameters.at(i * 2), parameters.at(i * 2 + 1));
@@ -634,10 +634,10 @@ void t_create_package()
 
     auto botBridgeInst1 = nano::Create<CellInst>("BotBridge1", botBridgeLayout->GetCell(), base);
     botBridgeInst1->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {-17.75, 13}));
-    base->AddChild(botBridgeInst1);
+    base->AddCellInst(botBridgeInst1);
     auto botBridgeInst2 = nano::Create<CellInst>("BotBridge2", botBridgeLayout->GetCell(), base);
     botBridgeInst2->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {-17.75, -13}, Mirror2D::X));
-    base->AddChild(botBridgeInst2);
+    base->AddCellInst(botBridgeInst2);
 
     std::vector<FCoord2D> topCompLocs;
     for (size_t i = 0; i < 6; i++)
@@ -646,10 +646,10 @@ void t_create_package()
 
     auto topBridgeInst1 = nano::Create<CellInst>("TopBridge1", topBridgeLayout->GetCell(), base);
     topBridgeInst1->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {17.75, 13}));
-    base->AddChild(topBridgeInst1);
+    base->AddCellInst(topBridgeInst1);
     auto topBridgeInst2 = nano::Create<CellInst>("TopBridge2", topBridgeLayout->GetCell(), base);
     topBridgeInst2->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {17.75, -13}, Mirror2D::X));
-    base->AddChild(topBridgeInst2);
+    base->AddCellInst(topBridgeInst2);
 
     base->Flatten();
     auto iter = baseLayout->GetConnObjIter();

@@ -50,11 +50,6 @@ CId<HierObj> HierObj::GetParent() const
     return m_.parent;
 }
 
-const IdVec<HierObj> & HierObj::GetChildren() const
-{
-    return m_.children;
-}
-
 Id<HierObj> HierObj::AddChild(Id<HierObj> child)
 {
     child->SetParent(Entity<HierObj>::GetCId());
@@ -74,11 +69,25 @@ CId<CircuitCell> CellInst::GetCell() const
 
 Id<CellInst> CellInst::AddCellInst(Id<CellInst> cellInst)
 {
-    return Id<CellInst>(AddChild(cellInst));
+    AddChild(cellInst);
+    return cellInst;
+}
+
+auto CellInst::GetCellInstIter() const
+{
+    return (*this)--->children.GetCIter<CellInst>();
 }
 
 void CellInst::FlattenImpl()
 {
+    if (m_.flattenedLayout) {
+        nano::Remove(m_.flattenedLayout);
+        m_.flattenedLayout = nano::Clone(m_.cell->GetLayout());
+    }
+    auto iter = GetCellInstIter();
+    while (auto cellInst = iter.Next()) {
+        //todo
+    }
 }
 
 } // namespace nano::package
