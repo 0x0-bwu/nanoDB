@@ -75,6 +75,7 @@ public:
     ComponentLayer() = default;
 
     Id<ComponentPin> AddPin(Id<ComponentPin> pin);
+    CId<ComponentPin> FindPin(std::string_view name) const;
 
     void SetConnectedLayer(CId<Layer> layer);
     CId<Layer> GetConnectedLayer() const;
@@ -84,7 +85,7 @@ private:
     NS_DEFINE_CLASS_MEMBERS(
     (CId<Component>, component),
     (CId<Footprint>, footprint),
-    (IdVec<ComponentPin>, pins),
+    (IdVec<ComponentPin, NameLut>, pins),
     (CId<Layer>, connectedLayer)
     )
 };

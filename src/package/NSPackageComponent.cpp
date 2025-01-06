@@ -10,6 +10,7 @@ void Component::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
     ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(Component);
+    ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Transformable2D);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(NamedObj);
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
@@ -22,6 +23,12 @@ Component::Component(std::string name, CId<FootprintCell> footprint, CId<Layout>
 {
     m_.footprint = footprint;
     m_.layout = layout;
+    m_.flipped = false;
+}
+
+Component::Component()
+ : Component("", CId<FootprintCell>(), CId<Layout>())
+{
 }
 
 CId<FootprintCell> Component::GetFootprint() const
@@ -32,16 +39,6 @@ CId<FootprintCell> Component::GetFootprint() const
 CId<Layout> Component::GetLayout() const
 {
     return m_.layout;
-}
-
-void Component::SetLayer(CId<Layer> layer)
-{
-    m_.layer = layer;
-}
-
-CId<Layer> Component::GetLayer() const
-{
-    return m_.layer;
 }
 
 void Component::SetFlipped(bool flipped)
@@ -57,6 +54,18 @@ bool Component::isFlipped() const
 Id<ComponentLayer> Component::AddComponentLayer(Id<ComponentLayer> componentLayer)
 {
     return m_.componentLayers.Add(componentLayer);
+}
+
+CId<ComponentLayer> Component::FindComponentLayer(std::string_view name) const
+{
+    return m_.componentLayers.Lookup<lut::Name>(name);
+}
+
+CId<ComponentPin> Component::FindComponentPin(std::string_view layerName, std::string_view pinName) const
+{
+    if (auto layer = FindComponentLayer(layerName); layer)
+        return layer->FindPin(pinName);
+    return CId<ComponentPin>();
 }
 
 UPtr<Shape> Component::GetBoundary() const
