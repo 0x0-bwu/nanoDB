@@ -6,16 +6,16 @@ namespace nano::package {
 
 class HierObj : public Entity<HierObj>
 {
-public:
+protected:
     HierObj(CId<HierObj> parent);
     HierObj() = default;
 
     void SetParent(CId<HierObj> parent);
     CId<HierObj> GetParent() const;    
 
-    const IdVec<HierObj> & GetChildren() const;
     Id<HierObj> AddChild(Id<HierObj> child);
 
+public:
     virtual void Flatten();
 
 protected:
@@ -36,6 +36,7 @@ public:
 
     CId<CircuitCell> GetCell() const;
     Id<CellInst> AddCellInst(Id<CellInst> cellInst);
+    auto GetCellInstIter() const;
 
 protected:
     void FlattenImpl() override;

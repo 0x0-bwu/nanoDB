@@ -56,5 +56,13 @@ Id<Component> Layout::AddComponent(Id<Component> component)
     return m_.components.Add(component);
 }
 
+Ptr<Layout> Layout::CloneImpl() const
+{
+    auto clone = new Layout(m_.cell);
+    clone->m_.boundary = nano::Clone(m_.boundary);
+    //todo
+    return clone;
+}
+
 
 } // namespace nano::package
