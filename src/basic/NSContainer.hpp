@@ -11,10 +11,10 @@ public:
     using ObjectType = typename IdContainer::object_type;
     using ValueType = std::conditional_t<Mutable, Id<ObjectType>, CId<ObjectType>>; 
     explicit IdIterator(const IdContainer & container)
-     : m_curr(container.cbegin())
-     , m_end(container.cend())
-    {}
-    
+     : m_curr(container.cbegin()), m_end(container.cend())
+    {
+    }
+
     ValueType Next() // return current and advance one
     {
         if (m_curr == m_end) return ValueType();

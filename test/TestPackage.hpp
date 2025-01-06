@@ -201,14 +201,14 @@ Id<Layout> CreateBaseLayout(Id<Package> pkg)
     BOOST_CHECK(topCuLayer);
     for (size_t i = 0; i < dPLoc.size(); ++i) {
         auto bw1 = nano::Create<BondingWire>("DS1_" + std::to_string(i), noNet, 0.15);
-        bw1->SetStartLayer(topCuLayer, coordUnit.toCoord(dPLoc[i]), false);
-        bw1->SetEndLayer(topCuLayer, coordUnit.toCoord(sPLoc[i]), false);
+        bw1->SetStartLayer(topCuLayer, coordUnit.toCoord(dPLoc[i]));
+        bw1->SetEndLayer(topCuLayer, coordUnit.toCoord(sPLoc[i]));
         layout->AddConnObj(bw1);
 
         dPLoc[i][1] *= -1; sPLoc[i][1] *= -1;
         auto bw2 = nano::Create<BondingWire>("DS2_" + std::to_string(i), noNet, 0.15);
-        bw2->SetStartLayer(topCuLayer, coordUnit.toCoord(dPLoc[i]), false);
-        bw2->SetEndLayer(topCuLayer, coordUnit.toCoord(sPLoc[i]), false);
+        bw2->SetStartLayer(topCuLayer, coordUnit.toCoord(dPLoc[i]));
+        bw2->SetEndLayer(topCuLayer, coordUnit.toCoord(sPLoc[i]));
         layout->AddConnObj(bw2);
     }
 
@@ -216,54 +216,54 @@ Id<Layout> CreateBaseLayout(Id<Package> pkg)
     for (size_t i = 0; i < gPLoc.size(); ++i) {
         const auto & p = gPLoc.at(i);
         auto bw1 = nano::Create<BondingWire>("G1_" + std::to_string(i), noNet, 0.0635);
-        bw1->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(p[0], p[1])), false);
-        bw1->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(-p[0], p[1])), false);
+        bw1->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(p[0], p[1])));
+        bw1->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(-p[0], p[1])));
         layout->AddConnObj(bw1);
 
         auto bw2 = nano::Create<BondingWire>("G2_" + std::to_string(i), noNet, 0.0635);
-        bw2->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(p[0], -p[1])), false);
-        bw2->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(-p[0], -p[1])), false);
+        bw2->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(p[0], -p[1])));
+        bw2->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(-p[0], -p[1])));
         layout->AddConnObj(bw2);
     }
 
     auto kelvinBw0 = nano::Create<BondingWire>("KelvinBw0", gateNet, 0.0635);
-    kelvinBw0->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(30.15, -5.95)), false);
-    kelvinBw0->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(40.05, -5.95)), false);
+    kelvinBw0->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(30.15, -5.95)));
+    kelvinBw0->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(40.05, -5.95)));
     layout->AddConnObj(kelvinBw0);
 
     auto kelvinBw = nano::Create<BondingWire>("KelvinBw", gateNet, 0.0635);
-    kelvinBw->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(30.15, 5)), false);
-    kelvinBw->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(30.15, -5)), false);
+    kelvinBw->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(30.15, 5)));
+    kelvinBw->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(30.15, -5)));
     layout->AddConnObj(kelvinBw);
 
     auto gateBw0 = nano::Create<BondingWire>("GateBw0", gateNet, 0.0635);
-    gateBw0->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32, -12.375)), false);
-    gateBw0->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(40.05, -12.375)), false);
+    gateBw0->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32, -12.375)));
+    gateBw0->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(40.05, -12.375)));
     layout->AddConnObj(gateBw0);
 
     auto gateBw = nano::Create<BondingWire>("GateBw", gateNet, 0.0635);
-    gateBw->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32, 5)), false);
-    gateBw->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32, -5)), false);
+    gateBw->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32, 5)));
+    gateBw->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32, -5)));
     layout->AddConnObj(gateBw);
 
     auto gateBw1 = nano::Create<BondingWire>("GateBw1", gateNet, 0.0635);
-    gateBw1->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32.5, 3.0)), false);
-    gateBw1->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(41.3, 3.35)), false);
+    gateBw1->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32.5, 3.0)));
+    gateBw1->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(41.3, 3.35)));
     layout->AddConnObj(gateBw1);
 
     auto gateBw2 = nano::Create<BondingWire>("GateBw2", gateNet, 0.0635);
-    gateBw2->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32.5, 1.8)), false);
-    gateBw2->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(40.05, 1.0375)), false);
+    gateBw2->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32.5, 1.8)));
+    gateBw2->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(40.05, 1.0375)));
     layout->AddConnObj(gateBw2);
 
     auto gateBw3 = nano::Create<BondingWire>("GateBw3", gateNet, 0.0635);
-    gateBw3->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32.5, -1.8)), false);
-    gateBw3->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(40.05, -0.3625)), false);
+    gateBw3->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32.5, -1.8)));
+    gateBw3->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(40.05, -0.3625)));
     layout->AddConnObj(gateBw3);
 
     auto gateBw4 = nano::Create<BondingWire>("GateBw4", gateNet, 0.0635);
-    gateBw4->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32.5, -3)), false);
-    gateBw4->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(40.05, -2.7)), false);
+    gateBw4->SetStartLayer(topCuLayer, coordUnit.toCoord(FCoord2D(32.5, -3)));
+    gateBw4->SetEndLayer(topCuLayer, coordUnit.toCoord(FCoord2D(40.05, -2.7)));
     layout->AddConnObj(gateBw4);
 
     return layout;
@@ -387,13 +387,199 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
     BOOST_CHECK(rg);
     std::vector<FCoord2D> resLocs{{-14.17, 10.5}, {-14.17, 6.075}, {-14.17, 1.65}};
     for (size_t i = 0; i < resLocs.size(); ++i) {
-        auto res = layout->AddComponent(nano::Create<Component>("R1", rg, layout));
+        auto res = layout->AddComponent(nano::Create<Component>("R" + std::to_string(i + 1), rg, layout));
         res->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, resLocs.at(i)));
         auto compLayer = res->AddComponentLayer(nano::Create<ComponentLayer>("Bot", res, rg->FindFootprint("Bot")));
         compLayer->SetConnectedLayer(layer1);
     }
+
+    std::vector<FCoord2D> gateBwLocs{{-13.275f, 8.6f}, {-13.275f, 4.05f}, {-13.275f, -0.27f}};
+    for (size_t i = 0; i < gateBwLocs.size(); ++i) {
+        auto bw = nano::Create<BondingWire>("GateBw" + std::to_string(i), noNet, 0.0635);
+        bw->SetStartPin(dieComps[i]->FindComponentPin("Top", "G"));
+        bw->SetEndLayer(layer1, coordUnit.toCoord(gateBwLocs.at(i)));
+        layout->AddConnObj(bw);
+    }
+
+    std::vector<std::string> iPins{"A", "B", "C", "D", "E"};
+    for (size_t i = 0; i < dieComps.size(); ++i) {
+        for (size_t j = 0; j < iPins.size(); ++j) {
+            auto bw = nano::Create<BondingWire>(iPins.at(j), noNet, 0.15);
+            bw->SetStartPin(dieComps[i]->FindComponentPin("Top", iPins.at(j)));
+            bw->SetEndPin(diodeComps[i]->FindComponentPin("Top", iPins.at(j)));
+            layout->AddConnObj(bw);
+        }
+    }
+
+    std::vector<std::string> oPins{"F", "G", "H", "I", "J"};
+    std::vector<std::vector<FCoord2D>> diodePLocs {
+        {{12.650,  7.105}, {12.650,  6.380}, {11.075,  7.105}, {11.075,  6.380}, {11.075,  5.655}},
+        {{14.225,  7.105}, {14.225,  6.380}, {12.650, -2.595}, {11.075, -2.595}, {11.075, -3.320}},
+        {{12.650, -3.320}, {14.225, -3.320}, {11.075, -4.045}, {12.650, -4.045}, {14.225, -4.045}}
+    };
+
+    for (size_t i = 0; i < diodePLocs.size(); ++i) {
+        for (size_t j = 0; j < oPins.size(); ++j) {
+            auto bw = nano::Create<BondingWire>(oPins.at(j), noNet, 0.15);
+            bw->SetStartPin(diodeComps[i]->FindComponentPin("Top", oPins.at(j)));
+            bw->SetEndLayer(layer1, coordUnit.toCoord(diodePLocs.at(i).at(j)));
+            layout->AddConnObj(bw);
+        }
+    }
+
+    std::vector<FCoord2D> kelvinBwPLocs{{-11.475, 8.15}, {-11.475, 3.6}, {-11.475, -0.72}};
+    for (size_t i = 0; i < kelvinBwPLocs.size(); ++i) {
+        auto bw = nano::Create<BondingWire>("KelvinBw" + std::to_string(i), noNet, 0.0635);
+        bw->SetStartPin(dieComps[i]->FindComponentPin("Top", "K"));
+        bw->SetEndLayer(layer1, coordUnit.toCoord(kelvinBwPLocs.at(i)));
+        layout->AddConnObj(bw);
+    }    
     return layout;
 }
+
+
+Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & compLocs)
+{
+    const auto & coordUnit = pkg->GetCoordUnit();
+    auto cell = nano::Create<CircuitCell>("TopBridge", pkg);
+    auto layout = cell->SetLayout(nano::Create<Layout>(CId<CircuitCell>(cell)));
+    BOOST_CHECK(layout);
+
+    auto boundary = nano::Create<ShapeRect>(coordUnit, FCoord2D(-16.75, -12.5), FCoord2D(16.75, 12.5));
+    layout->SetBoundary(boundary);
+
+    auto noNet = layout->AddNet(nano::Create<Net>("NoNet", layout));
+    auto layer1 = pkg->FindStackupLayer("TopCuLayer");
+    auto layer2 = pkg->FindStackupLayer("CeramicLayer");
+    auto layer3 = pkg->FindStackupLayer("BotCuLayer");
+    auto layer4 = pkg->FindStackupLayer("SolderLayer");
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-15.45, -11.6}, {-13.95, -11.6}, {-13.35, -11.2}, {13.35, -11.2},
+                        {13.95, -11.6}, {15.45, -11.6}, {15.45, -10.8}, {-15.45, -10.8}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-15.45, -10.4}, {15.45, -10.4}, {15.45, -9.6}, {13.95, -9.6},
+                        {13.35, -10}, {-13.35, -10}, {-13.95, -9.6}, {-15.45, -9.6}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-15.45, -8.4}, {-12.95, -8.4}, {-12.35, -8.8}, {-9.15, -8.8},
+                        {-9.15, -3.1}, {-15.45, -3.1}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-15.45, -1.9}, {-7.95, -1.9}, {-7.95, -8.8}, {9.75, -8.8},
+                        {9.75, 11.45}, {-7.95, 11.45}, {-7.95, 4.45}, {-15.45, 4.45}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-15.45, 5.65}, {-9.15, 5.65}, {-9.15, 11.45}, {-15.45, 11.45}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{11.1, -8.5}, {12.9, -8.5}, {12.9, -6.55}, {11.85, -6.55}, {11.85, 11.45}, {11.1, 11.45}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{12.9, -5.5}, {13.65, -5.5}, {13.65, -2.2}, {12.9, -2.2}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{12.9, 0.95}, {13.65, 0.95}, {13.65, 4.25}, {12.9, 4.25}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{12.9,  7.4}, {13.65,  7.4}, {13.65, 10.7}, {12.9, 10.7}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{13.65, -8.5}, {15.45, -8.5}, {15.45, 11.45}, {14.7, 11.45},
+                        {14.7, -0.125}, {13.65, -0.125}, {13.65, -1.125}, {14.7, -1.125}, {14.7, -6.55}, {13.65, -6.55}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer2,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.75, -12.5}, {16.75, -12.5}, {16.75, 12.5}, {-16.75, 12.5}})));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer3,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.25, -12}, {16.25, -12}, {16.25, 12}, {-16.25, 12}}, 0.25)));
+    layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer4,
+                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.75, -12.5}, {16.75, -12.5}, {16.75, 12.5}, {-16.75, 12.5}})));
+    
+    IdArr3<Component> dieComps;
+    auto sicDie = CId<FootprintCell>(pkg->FindCell("SicDie"));
+    BOOST_CHECK(sicDie);
+    auto sicBotFp = sicDie->FindFootprint("Bot");
+    BOOST_CHECK(sicBotFp);
+    auto sicTopFp = sicDie->FindFootprint("Top");
+    BOOST_CHECK(sicTopFp);
+    std::vector<std::string> diePinNames{"G", "B", "D", "A", "C", "E", "K"};
+    for (size_t i = 0; i < dieComps.size(); ++i) {
+        dieComps[i] = layout->AddComponent(nano::Create<Component>("Die" + std::to_string(i + 1), sicDie, layout));
+        dieComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, compLocs.at(i)));
+        auto botLayer = dieComps[i]->AddComponentLayer(nano::Create<ComponentLayer>("Bot", dieComps[i], sicBotFp));
+        botLayer->AddPin(nano::Create<ComponentPin>("GND", botLayer, sicBotFp->FindPin("GND")));
+        botLayer->SetConnectedLayer(layer1);
+
+        auto topLayer = dieComps[i]->AddComponentLayer(nano::Create<ComponentLayer>("Top", dieComps[i], sicTopFp));
+        for (const auto & pin : diePinNames)
+            topLayer->AddPin(nano::Create<ComponentPin>(pin, topLayer, sicTopFp->FindPin(pin.c_str())));
+    }
+
+    IdArr3<Component> diodeComps;
+    auto diode = CId<FootprintCell>(pkg->FindCell("Diode"));
+    BOOST_CHECK(diode);
+    auto diodeBotFp = diode->FindFootprint("Bot");
+    BOOST_CHECK(diodeBotFp);
+    auto diodeTopFp = diode->FindFootprint("Top");
+    BOOST_CHECK(diodeTopFp);
+    std::vector<std::string> diodePinNames{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
+    for (size_t i = 0; i < diodeComps.size(); ++i) {
+        diodeComps[i] = layout->AddComponent(nano::Create<Component>("Diode" + std::to_string(i + 1), diode, layout));
+        diodeComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, compLocs.at(i)));
+        auto botLayer = diodeComps[i]->AddComponentLayer(nano::Create<ComponentLayer>("Bot", diodeComps[i], diodeBotFp));
+        botLayer->AddPin(nano::Create<ComponentPin>("GND", botLayer, diodeBotFp->FindPin("GND")));
+        botLayer->SetConnectedLayer(layer1);
+
+        auto topLayer = diodeComps[i]->AddComponentLayer(nano::Create<ComponentLayer>("Top", diodeComps[i], diodeTopFp));
+        for (const auto & pin : diodePinNames)
+            topLayer->AddPin(nano::Create<ComponentPin>(pin, topLayer, diodeTopFp->FindPin(pin.c_str())));
+    }
+
+    auto rg = CId<FootprintCell>(pkg->FindCell("Rg"));
+    BOOST_CHECK(rg);
+    std::vector<FCoord2D> resLocs{{14.17, 8.35}, {14.17, 1.9}, {14.17, -4.55}};
+    for (size_t i = 0; i < resLocs.size(); ++i) {
+        auto res = layout->AddComponent(nano::Create<Component>("R" + std::to_string(i + 1), rg, layout));
+        res->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, resLocs.at(i)));
+        auto compLayer = res->AddComponentLayer(nano::Create<ComponentLayer>("Bot", res, rg->FindFootprint("Bot")));
+        compLayer->SetConnectedLayer(layer1);
+    }
+
+    std::vector<FCoord2D> gateBwLocs{{13.275f, 10.25f}, {13.275f, 3.8f}, {13.275f, -2.65f}};
+    for (size_t i = 0; i < gateBwLocs.size(); ++i) {
+        auto bw = nano::Create<BondingWire>("GateBw" + std::to_string(i), noNet, 0.0635);
+        bw->SetStartPin(dieComps[i]->FindComponentPin("Top", "G"));
+        bw->SetEndLayer(layer1, coordUnit.toCoord(gateBwLocs.at(i)));
+        layout->AddConnObj(bw);
+    }
+
+    std::vector<std::string> iPins{"A", "B", "C", "D", "E"};
+    for (size_t i = 0; i < dieComps.size(); ++i) {
+        for (size_t j = 0; j < iPins.size(); ++j) {
+            auto bw = nano::Create<BondingWire>(iPins.at(j), noNet, 0.15);
+            bw->SetStartPin(dieComps[i]->FindComponentPin("Top", iPins.at(j)));
+            bw->SetEndPin(diodeComps[i]->FindComponentPin("Top", iPins.at(j)));
+            layout->AddConnObj(bw);
+        }
+    }
+
+    std::vector<std::string> oPins{"F", "G", "H", "I", "J"};
+    std::vector<std::vector<FCoord2D>> diodePLocs {
+        {{-10.15, 10.7250}, {-10.15, 10.000}, {-10.15,  9.2700}, {-10.15,  8.5500}, {-10.15,  7.8250}},
+        {{-10.15,  7.1000}, {-10.15,  6.375}, {-11.15,  6.3750}, {-10.15, -3.8125}, {-10.15, -4.5250}},
+        {{-10.15, -5.2375}, {-10.15, -5.950}, {-10.15, -6.6625}, {-10.15, -7.3750}, {-10.15, -8.0875}}
+    };
+
+    for (size_t i = 0; i < diodePLocs.size(); ++i) {
+        for (size_t j = 0; j < oPins.size(); ++j) {
+            auto bw = nano::Create<BondingWire>(oPins.at(j), noNet, 0.15);
+            bw->SetStartPin(diodeComps[i]->FindComponentPin("Top", oPins.at(j)));
+            bw->SetEndLayer(layer1, coordUnit.toCoord(diodePLocs.at(i).at(j)));
+            layout->AddConnObj(bw);
+        }
+    }
+
+    std::vector<FCoord2D> kelvinBwPLocs{{11.475, 8.08}, {11.475, 1.33}, {11.475, -5.42}};
+    for (size_t i = 0; i < kelvinBwPLocs.size(); ++i) {
+        auto bw = nano::Create<BondingWire>("KelvinBw" + std::to_string(i), noNet, 0.0635);
+        bw->SetStartPin(dieComps[i]->FindComponentPin("Top", "K"));
+        bw->SetEndLayer(layer1, coordUnit.toCoord(kelvinBwPLocs.at(i)));
+        layout->AddConnObj(bw);
+    }
+
+    return layout;
+}
+
 } // namespace detail
 
 void t_create_package()
@@ -445,6 +631,36 @@ void t_create_package()
         botCompLocs.emplace_back(parameters.at(i * 2), parameters.at(i * 2 + 1));
     auto botBridgeLayout = detail::CreateBotBridgeLayout(pkg, botCompLocs);
 
+    auto botBridgeInst1 = nano::Create<CellInst>("BotBridge1", botBridgeLayout->GetCell(), base);
+    botBridgeInst1->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {-17.75, 13}));
+    base->AddChild(botBridgeInst1);
+    auto botBridgeInst2 = nano::Create<CellInst>("BotBridge2", botBridgeLayout->GetCell(), base);
+    botBridgeInst2->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {-17.75, -13}, Mirror2D::X));
+    base->AddChild(botBridgeInst2);
+
+    std::vector<FCoord2D> topCompLocs;
+    for (size_t i = 0; i < 6; i++)
+        topCompLocs.emplace_back(parameters.at(i * 2 + 12), parameters.at(i * 2 + 13));
+    auto topBridgeLayout = detail::CreateTopBridgeLayout(pkg, topCompLocs);
+
+    auto topBridgeInst1 = nano::Create<CellInst>("TopBridge1", topBridgeLayout->GetCell(), base);
+    topBridgeInst1->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {17.75, 13}));
+    base->AddChild(topBridgeInst1);
+    auto topBridgeInst2 = nano::Create<CellInst>("TopBridge2", topBridgeLayout->GetCell(), base);
+    topBridgeInst2->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {17.75, -13}, Mirror2D::X));
+    base->AddChild(topBridgeInst2);
+
+    base->Flatten();
+    auto iter = baseLayout->GetConnObjIter();
+    while (auto connObj = iter.Next()) {
+        if (auto bw = connObj->GetBondingWire(); bw) {
+            if (bw->GetRadius() == 0.0635)
+                bw->SetSolderJoints(thinBwSolderDef);
+            else
+                bw->SetSolderJoints(thickBwSolderDef);
+        }
+    }
+    
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/CAS300M12BM2.xml";
     Database::SaveCurrent(filename, ArchiveFormat::XML);
     Database::Shutdown();
