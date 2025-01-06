@@ -8,18 +8,17 @@ class Component : public NamedObj, public Transformable2D, public Entity<Compone
 {
 public:
     explicit Component(std::string name, CId<FootprintCell> footprint, CId<Layout> layout);
-    Component() = default;
+    Component();
 
     CId<FootprintCell> GetFootprint() const;
     CId<Layout> GetLayout() const;
-
-    void SetLayer(CId<Layer> layer);
-    CId<Layer> GetLayer() const;
 
     void SetFlipped(bool flipped);
     bool isFlipped() const;
 
     Id<ComponentLayer> AddComponentLayer(Id<ComponentLayer> componentLayer);
+    CId<ComponentLayer> FindComponentLayer(std::string_view name) const;
+    CId<ComponentPin> FindComponentPin(std::string_view layerName, std::string_view pinName) const;
 
     UPtr<Shape> GetBoundary() const;
 private:
@@ -28,7 +27,6 @@ private:
     (CId<FootprintCell>, footprint),
     (IdVec<ComponentLayer, NameLut>, componentLayers),
     (CId<Layout>, layout),
-    (CId<Layer>, layer),
     (Id<Shape>, boundary),
     (bool, flipped)
     )

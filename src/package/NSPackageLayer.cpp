@@ -89,6 +89,11 @@ Id<ComponentPin> ComponentLayer::AddPin(Id<ComponentPin> pin)
     return m_.pins.Add(pin);
 }
 
+CId<ComponentPin> ComponentLayer::FindPin(std::string_view name) const
+{
+    return m_.pins.Lookup<lut::Name>(name);
+}
+
 void ComponentLayer::SetConnectedLayer(CId<Layer> layer)
 {
     m_.connectedLayer = layer;
