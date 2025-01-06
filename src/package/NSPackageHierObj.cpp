@@ -77,4 +77,8 @@ Id<CellInst> CellInst::AddCellInst(Id<CellInst> cellInst)
     return Id<CellInst>(AddChild(cellInst));
 }
 
+void CellInst::FlattenImpl()
+{
+}
+
 } // namespace nano::package

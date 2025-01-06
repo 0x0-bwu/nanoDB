@@ -74,6 +74,21 @@ void t_basic()
         while(citer.Next()) { count++; }
         BOOST_CHECK(count == 3);
         BOOST_CHECK(not (*citer));
+
+        IdVec<package::Shape> shapes;
+        shapes.emplace_back(nano::Create<package::ShapeCircle>(NCoord2D(0, 0), 10));
+        shapes.emplace_back(nano::Create<package::ShapePolygon>());
+        shapes.emplace_back(nano::Create<package::ShapeCircle>(NCoord2D(0, 0), 20));
+        auto iter2 = shapes.GetIter<ShapeCircle>();
+        count = 0;
+        while(iter2.Next()) { count++; }
+        BOOST_CHECK(count == 2);
+        BOOST_CHECK(not (*iter2));
+
+        auto iter3 = shapes.GetCIter<ShapePolygon>();
+        BOOST_CHECK(iter3.Current());
+        BOOST_CHECK(iter3.Next());
+        BOOST_CHECK(not iter3.Current());
     }
     Database::Shutdown();
 }

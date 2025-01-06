@@ -5,6 +5,7 @@
 #include <core/package>
 
 #include "generic/tools/FileSystem.hpp"
+#include "generic/math/MathUtility.hpp"
 
 using namespace nano;
 using namespace boost::unit_test;
@@ -654,10 +655,9 @@ void t_create_package()
     auto iter = baseLayout->GetConnObjIter();
     while (auto connObj = iter.Next()) {
         if (auto bw = connObj->GetBondingWire(); bw) {
-            if (bw->GetRadius() == 0.0635)
+            if (generic::math::EQ<Float>(bw->GetRadius(),0.0635))
                 bw->SetSolderJoints(thinBwSolderDef);
-            else
-                bw->SetSolderJoints(thickBwSolderDef);
+            else bw->SetSolderJoints(thickBwSolderDef);
         }
     }
     
