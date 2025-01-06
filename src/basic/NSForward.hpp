@@ -84,6 +84,22 @@ class Pin;
 class RoutingWire;
 class StackupLayer;
 
+using Material               = nano::Material;
+using MaterialLib            = nano::MaterialLib;
+using MaterialProp           = nano::MaterialProp;
+using MaterialPropValue      = nano::MaterialPropValue;
+using MaterialPropTable      = nano::MaterialPropTable;
+using MaterialPropPolynomial = nano::MaterialPropPolynomial;
+using MaterialType           = nano::MaterialType;
+
+using Shape                  = nano::Shape;
+using ShapeCircle            = nano::ShapeCircle;
+using ShapeFromTemplate      = nano::ShapeFromTemplate;
+using ShapePath              = nano::ShapePath;
+using ShapePolygon           = nano::ShapePolygon;
+using ShapePolygonWithHoles  = nano::ShapePolygonWithHoles;
+using ShapeRect              = nano::ShapeRect;
+
 } // namespace package
 
 namespace parasitic {

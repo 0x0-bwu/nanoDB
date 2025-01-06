@@ -18,8 +18,8 @@ public:
     Id<ConnObj> AddConnObj(Id<ConnObj> connObj);
     Id<Component> AddComponent(Id<Component> component);
 
-    auto GetConnObjIter() { return m_.connObjs.GetIter(); }
-    auto GetConnObjIter() const { return m_.connObjs.GetCIter(); }
+    auto GetConnObjIter() { return m_.connObjs.GetIter<ConnObj>(); }
+    auto GetConnObjIter() const { return m_.connObjs.GetCIter<ConnObj>(); }
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;

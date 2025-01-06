@@ -38,7 +38,7 @@ public:
     Id<CellInst> AddCellInst(Id<CellInst> cellInst);
 
 protected:
-    void FlattenImpl() override {}
+    void FlattenImpl() override;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION

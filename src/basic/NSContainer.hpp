@@ -3,36 +3,43 @@
 
 namespace nano {
 
-template <typename IdContainer, bool Mutable = true>
+template <typename IdContainer, typename T = typename IdContainer::object_type, bool Mutable = true, 
+          typename std::enable_if_t<std::is_base_of_v<typename IdContainer::object_type, T>, bool> = true>
 class IdIterator
 {
 public:
     using Iterator = typename IdContainer::const_iterator;
-    using ObjectType = typename IdContainer::object_type;
-    using ValueType = std::conditional_t<Mutable, Id<ObjectType>, CId<ObjectType>>; 
+    using ReturnType = std::conditional_t<Mutable, Id<T>, CId<T>>; 
     explicit IdIterator(const IdContainer & container)
      : m_curr(container.cbegin()), m_end(container.cend())
     {
     }
 
-    ValueType Next() // return current and advance one
+    ReturnType Next() // return current and advance one
     {
-        if (m_curr == m_end) return ValueType();
-        auto iter = m_curr; m_curr++;
-        return ValueType(*iter);
+        while (m_curr != m_end) {
+            if (auto res = ReturnType(*m_curr); res) {
+                m_curr++; return res;
+            }
+            m_curr++;
+        }
+        return ReturnType();
     }
 
-    ValueType Current() const
+    ReturnType Current() const
     {
-        if (m_curr == m_end) return ValueType();
-        return ValueType(*m_curr);
+        while (m_curr != m_end) {
+            if (auto res = ReturnType(*m_curr); res)
+                return res;
+            m_curr++;
+        }
+        return ReturnType();
     }
 
-    ValueType operator*  () const noexcept { return Current(); }
-    ValueType operator-> () const noexcept { return Current(); }
-
+    ReturnType operator*  () const noexcept { return Current(); }
+    ReturnType operator-> () const noexcept { return Current(); }
 private:
-    Iterator m_curr;
+    mutable Iterator m_curr;
     const Iterator m_end;
 };
 
@@ -184,11 +191,18 @@ public:
     size_t size() const { return m_data.size(); }
 
     ///
-    using Iter = IdIterator<IdVec<T, Luts>>;
-    using CIter = IdIterator<IdVec<T, Luts>, false>;
-    Iter GetIter() const { return Iter(*this); }
-    CIter GetCIter() const { return CIter(*this); }
-    
+    template <typename Derived>
+    using Iter = IdIterator<IdVec<T, Luts>, Derived, /*Mutable=*/true>;
+
+    template <typename Derived>
+    using CIter = IdIterator<IdVec<T, Luts>, Derived, /*Mutable=*/false>;
+
+    template <typename Derived = T>
+    Iter<Derived> GetIter() const { return Iter<Derived>(*this); }
+
+    template <typename Derived = T>
+    CIter<Derived> GetCIter() const { return CIter<Derived>(*this); }
+
     template <template <typename> class Lut, typename Key>
     Id<T> Lookup(Key && key) const 
     {
