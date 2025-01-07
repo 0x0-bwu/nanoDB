@@ -33,22 +33,7 @@ Id<Net> Layout::AddNet(Id<Net> net)
 
 Id<ConnObj> Layout::AddConnObj(Id<ConnObj> connObj)
 {
-    m_.connObjs.Add(connObj);
-    if (auto net = connObj->GetNet(); net)
-        net.ConstCast()->AddConnObj(connObj);
-    
-    if (auto bw = connObj->GetBondingWire(); bw) {
-        if (auto sLayer = bw->GetStartLayer(); sLayer)
-            sLayer.ConstCast()->AddStartBondingWire(bw);
-        if (auto eLayer = bw->GetEndLayer(); eLayer)
-            eLayer.ConstCast()->AddEndBondingWire(bw);
-    }
-    else if (auto rw = connObj->GetRoutingWire(); rw) {
-        if (auto layer = rw->GetStackupLayer(); layer)
-            layer.ConstCast()->AddRoutingWire(rw);
-    }
-
-    return connObj;
+    return m_.connObjs.Add(connObj);
 }
 
 Id<Component> Layout::AddComponent(Id<Component> component)

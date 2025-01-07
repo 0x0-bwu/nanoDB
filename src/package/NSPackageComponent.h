@@ -13,9 +13,6 @@ public:
     CId<FootprintCell> GetFootprint() const;
     CId<Layout> GetLayout() const;
 
-    void SetFlipped(bool flipped);
-    bool isFlipped() const;
-
     Id<ComponentLayer> AddComponentLayer(Id<ComponentLayer> componentLayer);
     CId<ComponentLayer> FindComponentLayer(std::string_view name) const;
     CId<ComponentPin> FindComponentPin(std::string_view layerName, std::string_view pinName) const;
@@ -27,8 +24,7 @@ private:
     (CId<FootprintCell>, footprint),
     (IdVec<ComponentLayer, NameLut>, componentLayers),
     (CId<Layout>, layout),
-    (Id<Shape>, boundary),
-    (bool, flipped)
+    (Id<Shape>, boundary)
     )
 };
 

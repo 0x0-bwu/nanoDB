@@ -18,19 +18,11 @@ public:
     friend class BondingWire;
     Layer(std::string name, LayerType type);
     Layer() = default;
-
     LayerType GetLayerType() const { return m_.type; }
-private:
-    void AddStartBondingWire(Id<BondingWire> bw) { m_.startBondingWires.Add(bw); }
-    void AddEndBondingWire(Id<BondingWire> bw) { m_.endBondingWires.Add(bw); }
-    void RemoveStartBondingWire(Id<BondingWire> bw) { m_.startBondingWires.Remove(bw); }
-    void RemoveEndBondingWire(Id<BondingWire> bw) { m_.endBondingWires.Remove(bw); }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (LayerType, type),
-    (IdVec<BondingWire>, startBondingWires),
-    (IdVec<BondingWire>, endBondingWires)
+    (LayerType, type)
     )
 };
 
@@ -55,16 +47,12 @@ public:
     CId<Material> GetDielectricMaterial() const;
 
 private:
-    void AddRoutingWire(Id<RoutingWire> wire) { m_.routingWires.Add(wire); }
-
-private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (Float, elevation),
     (Float, thickness),
     (CId<Material>, conductingMat),
-    (CId<Material>, dielectricMat),
-    (IdVec<RoutingWire>, routingWires)
+    (CId<Material>, dielectricMat)
     )
 };
 

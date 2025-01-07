@@ -23,9 +23,4 @@ Net::Net(std::string name, Id<Layout> layout)
     m_.layout = layout;
 }
 
-Id<ConnObj> Net::AddConnObj(Id<ConnObj> connObj)
-{
-    return m_.connObjs.Add(connObj);
-}
-
 } // namespace nano::package

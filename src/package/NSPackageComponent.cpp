@@ -23,7 +23,6 @@ Component::Component(std::string name, CId<FootprintCell> footprint, CId<Layout>
 {
     m_.footprint = footprint;
     m_.layout = layout;
-    m_.flipped = false;
 }
 
 Component::Component()
@@ -39,16 +38,6 @@ CId<FootprintCell> Component::GetFootprint() const
 CId<Layout> Component::GetLayout() const
 {
     return m_.layout;
-}
-
-void Component::SetFlipped(bool flipped)
-{
-    m_.flipped = flipped;
-}
-
-bool Component::isFlipped() const
-{
-    return m_.flipped;
 }
 
 Id<ComponentLayer> Component::AddComponentLayer(Id<ComponentLayer> componentLayer)
