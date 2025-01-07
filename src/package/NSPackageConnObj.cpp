@@ -128,8 +128,6 @@ void BondingWire::SetStartLayer(CId<Layer> layer, const NCoord2D & loc)
 
 void BondingWire::SetStartLayer(CId<Layer> layer)
 {
-    if (m_.layers[0])
-        m_.layers[0].ConstCast()->RemoveStartBondingWire(Id<BondingWire>(GetId()));
     m_.layers[0] = layer;
 }
 
@@ -153,8 +151,6 @@ void BondingWire::SetEndLayer(CId<Layer> layer, const NCoord2D & loc)
 
 void BondingWire::SetEndLayer(CId<Layer> layer)
 {
-    if (m_.layers[1])
-        m_.layers[1].ConstCast()->RemoveEndBondingWire(Id<BondingWire>(GetId()));
     m_.layers[1] = layer;
 }
 

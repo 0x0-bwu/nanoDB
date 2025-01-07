@@ -67,6 +67,12 @@ CId<CircuitCell> CellInst::GetCell() const
     return m_.cell;
 }
 
+CId<Layout> CellInst::GetFlattenedLayout() const
+{
+    //should call Flatten() first
+    return m_.flattenedLayout;
+} 
+
 Id<CellInst> CellInst::AddCellInst(Id<CellInst> cellInst)
 {
     AddChild(cellInst);

@@ -11,15 +11,11 @@ public:
     Net() = default;
 
     Id<Layout> GetLayout() const { return m_.layout; }
-    
-private:
-    Id<ConnObj> AddConnObj(Id<ConnObj> connObj);
-    
+
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
-    (Id<Layout>, layout),
-    (IdVec<ConnObj>, connObjs)
+    (Id<Layout>, layout)
     )
 };
 
