@@ -48,7 +48,7 @@ void t_basic()
     {
         auto circle = Create<ShapeCircle>(NCoord2D(0, 0), 10);
         Id<Shape> shape = circle;
-        Id<Shape> clone = nano::Clone(shape);
+        Id<Shape> clone = nano::Clone<Shape>(shape);
         BOOST_CHECK(not shape->Identical(clone));
         BOOST_CHECK(circle->GetRadius() == Id<ShapeCircle>(clone)->GetRadius());
         BOOST_CHECK(circle->GetCenter() == Id<ShapeCircle>(clone)->GetCenter());

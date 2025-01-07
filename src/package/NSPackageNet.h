@@ -3,19 +3,20 @@
 
 namespace nano::package {
 
-class Net : public NamedObj, public Entity<Net>
+class Net : public NamedObj, public Clonable<Net>, public Entity<Net>
 {
 public:
     friend class Layout;
-    Net(std::string name, Id<Layout> layout);
+    Net(std::string name, CId<Layout> layout);
     Net() = default;
 
-    Id<Layout> GetLayout() const { return m_.layout; }
+    CId<Layout> GetLayout() const { return m_.layout; }
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
+    NS_CLONE_FUNCTIONS_DECLARATION(Net)
     NS_DEFINE_CLASS_MEMBERS(
-    (Id<Layout>, layout)
+    (CId<Layout>, layout)
     )
 };
 

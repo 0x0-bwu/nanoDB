@@ -41,13 +41,23 @@ Id<Component> Layout::AddComponent(Id<Component> component)
     return m_.components.Add(component);
 }
 
-Ptr<Layout> Layout::CloneImpl() const
+Ptr<Layout> Layout::CloneImpl(const Layout & src)
 {
-    auto clone = new Layout(m_.cell);
-    clone->m_.boundary = nano::Clone(m_.boundary);
-    //todo
-    return clone;
-}
+    m_.cell = src.m_.cell;
+    m_.boundary = nano::Clone<Shape>(src.m_.boundary);
+    
+    std::unordered_map<CId<Net>, CId<Net>> netMap{{CId<Net>(), CId<Net>()}};
+    for (const auto & net : src.m_.nets) {
+        auto cloneNet = m_.nets.Add(nano::Clone<Net>(net, std::string(net->GetName())));
+        netMap.emplace(net, cloneNet);
+    }
 
+    for (const auto & connObj : src.m_.connObjs) {
+        auto cloneConnObj = m_.connObjs.Add(nano::Clone<ConnObj>(connObj));
+        cloneConnObj->SetNet(netMap.at(connObj->GetNet()));
+    }
+
+    return this;
+}
 
 } // namespace nano::package

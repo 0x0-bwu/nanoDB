@@ -21,10 +21,9 @@ public:
     auto GetConnObjIter() { return m_.connObjs.GetIter<ConnObj>(); }
     auto GetConnObjIter() const { return m_.connObjs.GetCIter<ConnObj>(); }
 
-protected:
-    Ptr<Layout> CloneImpl() const override;
 private:
-    NS_SERIALIZATION_FUNCTIONS_DECLARATION;
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION
+    NS_CLONE_FUNCTIONS_DECLARATION(Layout)
     NS_DEFINE_CLASS_MEMBERS(
     (CId<CircuitCell>, cell),
     (Id<Shape>, boundary),

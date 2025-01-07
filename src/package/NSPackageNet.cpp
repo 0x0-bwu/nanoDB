@@ -17,10 +17,17 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Net)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Net::Net(std::string name, Id<Layout> layout)
+Net::Net(std::string name, CId<Layout> layout)
  : NamedObj(std::move(name))
 {
     m_.layout = layout;
+}
+
+Ptr<Net> Net::CloneImpl(const Net & src)
+{
+    NamedObj::CloneImpl(src);
+    m_ = src.m_;
+    return this;
 }
 
 } // namespace nano::package

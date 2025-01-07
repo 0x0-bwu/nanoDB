@@ -3,12 +3,10 @@
 
 namespace nano::package {
 
-class ConnObj : public Entity<ConnObj>
+class ConnObj : public Clonable<ConnObj>, public Entity<ConnObj>
 {
 public:
-    explicit ConnObj(CId<Net> net);
-    ConnObj() = default;
-
+    void SetNet(CId<Net> net) { m_.net = net; }
     CId<Net> GetNet() const { return m_.net; }
 
     Id<BondingWire> GetBondingWire();
@@ -20,6 +18,11 @@ public:
     Id<PadstackInst> GetPadstackInst();
     CId<PadstackInst> GetPadstackInst() const;
 
+protected:
+    explicit ConnObj(CId<Net> net);
+    ConnObj() = default;
+
+    Ptr<ConnObj> CloneImpl(const ConnObj & src);
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
@@ -69,6 +72,7 @@ public:
     void Transform(const Transform2D & transform);
 
 private:
+    NS_CLONE_FUNCTIONS_DECLARATION(BondingWire)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (CId<Material>, material),
@@ -91,6 +95,7 @@ public:
     CId<StackupLayer> GetStackupLayer() const;
 
 private:
+    NS_CLONE_FUNCTIONS_DECLARATION(RoutingWire)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (CId<StackupLayer>, layer),

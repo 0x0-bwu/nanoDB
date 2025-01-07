@@ -63,9 +63,8 @@ public:
     ShapeType GetType() const override { return ShapeType::RECTANGLE; }
     bool isValid() const override;
 
-protected:
-    Ptr<ShapeRect> CloneImpl() const override;
 private:
+    NS_CLONE_FUNCTIONS_DECLARATION(ShapeRect)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (NBox2D, shape))
@@ -88,9 +87,8 @@ public:
     void SetWidth(NCoord width) { m_.width = width;}
     NCoord GetWidth() const { return m_.width; }
 
-protected:
-    Ptr<ShapePath> CloneImpl() const override;
 private:
+    NS_CLONE_FUNCTIONS_DECLARATION(ShapePath)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (NPolyline, shape),
@@ -115,9 +113,8 @@ public:
     NCoord2D GetCenter() const { return m_.center; }
     NCoord GetRadius() const { return m_.radius; }
 
-protected:
-    Ptr<ShapeCircle> CloneImpl() const override;
 private:
+    NS_CLONE_FUNCTIONS_DECLARATION(ShapeCircle)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (NCoord2D, center),
@@ -138,9 +135,9 @@ public:
     void Transform(const Transform2D & trans) override;
     ShapeType GetType() const override { return ShapeType::POLYGON; }
     bool isValid() const override;
-protected:
-    Ptr<ShapePolygon> CloneImpl() const override;
+
 private:
+    NS_CLONE_FUNCTIONS_DECLARATION(ShapePolygon)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (NPolygon, shape))
@@ -162,9 +159,8 @@ public:
     void SetOutline(NPolygon outline);
     void AddHole(NPolygon hole);
 
-protected:
-    Ptr<ShapePolygonWithHoles> CloneImpl() const override;
 private:
+    NS_CLONE_FUNCTIONS_DECLARATION(ShapePolygonWithHoles)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (NPolygonWithHoles, shape))
@@ -185,9 +181,9 @@ public:
     bool isValid() const override;
 
     void SetTemplate(CId<Shape> shape);
-protected:
-    Ptr<ShapeFromTemplate> CloneImpl() const override;
+
 private:
+    NS_CLONE_FUNCTIONS_DECLARATION(ShapeFromTemplate)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (CId<Shape>, shape),

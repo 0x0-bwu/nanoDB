@@ -82,6 +82,12 @@ CId<PadstackInst> ConnObj::GetPadstackInst() const
     return CId<PadstackInst>(Entity<ConnObj>::GetCId());
 }
 
+Ptr<ConnObj> ConnObj::CloneImpl(const ConnObj & src)
+{
+    m_ = src.m_;
+    return this;
+}
+
 BondingWire::BondingWire(std::string name, CId<Net> net, Float radius)
  : NamedObj(std::move(name)), ConnObj(net)
 {
@@ -195,6 +201,13 @@ void BondingWire::Transform(const Transform2D & transform)
     generic::geometry::Transform(m_.locations[1], transform.GetTransform());
 }
 
+Ptr<BondingWire> BondingWire::CloneImpl(const BondingWire & src)
+{
+    ConnObj::CloneImpl(src);
+    m_ = src.m_;
+    return this;
+}
+
 RoutingWire::RoutingWire(CId<Net> net, CId<StackupLayer> layer, CId<Shape> shape)
  : ConnObj(net)
 {
@@ -205,6 +218,13 @@ RoutingWire::RoutingWire(CId<Net> net, CId<StackupLayer> layer, CId<Shape> shape
 CId<StackupLayer> RoutingWire::GetStackupLayer() const
 {
     return m_.layer;
+}
+
+Ptr<RoutingWire> RoutingWire::CloneImpl(const RoutingWire & src)
+{
+    ConnObj::CloneImpl(src);
+    m_ = src.m_;
+    return this;
 }
 
 PadstackInst::PadstackInst(CId<Padstack> padstack, CId<Net> net)

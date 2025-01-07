@@ -3,7 +3,6 @@
 #include "basic/NSContainer.hpp"
 
 namespace nano::package {
-
 class HierObj : public Entity<HierObj>
 {
 protected:
@@ -14,7 +13,9 @@ protected:
     CId<HierObj> GetParent() const;    
 
     Id<HierObj> AddChild(Id<HierObj> child);
-
+    
+    static std::string_view GetHierSep();
+    static void SetHierSep(std::string sep);
 public:
     virtual void Flatten();
 
@@ -26,6 +27,7 @@ private:
     (CId<HierObj>, parent),
     (IdVec<HierObj>, children)
     )
+    static std::string m_hierSep;
 };
 
 class CellInst : public NamedObj, public Transformable2D, public HierObj

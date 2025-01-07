@@ -32,7 +32,7 @@ public:
     public:
         size_t Size() const { return m_ids.size(); }
         bool Empty() const { return m_ids.empty(); }
-        void Add(Id<T> t) { m_ids.emplace_back(IdType(t)); }
+        void Add(const Id<T> & t) { m_ids.emplace_back(IdType(t)); }
         void Clear() { m_ids.clear(); }
         Id<T> Take()
         {
@@ -55,14 +55,14 @@ public:
     ~Container() { Reset(); }
 
     template <typename Derived>
-    Derived & operator[] (Id<Derived> id)
+    Derived & operator[] (const Id<Derived> & id)
     { 
         static_assert(std::is_same_v<traits::BaseOf<Derived>, T>, "should be derived class or self");
         return (Derived&)(*m_data[IdType(id)]);
     }   
 
     template <typename Derived>
-    const Derived & operator[] (Id<Derived> id) const
+    const Derived & operator[] (const Id<Derived> & id) const
     { 
         static_assert(std::is_same_v<traits::BaseOf<Derived>, T>, "should be derived class or self");
         return (Derived&)(*m_data[IdType(id)]);
@@ -87,7 +87,7 @@ public:
         return Id<Derived>(id);
     }
 
-    bool Remove(Id<T> id)
+    bool Remove(const Id<T> & id)
     {
         if (size_t(id) >= m_data.size()) return false;
         if (nullptr == m_data[id]) return false;
@@ -121,7 +121,7 @@ private:
 
 class NamedObj;
 template <typename T, std::enable_if_t<std::is_base_of_v<NamedObj, T>, bool> = true>
-Id<T> Clone(CId<T> id, std::string rename);
+Id<T> Clone(const CId<std::type_identity_t<T>> & id, std::string rename);
 
 class NamedObj
 {
@@ -134,11 +134,12 @@ public:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
 protected:
     NamedObj() = default;
+    Ptr<NamedObj> CloneImpl(const NamedObj & other) { m_name = other.m_name; return this; }
     // members
     std::string m_name;
 private:
     template <typename T, std::enable_if_t<std::is_base_of_v<NamedObj, T>, bool>>
-    friend Id<T> Clone(CId<T> id, std::string rename);
+    friend Id<T> Clone(const CId<std::type_identity_t<T>> & id, std::string rename);
 
     void Rename(std::string name) { m_name = std::move(name); }
 };
@@ -292,7 +293,7 @@ protected:
     Id<T> GetId() { return Id<T>(m_id); }
     CId<T> GetCId() const { return CId<T>(m_id); }
 private:
-    void SetId(Id<T> id) { m_id = IdType(id); }
+    void SetId(const Id<T> & id) { m_id = IdType(id); }
 public:
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     template <typename Archive>
@@ -359,37 +360,37 @@ inline Id<T> Create(Args &&... args)
 }
 
 template <typename T>
-inline bool Remove(Id<T> id)
+inline bool Remove(const Id<T> & id)
 {
     return Database::Current().Remove<T>(id);
 }
 
 template <typename T>
-inline T & Get(Id<T> id)
+inline T & Get(const Id<T> & id)
 {
     return Database::Current().Get<T>()[id];
 }
 
 template <typename T>
-inline const T & Get(CId<T> id)
+inline const T & Get(const CId<T> & id)
 {
     return Get<T>(id.ConstCast());
 }
 
 template <typename T>
-inline Id<T> Clone(CId<T> id)
+inline Id<T> Clone(const CId<std::type_identity_t<T>> & id)
 {
     return id->Clone();
 }
 
 template <typename T>
-inline Id<T> Clone(Id<T> id)
+inline Id<T> Clone(const Id<std::type_identity_t<T>> & id)
 {
-    return Clone(CId<T>(id));
+    return Clone<T>(CId<std::type_identity_t<T>>(id));
 }
 
 template <typename T, std::enable_if_t<std::is_base_of_v<NamedObj, T>, bool>>
-inline Id<T> Clone(CId<T> id, std::string rename)
+inline Id<T> Clone(const CId<std::type_identity_t<T>> & id, std::string rename)
 {
     auto clone = id->Clone();
     clone->Rename(std::move(rename));
@@ -397,9 +398,9 @@ inline Id<T> Clone(CId<T> id, std::string rename)
 }
 
 template <typename T, std::enable_if_t<std::is_base_of_v<NamedObj, T>, bool>>
-inline Id<T> Clone(Id<T> id, std::string rename)
+inline Id<T> Clone(const Id<std::type_identity_t<T>> & id, std::string rename)
 {
-    return Clone(CId<T>(id), std::move(rename));
+    return Clone<T>(CId<std::type_identity_t<T>>(id), std::move(rename));
 }
 
 template <typename T>
@@ -556,3 +557,24 @@ void serialize(Archive & ar, typename nano::Binding::BindingMap & m, const unsig
 }
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 } // namespace boost::serialization
+
+namespace std {
+template<typename T>
+struct hash<::nano::Id<T>>
+{
+    std::size_t operator() (const ::nano::Id<T> & id) const noexcept
+    {
+        return std::hash<::nano::IdType>()(::nano::IdType(id));
+    }
+};
+
+template<typename T>
+struct hash<::nano::CId<T>>
+{
+    std::size_t operator() (const ::nano::CId<T> & id) const noexcept
+    {
+        return std::hash<::nano::IdType>()(::nano::IdType(id));
+    }
+};
+
+} // namespace std

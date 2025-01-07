@@ -121,11 +121,10 @@ bool ShapeRect::isValid() const
     return m_.shape.isValid();
 }
 
-Ptr<ShapeRect> ShapeRect::CloneImpl() const
+Ptr<ShapeRect> ShapeRect::CloneImpl(const ShapeRect & src)
 {
-    auto clone = new ShapeRect();
-    clone->m_ = m_;
-    return clone;
+    m_ = src.m_;
+    return this;
 }
 
 NBox2D ShapePath::GetBBox() const
@@ -160,11 +159,10 @@ void ShapePath::SetPoints(std::vector<NCoord2D> points)
     m_.shape = std::move(points);
 }
 
-Ptr<ShapePath> ShapePath::CloneImpl() const
+Ptr<ShapePath> ShapePath::CloneImpl(const ShapePath & src)
 {
-    auto clone = new ShapePath();
-    clone->m_ = m_;
-    return clone;
+    m_ = src.m_;
+    return this;
 }
 
 ShapeCircle::ShapeCircle(const CoordUnit & coordUnit, FCoord2D o, FCoord r)
@@ -211,11 +209,10 @@ bool ShapeCircle::isValid() const
     return generic::math::GT<NCoord>(m_.radius, 0);
 }
 
-Ptr<ShapeCircle> ShapeCircle::CloneImpl() const
+Ptr<ShapeCircle> ShapeCircle::CloneImpl(const ShapeCircle & src)
 {
-    auto clone = new ShapeCircle();
-    clone->m_ = m_;
-    return clone;
+    m_ = src.m_;
+    return this;
 }
 
 ShapePolygon::ShapePolygon(const CoordUnit & coordUnit, std::vector<FCoord2D> outline, FCoord cornerR)
@@ -259,11 +256,10 @@ bool ShapePolygon::isValid() const
     return m_.shape.Size() >= 3;
 }
 
-Ptr<ShapePolygon> ShapePolygon::CloneImpl() const
+Ptr<ShapePolygon> ShapePolygon::CloneImpl(const ShapePolygon & src)
 {
-    auto clone = new ShapePolygon();
-    clone->m_ = m_;
-    return clone;
+    m_ = src.m_;
+    return this;
 }
 
 bool ShapePolygonWithHoles::hasHole() const
@@ -306,11 +302,10 @@ void ShapePolygonWithHoles::AddHole(NPolygon hole)
     m_.shape.holes.emplace_back(std::move(hole));
 }
 
-Ptr<ShapePolygonWithHoles> ShapePolygonWithHoles::CloneImpl() const
+Ptr<ShapePolygonWithHoles> ShapePolygonWithHoles::CloneImpl(const ShapePolygonWithHoles & src)
 {
-    auto clone = new ShapePolygonWithHoles();
-    clone->m_ = m_;
-    return clone;
+    m_ = src.m_;
+    return this;
 }
 
 ShapeFromTemplate::ShapeFromTemplate(Id<Shape> shape)
@@ -359,10 +354,9 @@ void ShapeFromTemplate::SetTemplate(CId<Shape> shape)
     m_.shape = shape;
 }
 
-Ptr<ShapeFromTemplate> ShapeFromTemplate::CloneImpl() const
+Ptr<ShapeFromTemplate> ShapeFromTemplate::CloneImpl(const ShapeFromTemplate & src)
 {
-    auto clone = new ShapeFromTemplate();
-    clone->m_ = m_;
-    return clone;
+    m_ = src.m_;
+    return this;
 }
 } // namespace nano
