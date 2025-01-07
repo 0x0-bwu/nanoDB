@@ -157,10 +157,12 @@ public:
     Id<T> & at(size_t i) { return m_data.at(i); }
     const Id<T> & at(size_t i) const { return m_data.at(i); }
 
-    auto begin() { return m_data.begin(); }
-    auto end() { return m_data.end(); }
-    auto cbegin() const { return m_data.cbegin(); }
-    auto cend() const { return m_data.cend(); }
+    iterator begin() { return m_data.begin(); }
+    iterator end() { return m_data.end(); }
+    const_iterator begin() const { return m_data.cbegin(); }
+    const_iterator end() const { return m_data.cend(); }
+    const_iterator cbegin() const { return m_data.cbegin(); }
+    const_iterator cend() const { return m_data.cend(); }
 
     auto & front() { return m_data.front(); }
     const auto & front() const { return m_data.front(); }

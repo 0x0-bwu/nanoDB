@@ -28,6 +28,17 @@ NS_SERIALIZATION_FUNCTIONS_IMP(CellInst)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
+std::string HierObj::m_hierSep = "/";
+std::string_view HierObj::GetHierSep()
+{
+    return m_hierSep.c_str();
+}
+
+void HierObj::SetHierSep(std::string sep)
+{
+    m_hierSep = std::move(sep);
+}
+
 HierObj::HierObj(CId<HierObj> parent)
 {
     m_.parent = parent;
@@ -88,7 +99,7 @@ void CellInst::FlattenImpl()
 {
     if (m_.flattenedLayout) {
         nano::Remove(m_.flattenedLayout);
-        m_.flattenedLayout = nano::Clone(m_.cell->GetLayout());
+        m_.flattenedLayout = nano::Clone<Layout>(m_.cell->GetLayout());
     }
     auto iter = GetCellInstIter();
     while (auto cellInst = iter.Next()) {

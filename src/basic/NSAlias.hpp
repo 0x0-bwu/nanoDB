@@ -5,9 +5,11 @@
 #include "generic/geometry/Point.hpp"
 #include "generic/tools/Log.hpp"
 
+#include <boost/algorithm/string/join.hpp>
 #include <boost/core/ignore_unused.hpp>
 #include <unordered_set>
 #include <memory>
+#include <ranges>
 #include <vector>
 #include <array>
 

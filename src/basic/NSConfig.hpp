@@ -29,6 +29,14 @@ public:                                                                       \
 private:                                                                      \
 /**/
 
+#define NS_CLONE_FUNCTIONS_DECLARATION(CLASS)                                 \
+protected:                                                                    \
+    CLASS * CloneImpl(const CLASS &);                                         \
+    CLASS * CloneImpl() const override                                        \
+    { auto clone = new CLASS; return clone->CloneImpl(*this); }               \
+private:                                                                      \
+/**/
+
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     #ifndef GENERIC_BOOST_SERIALIZATION_SUPPORT
         #define GENERIC_BOOST_SERIALIZATION_SUPPORT
