@@ -47,6 +47,13 @@ IOType Pin::GetIOType() const
     return m_.ioType;
 }
 
+Ptr<Pin> Pin::CloneFrom(const Pin & src)
+{
+    NamedObj::CloneFrom(src);
+    m_ = src.m_;
+    return this;
+}
+
 FootprintPin::FootprintPin(std::string name, CId<Footprint> footprint, NCoord2D location, IOType ioType)
  : Pin(std::move(name), ioType)
 {
@@ -54,11 +61,30 @@ FootprintPin::FootprintPin(std::string name, CId<Footprint> footprint, NCoord2D 
     m_.location = location;
 }
 
+Ptr<FootprintPin> FootprintPin::CloneFrom(const FootprintPin & src)
+{
+    Pin::CloneFrom(src);
+    m_ = src.m_;
+    return this;
+}
+
 ComponentPin::ComponentPin(std::string name, CId<ComponentLayer> componentLayer, CId<FootprintPin> footprintPin)
  : Pin(std::move(name), footprintPin->GetIOType())
 {
     m_.componentLayer = componentLayer;
     m_.footprintPin = footprintPin;
+}
+
+void ComponentPin::SetComponentLayer(CId<ComponentLayer> layer)
+{
+    m_.componentLayer = layer;
+}
+
+Ptr<ComponentPin> ComponentPin::CloneFrom(const ComponentPin & src)
+{
+    Pin::CloneFrom(src);
+    m_ = src.m_;
+    return this;
 }
 
 } // namespace nano::package

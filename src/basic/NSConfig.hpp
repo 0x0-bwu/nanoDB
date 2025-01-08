@@ -18,23 +18,23 @@ inline nano::Id<FROM> operator-- (nano::Id<CLASS> id) { return nano::Id<FROM>(id
 inline nano::Id<FROM> operator-- (nano::Id<CLASS> id, int) { return nano::Id<FROM>(id); }      \
 /**/
 #define NS_INHERIT_FROM_BASE(CLASS, BASE) NS_INHERITANCE(CLASS, BASE, BASE)
-#define NS_DEFINE_CLASS_MEMBERS(...)                                          \
-private:                                                                      \
-    struct NANO_CLASS_MEMBERS {                                               \
-    BOOST_HANA_DEFINE_STRUCT(NANO_CLASS_MEMBERS, __VA_ARGS__);} m_;           \
-    NANO_CLASS_MEMBERS * operator-> () noexcept { return &m_; }               \
-public:                                                                       \
-    const NANO_CLASS_MEMBERS * operator->() const noexcept { return &m_; }    \
-    const NANO_CLASS_MEMBERS & operator* () const noexcept { return  m_; }    \
-private:                                                                      \
+#define NS_DEFINE_CLASS_MEMBERS(...)                                                           \
+private:                                                                                       \
+    struct NANO_CLASS_MEMBERS {                                                                \
+    BOOST_HANA_DEFINE_STRUCT(NANO_CLASS_MEMBERS, __VA_ARGS__);} m_;                            \
+    NANO_CLASS_MEMBERS * operator-> () noexcept { return &m_; }                                \
+public:                                                                                        \
+    const NANO_CLASS_MEMBERS * operator->() const noexcept { return &m_; }                     \
+    const NANO_CLASS_MEMBERS & operator* () const noexcept { return  m_; }                     \
+private:                                                                                       \
 /**/
 
-#define NS_CLONE_FUNCTIONS_DECLARATION(CLASS)                                 \
-protected:                                                                    \
-    CLASS * CloneFrom(const CLASS &);                                         \
-    CLASS * CloneImpl() const override                                        \
-    { auto clone = new CLASS; return clone->CloneFrom(*this); }               \
-private:                                                                      \
+#define NS_CLONE_FUNCTIONS_DECLARATION(CLASS)                                                  \
+protected:                                                                                     \
+    CLASS * CloneFrom(const CLASS &);                                                          \
+    CLASS * CloneImpl(IdType id) const override                                                \
+    { auto clone = new CLASS; clone->SetId(id); return clone->CloneFrom(*this); }              \
+private:                                                                                       \
 /**/
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
@@ -44,21 +44,21 @@ private:                                                                      \
     #include "generic/common/Archive.hpp"
     #include "generic/geometry/Serialization.hpp"
     #include <boost/serialization/binary_object.hpp>
-    #define NS_SERIALIZATION_ENTITY_OBJECT_NVP(name)                               \
-        boost::serialization::make_nvp(                                            \
-            NANO_STRING(Entity_##name),                                            \
-            boost::serialization::base_object<Entity<name>>(*this)                 \
-        )                                                                          \
+    #define NS_SERIALIZATION_ENTITY_OBJECT_NVP(name)                                           \
+        boost::serialization::make_nvp(                                                        \
+            NANO_STRING(Entity_##name),                                                        \
+            boost::serialization::base_object<Entity<name>>(*this)                             \
+        )                                                                                      \
     /**/
 
     #define NS_SERIALIZATION_ABSTRACT_CLASS(T) BOOST_SERIALIZATION_ASSUME_ABSTRACT(T)
-    #define NS_SERIALIZATION_FUNCTIONS_DECLARATION                                  \
-    friend class boost::serialization::access;                                      \
-    template <typename Archive> void serialize(Archive &, const unsigned int);      \
+    #define NS_SERIALIZATION_FUNCTIONS_DECLARATION                                             \
+    friend class boost::serialization::access;                                                 \
+    template <typename Archive> void serialize(Archive &, const unsigned int);                 \
     /**/
-    #define NS_SERIALIZATION_ABSTRACT_CLASS_FUNCTIONS_DECLARATION                   \
-    friend class boost::serialization::access;                                      \
-    template<typename Archive> void serialize(Archive &, unsigned int) {}           \
+    #define NS_SERIALIZATION_ABSTRACT_CLASS_FUNCTIONS_DECLARATION                              \
+    friend class boost::serialization::access;                                                 \
+    template<typename Archive> void serialize(Archive &, unsigned int) {}                      \
     /**/
 
     #define NS_SERIALIZATION_CLASS_EXPORT(T) BOOST_CLASS_EXPORT(T)
@@ -73,15 +73,15 @@ private:                                                                      \
     template void T::serialize<boost::archive::binary_oarchive>(boost::archive::binary_oarchive &, const unsigned int); \
     /**/
 
-    #define NS_SERIALIZATION_CLASS_MEMBERS(ARCHIVE)                               \
-    {                                                                             \
-        size_t index{0};                                                          \
-        hana::for_each(hana::members(m_), [&](const auto & m) {                   \
-            auto & mm = const_cast<std::decay_t<decltype(m)>&>(m);                \
-            auto tag = "member" + std::to_string(index++);                        \
-            ARCHIVE & boost::serialization::make_nvp(tag.c_str(), mm);            \
-        });                                                                       \
-    }                                                                             \
+    #define NS_SERIALIZATION_CLASS_MEMBERS(ARCHIVE)                                            \
+    {                                                                                          \
+        size_t index{0};                                                                       \
+        hana::for_each(hana::members(m_), [&](const auto & m) {                                \
+            auto & mm = const_cast<std::decay_t<decltype(m)>&>(m);                             \
+            auto tag = "member" + std::to_string(index++);                                     \
+            ARCHIVE & boost::serialization::make_nvp(tag.c_str(), mm);                         \
+        });                                                                                    \
+    }                                                                                          \
     /**/
 #else
     #define NS_SERIALIZATION_ENTITY_OBJECT_NVP(T)    

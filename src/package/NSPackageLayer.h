@@ -11,7 +11,7 @@ enum class LayerType : int8_t
     COMPONENT = 10,
 };
 
-class Layer : public NamedObj, public Entity<Layer>
+class Layer : public NamedObj, public Cloneable<Layer>, public Entity<Layer>
 {
 public:
     friend class Layout;
@@ -21,6 +21,7 @@ public:
     LayerType GetLayerType() const { return m_.type; }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
+    NS_CLONE_FUNCTIONS_DECLARATION(Layer)
     NS_DEFINE_CLASS_MEMBERS(
     (LayerType, type)
     )
@@ -47,6 +48,7 @@ public:
     CId<Material> GetDielectricMaterial() const;
 
 private:
+    NS_CLONE_FUNCTIONS_DECLARATION(StackupLayer)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (Float, elevation),
@@ -59,8 +61,12 @@ private:
 class ComponentLayer : public Layer
 {
 public:
+    friend class Component;
     ComponentLayer(std::string name, CId<Component> component, CId<Footprint> footprint);
     ComponentLayer() = default;
+
+    CId<Footprint> GetFootprint() const;
+    CId<Component> GetComponent() const;
 
     Id<ComponentPin> AddPin(Id<ComponentPin> pin);
     CId<ComponentPin> FindPin(std::string_view name) const;
@@ -69,6 +75,9 @@ public:
     CId<Layer> GetConnectedLayer() const;
 
 private:
+    void SetComponent(CId<Component> component);
+private:
+    NS_CLONE_FUNCTIONS_DECLARATION(ComponentLayer)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (CId<Component>, component),

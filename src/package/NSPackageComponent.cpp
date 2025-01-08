@@ -64,4 +64,21 @@ UPtr<Shape> Component::GetBoundary() const
     return shape;
 }
 
+Ptr<Component> Component::CloneFrom(const Component & src)
+{
+    NamedObj::CloneFrom(src);
+    Transformable2D::CloneFrom(src);
+    m_.footprint = src.m_.footprint;
+    m_.layout = src.m_.layout;
+    m_.componentLayers = src.m_.componentLayers.Clone();
+    for (auto & layer : m_.componentLayers)
+        layer->SetComponent(GetCId());
+    return this;
+}
+
+void Component::SetLayout(CId<Layout> layout)
+{
+    m_.layout = layout;
+}
+
 } // namespace nano::package 

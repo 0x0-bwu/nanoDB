@@ -159,6 +159,8 @@ public:
     const Transform2D & GetTransform() const { return m_transform; }
     void SetTransform(const Transform2D & transform) { m_transform = transform; }
     void AddTransform(const Transform2D & transform) { m_transform.Append(transform); }
+protected:
+    Ptr<Transformable2D> CloneFrom(const Transformable2D & src) { m_transform = src.m_transform; return this; }
 private:
     Transform2D m_transform;
 };

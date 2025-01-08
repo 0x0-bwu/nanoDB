@@ -228,8 +228,8 @@ public:
 
     IdVec<T, Luts> Clone() const requires (traits::Cloneable<T>)
     {
-        IdVec<T, Luts> res;
-        for (auto id : m_data) res.Add(nano::Clone<T>(id));
+        IdVec<T, Luts> res; res.reserve(m_data.size());
+        for (auto id : m_data) res.Add(Id<T>(id->Clone()));
         return res;
     }
 

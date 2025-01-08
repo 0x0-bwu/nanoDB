@@ -4,9 +4,10 @@
 
 namespace nano::package {
 
-class Component : public NamedObj, public Transformable2D, public Entity<Component>
+class Component : public NamedObj, public Transformable2D, public Cloneable<Component>, public Entity<Component>
 {
 public:
+    friend class Layout;
     explicit Component(std::string name, CId<FootprintCell> footprint, CId<Layout> layout);
     Component();
 
@@ -18,13 +19,17 @@ public:
     CId<ComponentPin> FindComponentPin(std::string_view layerName, std::string_view pinName) const;
 
     UPtr<Shape> GetBoundary() const;
+
 private:
+    void SetLayout(CId<Layout> layout);
+
+private:
+    NS_CLONE_FUNCTIONS_DECLARATION(Component)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (CId<FootprintCell>, footprint),
     (CId<Layout>, layout),
-    (IdVec<ComponentLayer, NameLut>, componentLayers),
-    (Id<Shape>, boundary)
+    (IdVec<ComponentLayer, NameLut>, componentLayers)
     )
 };
 
