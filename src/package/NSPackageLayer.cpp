@@ -42,6 +42,13 @@ Layer::Layer(std::string name, LayerType type)
     m_.type = type;
 }
 
+Ptr<Layer> Layer::CloneFrom(const Layer & src)
+{
+    NamedObj::CloneFrom(src);
+    m_ = src.m_;
+    return this;
+}
+
 StackupLayer::StackupLayer(std::string name,  LayerType type, 
     Float elevation, Float thickness, CId<Material> conductingMat, CId<Material> dielectricMat)
  : Layer(std::move(name), type)
@@ -77,11 +84,28 @@ CId<Material> StackupLayer::GetDielectricMaterial() const
     return m_.dielectricMat;
 }
 
+Ptr<StackupLayer> StackupLayer::CloneFrom(const StackupLayer & src)
+{
+    Layer::CloneFrom(src);
+    m_ = src.m_;
+    return this;
+}
+
 ComponentLayer::ComponentLayer(std::string name, CId<Component> component, CId<Footprint> footprint)
  : Layer(std::move(name), LayerType::COMPONENT)
 {
     m_.component = component;
     m_.footprint = footprint;
+}
+
+CId<Footprint> ComponentLayer::GetFootprint() const
+{
+    return m_.footprint;
+}
+
+CId<Component> ComponentLayer::GetComponent() const
+{
+    return m_.component;
 }
 
 Id<ComponentPin> ComponentLayer::AddPin(Id<ComponentPin> pin)
@@ -102,6 +126,23 @@ void ComponentLayer::SetConnectedLayer(CId<Layer> layer)
 CId<Layer> ComponentLayer::GetConnectedLayer() const
 {
     return m_.connectedLayer;
+}
+
+void ComponentLayer::SetComponent(CId<Component> component)
+{
+    m_.component = component;
+}
+
+Ptr<ComponentLayer> ComponentLayer::CloneFrom(const ComponentLayer & src)
+{
+    Layer::CloneFrom(src);
+    m_.connectedLayer = src.m_.connectedLayer;
+    m_.component = src.m_.component;
+    m_.footprint = src.m_.footprint;
+    m_.pins = src.m_.pins.Clone();
+    for (auto & pin : m_.pins)
+        pin->SetComponentLayer(CId<ComponentLayer>(GetCId()));
+    return this;
 }
     
 } // namespace nano::package

@@ -34,11 +34,11 @@ public:
         bool Empty() const { return m_ids.empty(); }
         void Add(const Id<T> & t) { m_ids.emplace_back(IdType(t)); }
         void Clear() { m_ids.clear(); }
-        Id<T> Take()
+        IdType Take()
         {
             auto t = m_ids.back();
             m_ids.pop_back();
-            return Id<T>(t);
+            return t;
         }
 
     public:
@@ -67,24 +67,28 @@ public:
         static_assert(std::is_same_v<traits::BaseOf<Derived>, T>, "should be derived class or self");
         return (Derived&)(*m_data[IdType(id)]);
     }
+    
+    IdType Allocate()
+    {
+        return m_recycler.Empty() ? IdType(m_data.Append(nullptr)) : m_recycler.Take();
+    }
+
+    template <typename Derived>
+    Id<Derived> Register(IdType id, Derived * p)
+    {
+        static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
+        NS_ASSERT(m_data[id] == nullptr and p);
+        static_cast<Entity<T>&>(*p).SetId(id);
+        m_data[id] = p;
+        return Id<Derived>(id);
+    }
 
     template <typename Derived, typename... Args>
     Id<Derived> Create(Args &&... args)
     {
         static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
         static_assert(std::is_constructible_v<Derived, Args...>, "should be constructible from args...");
-        return Register(new Derived(std::forward<Args>(args)...));
-    }
-
-    template <typename Derived>
-    Id<Derived> Register(Derived * p)
-    {
-        static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
-        auto id = m_recycler.Empty() ? m_data.Append(nullptr) : m_recycler.Take();
-        NS_ASSERT(m_data[id] == nullptr and p);
-        m_data[id] = p;
-        static_cast<Entity<T>&>(*id).SetId(id);
-        return Id<Derived>(id);
+        return Register(Allocate(), new Derived(std::forward<Args>(args)...));
     }
 
     bool Remove(const Id<T> & id)
@@ -119,10 +123,6 @@ private:
     LinearMap<Id<T>, T*> m_data;
 };
 
-class NamedObj;
-template <typename T, std::enable_if_t<std::is_base_of_v<NamedObj, T>, bool> = true>
-Id<T> Clone(const CId<std::type_identity_t<T>> & id, std::string rename);
-
 class NamedObj
 {
 public:
@@ -134,13 +134,10 @@ public:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
 protected:
     NamedObj() = default;
-    Ptr<NamedObj> CloneFrom(const NamedObj & other) { m_name = other.m_name; return this; }
+    Ptr<NamedObj> CloneFrom(const NamedObj & src) { m_name = src.m_name; return this; }
     // members
     std::string m_name;
 private:
-    template <typename T, std::enable_if_t<std::is_base_of_v<NamedObj, T>, bool>>
-    friend Id<T> Clone(const CId<std::type_identity_t<T>> & id, std::string rename);
-
     void Rename(std::string name) { m_name = std::move(name); }
 };
 
@@ -252,14 +249,15 @@ public:
     virtual ~Cloneable() = default;
     Id<T> Clone() const
     {
-        return Database::Current().Get<T>().Register(CloneImpl());
+        auto id = Database::Current().Get<T>().Allocate();
+        return Database::Current().Get<T>().Register(id, CloneImpl(id));
     }
 
-    SPtr<T> SharedClone() const { return SPtr<T>(CloneImpl()); }
-    UPtr<T> UniqueClone() const { return UPtr<T>(CloneImpl()); }
+    SPtr<T> SharedClone() const { return SPtr<T>(CloneImpl(Id<T>::INVALID_ID)); }
+    UPtr<T> UniqueClone() const { return UPtr<T>(CloneImpl(Id<T>::INVALID_ID)); }
     
 protected:
-    virtual Ptr<T> CloneImpl() const = 0;
+    virtual Ptr<T> CloneImpl(IdType id) const = 0;
 };
 
 template <typename T>
@@ -290,10 +288,9 @@ public:
     CId<Other> GetBind() const;
     
 protected:
+    void SetId(IdType id)  { m_id = id; }
     Id<T> GetId() { return Id<T>(m_id); }
     CId<T> GetCId() const { return CId<T>(m_id); }
-private:
-    void SetId(const Id<T> & id) { m_id = IdType(id); }
 public:
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     template <typename Archive>
@@ -378,32 +375,6 @@ inline const T & Get(const CId<T> & id)
 }
 
 template <typename T>
-inline Id<T> Clone(const CId<std::type_identity_t<T>> & id)
-{
-    return id->Clone();
-}
-
-template <typename T>
-inline Id<T> Clone(const Id<std::type_identity_t<T>> & id)
-{
-    return Clone<T>(CId<std::type_identity_t<T>>(id));
-}
-
-template <typename T, std::enable_if_t<std::is_base_of_v<NamedObj, T>, bool>>
-inline Id<T> Clone(const CId<std::type_identity_t<T>> & id, std::string rename)
-{
-    auto clone = id->Clone();
-    clone->Rename(std::move(rename));
-    return clone;
-}
-
-template <typename T, std::enable_if_t<std::is_base_of_v<NamedObj, T>, bool>>
-inline Id<T> Clone(const Id<std::type_identity_t<T>> & id, std::string rename)
-{
-    return Clone<T>(CId<std::type_identity_t<T>>(id), std::move(rename));
-}
-
-template <typename T>
 class Id : public Index<Id<T>>
 {
 public:
@@ -463,13 +434,13 @@ public:
     CId(const CId<Derived> & derived) : CId(SizeType(derived)) {}// implicit convert from derived to base
 
     template <typename Base, typename std::enable_if_t<not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>, bool> = true>
-    explicit CId(const Id<Base> & base) // explicit convert from base to derivied, will do dynamic cast check
+    explicit CId(const Id<Base> & base) // explicit convert from base to derived, will do dynamic cast check
     {
         m_id = dynamic_cast<const T *>(base.operator->()) ? SizeType(base) : INVALID_ID;
     }
 
     template <typename Base, typename std::enable_if_t<not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>, bool> = true>
-    explicit CId(const CId<Base> & base) // explicit convert from base to derivied, will do dynamic cast check
+    explicit CId(const CId<Base> & base) // explicit convert from base to derived, will do dynamic cast check
     {
         m_id = dynamic_cast<const T *>(base.operator->()) ? SizeType(base) : INVALID_ID;
     }

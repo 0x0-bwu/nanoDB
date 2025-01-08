@@ -224,7 +224,7 @@ Ptr<RoutingWire> RoutingWire::CloneFrom(const RoutingWire & src)
 {
     ConnObj::CloneFrom(src);
     m_.layer = src.m_.layer;
-    m_.shape = nano::Clone<Shape>(src.m_.shape);
+    m_.shape = src.m_.shape->Clone();
     return this;
 }
 

@@ -4,7 +4,7 @@
 
 namespace nano::package {
 
-class Pin : public NamedObj, public Entity<Pin>
+class Pin : public NamedObj, public Cloneable<Pin>, public Entity<Pin>
 {
 protected:
     Pin(std::string name, IOType ioType);
@@ -14,6 +14,7 @@ public:
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
+    NS_CLONE_FUNCTIONS_DECLARATION(Pin)
     NS_DEFINE_CLASS_MEMBERS(
     (IOType, ioType))
 };
@@ -25,6 +26,7 @@ public:
     FootprintPin() = default;
 
 private:
+    NS_CLONE_FUNCTIONS_DECLARATION(FootprintPin)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (CId<Footprint>, footprint),
@@ -35,12 +37,17 @@ private:
 class ComponentPin : public Pin
 {
 public:
+    friend class ComponentLayer;
     ComponentPin(std::string name, CId<ComponentLayer> componentLayer, CId<FootprintPin> footprintPin);
     ComponentPin() = default;
 
     CId<ComponentLayer> GetComponentLayer() const { return m_.componentLayer; }
-    
+
 private:
+    void SetComponentLayer(CId<ComponentLayer> layer);
+
+private:
+    NS_CLONE_FUNCTIONS_DECLARATION(ComponentPin)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (CId<ComponentLayer>, componentLayer),

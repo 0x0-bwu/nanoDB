@@ -44,7 +44,7 @@ Id<Component> Layout::AddComponent(Id<Component> component)
 Ptr<Layout> Layout::CloneFrom(const Layout & src)
 {
     m_.cell = src.m_.cell;
-    m_.boundary = nano::Clone<Shape>(src.m_.boundary);
+    m_.boundary = src.m_.boundary->Clone();
     
     std::unordered_map<CId<Net>, CId<Net>> netMap{{CId<Net>(), CId<Net>()}};
     m_.nets = src.m_.nets.Clone();
@@ -57,7 +57,10 @@ Ptr<Layout> Layout::CloneFrom(const Layout & src)
         connObj->SetNet(netMap.at(connObj->GetNet()));
     }
 
-    // m_.components = src.m_.components.Clone();
+    m_.components = src.m_.components.Clone();
+    for (auto & component : m_.components) {
+        component->SetLayout(CId<Layout>(GetCId()));
+    }
 
     return this;
 }

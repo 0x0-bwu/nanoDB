@@ -99,7 +99,7 @@ void CellInst::FlattenImpl()
 {
     if (m_.flattenedLayout) {
         nano::Remove(m_.flattenedLayout);
-        m_.flattenedLayout = nano::Clone<Layout>(m_.cell->GetLayout());
+        m_.flattenedLayout = m_.cell->GetLayout()->Clone();
     }
     auto iter = GetCellInstIter();
     while (auto cellInst = iter.Next()) {
