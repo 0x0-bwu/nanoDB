@@ -22,7 +22,7 @@ protected:
     explicit ConnObj(CId<Net> net);
     ConnObj() = default;
 
-    Ptr<ConnObj> CloneImpl(const ConnObj & src);
+    Ptr<ConnObj> CloneFrom(const ConnObj & src);
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(

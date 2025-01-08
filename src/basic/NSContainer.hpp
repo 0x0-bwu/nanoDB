@@ -1,5 +1,6 @@
 #pragma once
 #include "NSDatabase.h"
+#include "generic/utils/ZipView.hpp"
 
 namespace nano {
 
@@ -249,5 +250,12 @@ private:
     Luts<T> m_luts;
     std::vector<Id<T>> m_data;
 };
+
+
+template <typename... Containers>
+auto Zip(Containers & ... containers)
+{
+    return generic::utils::Zip<Containers...>(containers...);
+}
 
 } // namespace nano

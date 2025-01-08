@@ -134,7 +134,7 @@ public:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
 protected:
     NamedObj() = default;
-    Ptr<NamedObj> CloneImpl(const NamedObj & other) { m_name = other.m_name; return this; }
+    Ptr<NamedObj> CloneFrom(const NamedObj & other) { m_name = other.m_name; return this; }
     // members
     std::string m_name;
 private:

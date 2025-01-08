@@ -31,9 +31,9 @@ private:                                                                      \
 
 #define NS_CLONE_FUNCTIONS_DECLARATION(CLASS)                                 \
 protected:                                                                    \
-    CLASS * CloneImpl(const CLASS &);                                         \
+    CLASS * CloneFrom(const CLASS &);                                         \
     CLASS * CloneImpl() const override                                        \
-    { auto clone = new CLASS; return clone->CloneImpl(*this); }               \
+    { auto clone = new CLASS; return clone->CloneFrom(*this); }               \
 private:                                                                      \
 /**/
 
