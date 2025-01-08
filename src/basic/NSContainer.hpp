@@ -225,6 +225,13 @@ public:
         m_data.erase(std::remove(m_data.begin(), m_data.end(), id), m_data.end());
     }
 
+    IdVec<T, Luts> Clone() const requires (traits::Cloneable<T>)
+    {
+        IdVec<T, Luts> res;
+        for (auto id : m_data) res.Add(nano::Clone<T>(id));
+        return res;
+    }
+
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     template <typename Archive>
     void serialize(Archive & ar, const unsigned int)

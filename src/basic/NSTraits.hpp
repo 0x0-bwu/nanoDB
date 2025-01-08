@@ -1,6 +1,5 @@
 #pragma once
 #include "NSForward.hpp"
-
 namespace nano::traits {
 
 // inheritance
@@ -16,7 +15,8 @@ struct Base<T, hana::when<hana::contains(inheritanceMap, hana::type_c<T>)>>
 template <typename T>
 using BaseOf = typename Base<T>::type;
 
+// cloneable
 template <typename T>
-constexpr bool Cloneable = std::is_base_of_v<nano::Cloneable<BaseOf<T>>, T>;
+concept Cloneable = requires (T & t) { []<typename U>(nano::Cloneable<U> &){}(t); };
 
 } // namespace nano::traits
