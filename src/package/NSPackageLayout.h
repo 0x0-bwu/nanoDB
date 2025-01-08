@@ -3,7 +3,7 @@
 
 namespace nano::package {
 
-class Layout : public Clonable<Layout>, public Entity<Layout>
+class Layout : public Cloneable<Layout>, public Entity<Layout>
 {
 public:
     explicit Layout(CId<CircuitCell> cell);

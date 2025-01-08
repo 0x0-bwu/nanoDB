@@ -1,4 +1,3 @@
-clonable
 combinational
 deepnwell
 deeppwell

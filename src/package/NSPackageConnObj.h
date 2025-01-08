@@ -3,7 +3,7 @@
 
 namespace nano::package {
 
-class ConnObj : public Clonable<ConnObj>, public Entity<ConnObj>
+class ConnObj : public Cloneable<ConnObj>, public Entity<ConnObj>
 {
 public:
     void SetNet(CId<Net> net) { m_.net = net; }
@@ -89,7 +89,7 @@ private:
 class RoutingWire : public ConnObj
 {
 public:
-    RoutingWire(CId<Net> net, CId<StackupLayer> layer, CId<Shape> shape);
+    RoutingWire(CId<Net> net, CId<StackupLayer> layer, Id<Shape> shape);
     RoutingWire() = default;
 
     CId<StackupLayer> GetStackupLayer() const;
@@ -99,7 +99,7 @@ private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (CId<StackupLayer>, layer),
-    (CId<Shape>, shape)
+    (Id<Shape>, shape)
     )
 };
 

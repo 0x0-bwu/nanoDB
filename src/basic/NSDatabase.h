@@ -1,5 +1,5 @@
 #pragma once
-#include "NSForward.hpp"
+#include "NSTraits.hpp"
 #include "generic/utils/LinearMap.hpp"
 #include "generic/utils/Version.hpp"
 #include "generic/utils/Index.hpp"
@@ -246,10 +246,10 @@ private:
 };
 
 template <typename T>
-class Clonable
+class Cloneable
 {
 public:
-    virtual ~Clonable() = default;
+    virtual ~Cloneable() = default;
     Id<T> Clone() const
     {
         return Database::Current().Get<T>().Register(CloneImpl());

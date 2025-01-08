@@ -22,8 +22,8 @@ private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
     (CId<FootprintCell>, footprint),
-    (IdVec<ComponentLayer, NameLut>, componentLayers),
     (CId<Layout>, layout),
+    (IdVec<ComponentLayer, NameLut>, componentLayers),
     (Id<Shape>, boundary)
     )
 };
