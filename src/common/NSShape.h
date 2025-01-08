@@ -30,7 +30,7 @@ enum class ShapeType
     FROM_TEMPLATE
 };
 
-class Shape : public Clonable<Shape>, public Entity<Shape>
+class Shape : public Cloneable<Shape>, public Entity<Shape>
 {
 public:
     virtual ~Shape() = default;

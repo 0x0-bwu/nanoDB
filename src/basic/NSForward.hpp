@@ -8,6 +8,9 @@ namespace nano {
 
 class Binding;
 
+template <typename T>
+class Cloneable;
+
 class Material;
 class MaterialLib;
 class MaterialProp;
@@ -250,18 +253,6 @@ inline constexpr static auto inheritanceMap = hana::make_map(
     hana::make_pair(hana::type_c<package::RoutingWire             >, hana::type_c<package::ConnObj     >),
     hana::make_pair(hana::type_c<package::StackupLayer            >, hana::type_c<package::Layer       >)
 );
-
-template <typename T, typename = hana::when<true>>
-struct Base { using type = std::decay_t<T>; };
-
-template <typename T>
-struct Base<T, hana::when<hana::contains(inheritanceMap, hana::type_c<T>)>>
-{
-    using type = typename std::decay_t<decltype(inheritanceMap[hana::type_c<T>])>::type;
-};
-
-template <typename T>
-using BaseOf = typename Base<T>::type;
 
 } // namespace traits
 

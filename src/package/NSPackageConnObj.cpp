@@ -208,7 +208,7 @@ Ptr<BondingWire> BondingWire::CloneImpl(const BondingWire & src)
     return this;
 }
 
-RoutingWire::RoutingWire(CId<Net> net, CId<StackupLayer> layer, CId<Shape> shape)
+RoutingWire::RoutingWire(CId<Net> net, CId<StackupLayer> layer, Id<Shape> shape)
  : ConnObj(net)
 {
     m_.layer = layer;
@@ -223,7 +223,8 @@ CId<StackupLayer> RoutingWire::GetStackupLayer() const
 Ptr<RoutingWire> RoutingWire::CloneImpl(const RoutingWire & src)
 {
     ConnObj::CloneImpl(src);
-    m_ = src.m_;
+    m_.layer = src.m_.layer;
+    m_.shape = nano::Clone<Shape>(src.m_.shape);
     return this;
 }
 

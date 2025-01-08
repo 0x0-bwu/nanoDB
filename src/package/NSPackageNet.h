@@ -3,7 +3,7 @@
 
 namespace nano::package {
 
-class Net : public NamedObj, public Clonable<Net>, public Entity<Net>
+class Net : public NamedObj, public Cloneable<Net>, public Entity<Net>
 {
 public:
     friend class Layout;
