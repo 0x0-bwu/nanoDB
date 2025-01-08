@@ -23,9 +23,9 @@ Net::Net(std::string name, CId<Layout> layout)
     m_.layout = layout;
 }
 
-Ptr<Net> Net::CloneImpl(const Net & src)
+Ptr<Net> Net::CloneFrom(const Net & src)
 {
-    NamedObj::CloneImpl(src);
+    NamedObj::CloneFrom(src);
     m_ = src.m_;
     return this;
 }

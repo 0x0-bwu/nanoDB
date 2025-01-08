@@ -82,7 +82,7 @@ CId<PadstackInst> ConnObj::GetPadstackInst() const
     return CId<PadstackInst>(Entity<ConnObj>::GetCId());
 }
 
-Ptr<ConnObj> ConnObj::CloneImpl(const ConnObj & src)
+Ptr<ConnObj> ConnObj::CloneFrom(const ConnObj & src)
 {
     m_ = src.m_;
     return this;
@@ -201,9 +201,9 @@ void BondingWire::Transform(const Transform2D & transform)
     generic::geometry::Transform(m_.locations[1], transform.GetTransform());
 }
 
-Ptr<BondingWire> BondingWire::CloneImpl(const BondingWire & src)
+Ptr<BondingWire> BondingWire::CloneFrom(const BondingWire & src)
 {
-    ConnObj::CloneImpl(src);
+    ConnObj::CloneFrom(src);
     m_ = src.m_;
     return this;
 }
@@ -220,9 +220,9 @@ CId<StackupLayer> RoutingWire::GetStackupLayer() const
     return m_.layer;
 }
 
-Ptr<RoutingWire> RoutingWire::CloneImpl(const RoutingWire & src)
+Ptr<RoutingWire> RoutingWire::CloneFrom(const RoutingWire & src)
 {
-    ConnObj::CloneImpl(src);
+    ConnObj::CloneFrom(src);
     m_.layer = src.m_.layer;
     m_.shape = nano::Clone<Shape>(src.m_.shape);
     return this;

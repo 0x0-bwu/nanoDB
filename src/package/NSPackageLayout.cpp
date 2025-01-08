@@ -41,16 +41,16 @@ Id<Component> Layout::AddComponent(Id<Component> component)
     return m_.components.Add(component);
 }
 
-Ptr<Layout> Layout::CloneImpl(const Layout & src)
+Ptr<Layout> Layout::CloneFrom(const Layout & src)
 {
     m_.cell = src.m_.cell;
     m_.boundary = nano::Clone<Shape>(src.m_.boundary);
     
     std::unordered_map<CId<Net>, CId<Net>> netMap{{CId<Net>(), CId<Net>()}};
     m_.nets = src.m_.nets.Clone();
-    // for (const auto & [src, tar] : Zip(src.m_.nets, m_.nets)) {
-    //     netMap.emplace(src, tar);
-    // }
+    for (const auto & [src, tar] : Zip(src.m_.nets, m_.nets)) {
+        netMap.emplace(src, tar);
+    }
     
     m_.connObjs = src.m_.connObjs.Clone();
     for (auto & connObj : m_.connObjs) {

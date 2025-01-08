@@ -121,7 +121,7 @@ bool ShapeRect::isValid() const
     return m_.shape.isValid();
 }
 
-Ptr<ShapeRect> ShapeRect::CloneImpl(const ShapeRect & src)
+Ptr<ShapeRect> ShapeRect::CloneFrom(const ShapeRect & src)
 {
     m_ = src.m_;
     return this;
@@ -159,7 +159,7 @@ void ShapePath::SetPoints(std::vector<NCoord2D> points)
     m_.shape = std::move(points);
 }
 
-Ptr<ShapePath> ShapePath::CloneImpl(const ShapePath & src)
+Ptr<ShapePath> ShapePath::CloneFrom(const ShapePath & src)
 {
     m_ = src.m_;
     return this;
@@ -209,7 +209,7 @@ bool ShapeCircle::isValid() const
     return generic::math::GT<NCoord>(m_.radius, 0);
 }
 
-Ptr<ShapeCircle> ShapeCircle::CloneImpl(const ShapeCircle & src)
+Ptr<ShapeCircle> ShapeCircle::CloneFrom(const ShapeCircle & src)
 {
     m_ = src.m_;
     return this;
@@ -256,7 +256,7 @@ bool ShapePolygon::isValid() const
     return m_.shape.Size() >= 3;
 }
 
-Ptr<ShapePolygon> ShapePolygon::CloneImpl(const ShapePolygon & src)
+Ptr<ShapePolygon> ShapePolygon::CloneFrom(const ShapePolygon & src)
 {
     m_ = src.m_;
     return this;
@@ -302,7 +302,7 @@ void ShapePolygonWithHoles::AddHole(NPolygon hole)
     m_.shape.holes.emplace_back(std::move(hole));
 }
 
-Ptr<ShapePolygonWithHoles> ShapePolygonWithHoles::CloneImpl(const ShapePolygonWithHoles & src)
+Ptr<ShapePolygonWithHoles> ShapePolygonWithHoles::CloneFrom(const ShapePolygonWithHoles & src)
 {
     m_ = src.m_;
     return this;
@@ -354,7 +354,7 @@ void ShapeFromTemplate::SetTemplate(CId<Shape> shape)
     m_.shape = shape;
 }
 
-Ptr<ShapeFromTemplate> ShapeFromTemplate::CloneImpl(const ShapeFromTemplate & src)
+Ptr<ShapeFromTemplate> ShapeFromTemplate::CloneFrom(const ShapeFromTemplate & src)
 {
     m_ = src.m_;
     return this;
