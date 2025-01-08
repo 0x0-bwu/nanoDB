@@ -47,15 +47,17 @@ Ptr<Layout> Layout::CloneImpl(const Layout & src)
     m_.boundary = nano::Clone<Shape>(src.m_.boundary);
     
     std::unordered_map<CId<Net>, CId<Net>> netMap{{CId<Net>(), CId<Net>()}};
-    for (const auto & net : src.m_.nets) {
-        auto cloneNet = m_.nets.Add(nano::Clone<Net>(net, std::string(net->GetName())));
-        netMap.emplace(net, cloneNet);
+    m_.nets = src.m_.nets.Clone();
+    // for (const auto & [src, tar] : Zip(src.m_.nets, m_.nets)) {
+    //     netMap.emplace(src, tar);
+    // }
+    
+    m_.connObjs = src.m_.connObjs.Clone();
+    for (auto & connObj : m_.connObjs) {
+        connObj->SetNet(netMap.at(connObj->GetNet()));
     }
 
-    for (const auto & connObj : src.m_.connObjs) {
-        auto cloneConnObj = m_.connObjs.Add(nano::Clone<ConnObj>(connObj));
-        cloneConnObj->SetNet(netMap.at(connObj->GetNet()));
-    }
+    // m_.components = src.m_.components.Clone();
 
     return this;
 }
