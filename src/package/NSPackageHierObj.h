@@ -13,10 +13,10 @@ protected:
     CId<HierObj> GetParent() const;    
 
     Id<HierObj> AddChild(Id<HierObj> child);
-    
-    static std::string_view GetHierSep();
-    static void SetHierSep(std::string sep);
+
 public:
+    static std::string_view GetHierSep();
+    static void SetHierSep(std::string );
     virtual void Flatten();
 
 protected:

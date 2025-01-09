@@ -94,6 +94,8 @@ public:
 
     CId<StackupLayer> GetStackupLayer() const;
 
+    void Transform(const Transform2D & transform);
+
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(RoutingWire)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION

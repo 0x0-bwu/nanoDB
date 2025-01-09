@@ -220,6 +220,11 @@ CId<StackupLayer> RoutingWire::GetStackupLayer() const
     return m_.layer;
 }
 
+void RoutingWire::Transform(const Transform2D & transform)
+{
+    m_.shape->Transform(transform);
+}
+
 Ptr<RoutingWire> RoutingWire::CloneFrom(const RoutingWire & src)
 {
     ConnObj::CloneFrom(src);
