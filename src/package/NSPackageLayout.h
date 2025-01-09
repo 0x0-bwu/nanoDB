@@ -19,10 +19,11 @@ public:
     Id<Component> AddComponent(Id<Component> component);
 
     auto GetNetIter() { return m_.nets.GetIter<Net>(); }
-    auto GetNetCIter() const { return m_.nets.GetCIter<Net>(); }
-
+    auto GetNetIter() const { return m_.nets.GetCIter<Net>(); }
     auto GetConnObjIter() { return m_.connObjs.GetIter<ConnObj>(); }
     auto GetConnObjIter() const { return m_.connObjs.GetCIter<ConnObj>(); }
+    auto GetCompoenntIter() { return m_.components.GetIter<Component>(); }
+    auto GetComponentIter() const { return m_.components.GetCIter<Component>(); }
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION

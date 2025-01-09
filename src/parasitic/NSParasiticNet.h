@@ -24,7 +24,7 @@ struct CouplingCap
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
 };
 
-using CouplingCaps = std::unordered_map<CapId, std::vector<CouplingCap>>;
+using CouplingCaps = HashMap<CapId, std::vector<CouplingCap>>;
 struct ConnectedPin
 {
     bool isPort;

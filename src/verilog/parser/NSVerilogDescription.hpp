@@ -30,7 +30,7 @@ struct ExplicitInstance
 {
     std::string type;
     std::string name;
-    using Ports = std::unordered_map<std::string, std::string>;
+    using Ports = HashMap<std::string, std::string>;
     Ports ports;//[formal, actual]
 };
 

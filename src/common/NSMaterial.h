@@ -114,7 +114,7 @@ private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
     (MaterialType, type),
-    (std::unordered_map<Prop, Id<MaterialProp>>, props))
+    (HashMap<Prop, Id<MaterialProp>>, props))
 };
 
 class MaterialLib : public NamedObj, public Entity<MaterialLib>

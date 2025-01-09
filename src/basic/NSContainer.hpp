@@ -4,8 +4,8 @@
 
 namespace nano {
 
-template <typename IdContainer, typename T = typename IdContainer::object_type, bool Mutable = true, 
-          typename std::enable_if_t<std::is_base_of_v<typename IdContainer::object_type, T>, bool> = true>
+template <typename IdContainer, typename T = typename IdContainer::object_type, bool Mutable = true>
+requires std::is_base_of_v<typename IdContainer::object_type, T>
 class IdIterator
 {
 public:
@@ -78,7 +78,7 @@ public:
     void Clear() { m_lut.clear(); }
 private:
     KeyFn m_keyFn;
-    std::unordered_map<Key, Id<T>> m_lut;
+    HashMap<Key, Id<T>> m_lut;
 };
 
 template <typename T>

@@ -121,8 +121,14 @@ Float BondingWire::GetHeight() const
 
 void BondingWire::SetStartPin(CId<ComponentPin> connectedPin)
 {
+    if (not connectedPin) return;
     SetStartLayer(connectedPin->GetComponentLayer());
     m_.connectedPins[0] = connectedPin;
+}
+
+CId<ComponentPin> BondingWire::GetStartPin() const
+{
+    return m_.connectedPins[0];
 }
 
 void BondingWire::SetStartLayer(CId<Layer> layer, const NCoord2D & loc)
@@ -144,8 +150,14 @@ CId<Layer> BondingWire::GetStartLayer() const
 
 void BondingWire::SetEndPin(CId<ComponentPin> connectedPin)
 {
+    if (not connectedPin) return;
     SetEndLayer(connectedPin->GetComponentLayer());
     m_.connectedPins[1] = connectedPin;
+}
+
+CId<ComponentPin> BondingWire::GetEndPin() const
+{
+    return m_.connectedPins[1];
 }
 
 void BondingWire::SetEndLayer(CId<Layer> layer, const NCoord2D & loc)

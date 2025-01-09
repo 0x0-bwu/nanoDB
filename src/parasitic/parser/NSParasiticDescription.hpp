@@ -99,7 +99,7 @@ struct SpefHeader
 };
 
 using SpefNamePair = std::pair<int, std::string>;
-using SpefNameMap = std::unordered_map<int, std::string>;
+using SpefNameMap = HashMap<int, std::string>;
 struct SpefDescription
 {
 	SpefHeader header;

@@ -42,7 +42,7 @@ using Int = int64_t;
 using Float = float;
 
 template <typename Key, typename Value>
-using Map = std::unordered_map<Key, Value>;
+using HashMap = std::unordered_map<Key, Value>;
 
 template <typename T> using Arr2 = std::array<T, 2>;
 template <typename T> using Arr3 = std::array<T, 3>;

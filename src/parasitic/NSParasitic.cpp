@@ -102,8 +102,8 @@ Id<Parasitic> ReadSpef(std::string_view filename)
     NS_CHECK_TRUE(ParseResUnit(ast.header.resistanceUnit, resUnit));
     auto divider = ast.header.divider; boost::trim(divider);
     const auto & nameMap = ast.nameMap;
-    std::unordered_map<std::string_view, size_t> pin2id;
-    std::unordered_map<std::string_view, Id<Net>> pin2net;
+    HashMap<std::string_view, size_t> pin2id;
+    HashMap<std::string_view, Id<Net>> pin2net;
     auto getName = [&](const SpefName & spefName) -> std::string {
         if (auto * index = boost::get<int>(&spefName); index) {
             auto iter = nameMap.find(*index);
