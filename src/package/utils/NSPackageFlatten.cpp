@@ -12,12 +12,22 @@ bool FlattenUtility::Merge(Id<Layout> layout, CId<Layout> other, const Transform
     };
 
     //Net
-    std::unordered_map<CId<Net>, CId<Net>> netMap{{CId<Net>(), CId<Net>()}};
-    auto netIter = other->GetNetCIter();
+    HashMap<CId<Net>, CId<Net>> netMap{{CId<Net>(), CId<Net>()}};
+    auto netIter = other->GetNetIter();
     while (auto net = netIter.Next()) {
         auto clone = net->Clone(hierName(net->GetName()));
         netMap.emplace(net, layout->AddNet(clone));
     }
+
+    //Component
+    HashMap<CId<Component>, CId<Component>> compMap{{CId<Component>(), CId<Component>()}};
+    HashMap<CId<ComponentPin>, CId<ComponentPin>> compPinMap{{CId<ComponentPin>(), CId<ComponentPin>()}};
+    auto compIter = other->GetComponentIter();
+    while (auto comp = compIter.Next()) {
+        auto clone = comp->Clone<Component>(hierName(comp->GetName()));
+        compMap.emplace(comp, layout->AddComponent(clone));
+    }
+
 
     //ConnObj
     auto connObjIter = other->GetConnObjIter();

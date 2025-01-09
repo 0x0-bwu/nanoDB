@@ -240,7 +240,7 @@ private:
 
 private:
     Ptr<Content> m_current{nullptr};
-    std::unordered_map<std::string_view, UPtr<Content>> m_contents;
+    HashMap<std::string_view, UPtr<Content>> m_contents;
 };
 
 template <typename T>
@@ -249,7 +249,8 @@ class Cloneable
 public:
     virtual ~Cloneable() = default;
 
-    template <typename Derived = T, typename std::enable_if_t<std::is_base_of_v<T, Derived>, bool> = true>
+    template <typename Derived = T>
+    requires std::is_base_of_v<T, Derived>
     Id<Derived> Clone() const
     {
         auto id = Database::Current().Get<T>().Allocate();
@@ -257,7 +258,8 @@ public:
         return Id<Derived>(id);
     }
 
-    template <typename Derived = T, typename std::enable_if_t<std::is_base_of_v<T, Derived>, bool> = true>
+    template <typename Derived = T>
+    requires std::is_base_of_v<T, Derived>
     Id<Derived> Clone(std::string rename) const requires traits::Nameable<Derived>
     {
         auto id = Clone<Derived>();
@@ -318,15 +320,15 @@ private:
 };
 
 namespace traits {
-using NameIndexMap = std::unordered_map<std::string_view, std::type_index>;
-using IndexNameMap = std::unordered_map<std::type_index, std::string_view>;
+using NameIndexMap = HashMap<std::string_view, std::type_index>;
+using IndexNameMap = HashMap<std::type_index, std::string_view>;
 } // namespace traits
 
 class Binding : public Entity<Binding>
 {
 public:
     using Key = std::type_index; 
-    using BindingMap = std::unordered_map<std::type_index, IdType>;
+    using BindingMap = HashMap<std::type_index, IdType>;
     static traits::NameIndexMap nameIndexMap;
     static traits::IndexNameMap indexNameMap;
 
@@ -398,10 +400,12 @@ public:
     Id(const Index<Id<T>> & id) = delete;
     explicit Id(SizeType id) : Index<Id<T>>(id) {}
 
-    template <typename Derived, typename std::enable_if_t<std::is_base_of_v<T, Derived>, bool> = true>
+    template <typename Derived>
+    requires std::is_base_of_v<T, Derived>
     Id(const Id<Derived> & derived) : Id(SizeType(derived)) {}// implicit convert from derived to base
 
-    template <typename Base, typename std::enable_if_t<not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>, bool> = true>
+    template <typename Base>
+    requires (not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>)
     explicit Id(const Id<Base> & base) // explicit convert from base to derivied, will do dynamic cast check
     {
         m_id = dynamic_cast<T *>(base.operator->()) ? SizeType(base) : INVALID_ID;
@@ -439,19 +443,23 @@ public:
     CId(const Index<Id<T>> & id) = delete;
     explicit CId(SizeType id) : Index<Id<T>>(id) {}
 
-    template <typename Derived, typename std::enable_if_t<std::is_base_of_v<T, Derived>, bool> = true>
+    template <typename Derived>
+    requires std::is_base_of_v<T, Derived>
     CId(const Id<Derived> & derived) : CId(SizeType(derived)) {}// implicit convert from derived to base
 
-    template <typename Derived, typename std::enable_if_t<std::is_base_of_v<T, Derived>, bool> = true>
+    template <typename Derived>
+    requires std::is_base_of_v<T, Derived>
     CId(const CId<Derived> & derived) : CId(SizeType(derived)) {}// implicit convert from derived to base
 
-    template <typename Base, typename std::enable_if_t<not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>, bool> = true>
+    template <typename Base>
+    requires (not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>)
     explicit CId(const Id<Base> & base) // explicit convert from base to derived, will do dynamic cast check
     {
         m_id = dynamic_cast<const T *>(base.operator->()) ? SizeType(base) : INVALID_ID;
     }
 
-    template <typename Base, typename std::enable_if_t<not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>, bool> = true>
+    template <typename Base>
+    requires (not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>)
     explicit CId(const CId<Base> & base) // explicit convert from base to derived, will do dynamic cast check
     {
         m_id = dynamic_cast<const T *>(base.operator->()) ? SizeType(base) : INVALID_ID;

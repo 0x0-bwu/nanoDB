@@ -46,22 +46,41 @@ Ptr<Layout> Layout::CloneFrom(const Layout & src)
     m_.cell = src.m_.cell;
     m_.boundary = src.m_.boundary->Clone();
     
-    std::unordered_map<CId<Net>, CId<Net>> netMap{{CId<Net>(), CId<Net>()}};
     m_.nets = src.m_.nets.Clone();
-    for (const auto & [src, tar] : Zip(src.m_.nets, m_.nets)) {
+    HashMap<CId<Net>, CId<Net>> netMap{{CId<Net>(), CId<Net>()}};
+    for (auto [src, tar] : Zip(src.m_.nets, m_.nets)) {
         netMap.emplace(src, tar);
     }
     
+    m_.components = src.m_.components.Clone();
+    HashMap<CId<Component>, CId<Component>> compMap{{CId<Component>(), CId<Component>()}};
+    HashMap<CId<ComponentPin>, CId<ComponentPin>> compPinMap{{CId<ComponentPin>(), CId<ComponentPin>()}};
+    for(auto [src, tar] : Zip(src.m_.components, m_.components)) {
+        tar->SetLayout(CId<Layout>(GetCId()));
+        compMap.emplace(src, tar);
+        auto srcLayerIter = src->GetComponentLayerIter();
+        auto tarLayerIter = tar->GetComponentLayerIter();
+        while (auto srcLayer = srcLayerIter.Next()) {
+            auto tarLayer = tarLayerIter.Next();
+            NS_ASSERT(tarLayer);
+            auto srcPinIter = srcLayer->GetComponentPinIter();
+            auto tarPinIter = tarLayer->GetComponentPinIter();
+            while (auto srcPin = srcPinIter.Next()) {
+                auto tarPin = tarPinIter.Next();
+                NS_ASSERT(tarPin);
+                compPinMap.emplace(srcPin, tarPin);
+            }
+        }
+    }
+
     m_.connObjs = src.m_.connObjs.Clone();
     for (auto & connObj : m_.connObjs) {
         connObj->SetNet(netMap.at(connObj->GetNet()));
+        if (auto bw = connObj->GetBondingWire(); bw) {
+            bw->SetStartPin(compPinMap.at(bw->GetStartPin()));
+            bw->SetEndPin(compPinMap.at(bw->GetEndPin()));
+        }
     }
-
-    m_.components = src.m_.components.Clone();
-    for (auto & component : m_.components) {
-        component->SetLayout(CId<Layout>(GetCId()));
-    }
-
     return this;
 }
 

@@ -91,6 +91,11 @@ Id<CellInst> CellInst::AddCellInst(Id<CellInst> cellInst)
     return cellInst;
 }
 
+auto CellInst::GetCellInstIter()
+{
+    return (*this)--->children.GetIter<CellInst>();
+}
+
 auto CellInst::GetCellInstIter() const
 {
     return (*this)--->children.GetCIter<CellInst>();

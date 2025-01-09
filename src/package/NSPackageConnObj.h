@@ -51,11 +51,15 @@ public:
     Float GetHeight() const;
 
     void SetStartPin(CId<ComponentPin> connectedPin);
+    CId<ComponentPin> GetStartPin() const;
+
     void SetStartLayer(CId<Layer> layer, const NCoord2D & loc);
     void SetStartLayer(CId<Layer> layer);
     CId<Layer> GetStartLayer() const;
 
     void SetEndPin(CId<ComponentPin> connectedPin);
+    CId<ComponentPin> GetEndPin() const;
+    
     void SetEndLayer(CId<Layer> layer, const NCoord2D & loc);
     void SetEndLayer(CId<Layer> layer);
     CId<Layer> GetEndLayer() const;

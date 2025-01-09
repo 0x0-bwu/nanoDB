@@ -74,6 +74,9 @@ public:
     void SetConnectedLayer(CId<Layer> layer);
     CId<Layer> GetConnectedLayer() const;
 
+    auto GetComponentPinIter() { return m_.pins.GetIter<ComponentPin>(); }
+    auto GetComponentPinIter() const { return m_.pins.GetCIter<ComponentPin>(); }
+
 private:
     void SetComponent(CId<Component> component);
 private:
