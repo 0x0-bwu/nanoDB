@@ -2,6 +2,7 @@
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::HierObj)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::CellInst)
 
+#include "package/utils/NSPackageFlatten.h"
 namespace nano::package {
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
@@ -97,13 +98,18 @@ auto CellInst::GetCellInstIter() const
 
 void CellInst::FlattenImpl()
 {
-    if (m_.flattenedLayout) {
+    if (m_.flattenedLayout)
         nano::Remove(m_.flattenedLayout);
-        m_.flattenedLayout = m_.cell->GetLayout()->Clone();
-    }
+    m_.flattenedLayout = m_.cell->GetLayout()->Clone();
+    NS_ASSERT(m_.flattenedLayout);
     auto iter = GetCellInstIter();
     while (auto cellInst = iter.Next()) {
-        //todo
+        [[maybe_unused]] auto res =
+        utils::FlattenUtility::Merge(m_.flattenedLayout,
+            cellInst->GetFlattenedLayout(),
+            cellInst->GetTransform(),
+            cellInst->GetName());
+        NS_ASSERT(res);
     }
 }
 

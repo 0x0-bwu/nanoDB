@@ -15,8 +15,10 @@ struct Base<T, hana::when<hana::contains(inheritanceMap, hana::type_c<T>)>>
 template <typename T>
 using BaseOf = typename Base<T>::type;
 
-// cloneable
 template <typename T>
 concept Cloneable = requires (T & t) { []<typename U>(nano::Cloneable<U> &){}(t); };
+
+template <typename T>
+concept Nameable = requires (const T & t) { { t.GetName() } -> std::same_as<std::string_view>; }; 
 
 } // namespace nano::traits

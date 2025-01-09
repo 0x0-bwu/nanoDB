@@ -138,6 +138,7 @@ protected:
     // members
     std::string m_name;
 private:
+    template <typename T> friend class Cloneable;
     void Rename(std::string name) { m_name = std::move(name); }
 };
 
@@ -247,10 +248,21 @@ class Cloneable
 {
 public:
     virtual ~Cloneable() = default;
-    Id<T> Clone() const
+
+    template <typename Derived = T, typename std::enable_if_t<std::is_base_of_v<T, Derived>, bool> = true>
+    Id<Derived> Clone() const
     {
         auto id = Database::Current().Get<T>().Allocate();
-        return Database::Current().Get<T>().Register(id, CloneImpl(id));
+        Database::Current().Get<T>().Register(id, CloneImpl(id));
+        return Id<Derived>(id);
+    }
+
+    template <typename Derived = T, typename std::enable_if_t<std::is_base_of_v<T, Derived>, bool> = true>
+    Id<Derived> Clone(std::string rename) const requires traits::Nameable<Derived>
+    {
+        auto id = Clone<Derived>();
+        id->Rename(std::move(rename));
+        return id;
     }
 
     SPtr<T> SharedClone() const { return SPtr<T>(CloneImpl(Id<T>::INVALID_ID)); }

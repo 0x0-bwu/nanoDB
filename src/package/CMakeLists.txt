@@ -1,4 +1,5 @@
 add_library(nanoPackage
+    utils/NSPackageFlatten.cpp
     NSPackage.cpp
     NSPackageCell.cpp
     NSPackageConnObj.cpp

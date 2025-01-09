@@ -18,6 +18,9 @@ public:
     Id<ConnObj> AddConnObj(Id<ConnObj> connObj);
     Id<Component> AddComponent(Id<Component> component);
 
+    auto GetNetIter() { return m_.nets.GetIter<Net>(); }
+    auto GetNetCIter() const { return m_.nets.GetCIter<Net>(); }
+
     auto GetConnObjIter() { return m_.connObjs.GetIter<ConnObj>(); }
     auto GetConnObjIter() const { return m_.connObjs.GetCIter<ConnObj>(); }
 
