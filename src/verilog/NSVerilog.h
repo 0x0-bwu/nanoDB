@@ -1,6 +1,6 @@
 #pragma once
-#include "basic/NSForward.hpp"
-#include "common/NSCommon.hpp"
+#include <core/basic>
+#include <core/common>
 namespace nano::verilog {
 
 Id<chip::Chip> ReadVerilog(std::string_view filename);

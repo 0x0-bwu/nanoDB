@@ -1,4 +1,5 @@
 #pragma once
+#include <core/common>
 #include "NSChip.h"
 
 namespace nano::chip {

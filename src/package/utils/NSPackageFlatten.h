@@ -1,6 +1,6 @@
 #pragma once
-#include "basic/NSForward.hpp"
-#include "common/NSTransform.hpp"
+#include <core/basic>
+#include <core/common>
 namespace nano::package::utils {
 
 class FlattenUtility

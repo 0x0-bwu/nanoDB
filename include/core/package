@@ -1,5 +1,4 @@
 #pragma once
-#include "common"
 #include "../../src/package/NSPackage.h"
 #include "../../src/package/NSPackageCell.h"
 #include "../../src/package/NSPackageConnObj.h"
