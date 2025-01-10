@@ -1,7 +1,6 @@
 #pragma once
-#include "basic/NSDatabase.h"
-#include "basic/NSContainer.hpp"
-#include "common/NSCommon.hpp"
+#include <core/basic>
+#include <core/common>
 namespace nano::parasitic {
 
 Id<Parasitic> ReadSpef(std::string_view filename);

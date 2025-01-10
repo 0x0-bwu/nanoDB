@@ -1,7 +1,5 @@
 #pragma once
-#include "basic/NSDatabase.h"
-#include "basic/NSContainer.hpp"
-#include "common/NSCommon.hpp"
+#include <core/basic>
 namespace nano::chip {
 
 class Chip : public NamedObj, public Entity<Chip>

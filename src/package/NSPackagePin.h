@@ -1,6 +1,6 @@
 #pragma once
-#include "basic/NSContainer.hpp"
-#include "common/NSCommon.hpp"
+#include <core/basic>
+#include <core/common>
 
 namespace nano::package {
 

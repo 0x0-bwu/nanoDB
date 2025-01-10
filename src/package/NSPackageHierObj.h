@@ -1,6 +1,6 @@
 #pragma once
-#include "common/NSTransform.hpp"
-#include "basic/NSContainer.hpp"
+#include <core/basic>
+#include <core/common>
 
 namespace nano::package {
 class HierObj : public Entity<HierObj>
