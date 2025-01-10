@@ -38,6 +38,8 @@ public:
     CellInst() = default;
 
     CId<CircuitCell> GetCell() const;
+
+    Id<Layout> GetFlattenedLayout();
     CId<Layout> GetFlattenedLayout() const;
 
     Id<CellInst> AddCellInst(Id<CellInst> cellInst);

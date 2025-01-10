@@ -4,7 +4,7 @@
 #include <boost/algorithm/string.hpp>
 namespace nano::package::utils {
 
-bool FlattenUtility::Merge(Id<Layout> layout, CId<Layout> other, const Transform2D & trans, std::string_view prefix)
+bool FlattenUtility::Merge(Id<Layout> layout, Id<Layout> other, const Transform2D & trans, std::string_view prefix)
 {
     auto sep = HierObj::GetHierSep();
     auto hierName = [&](std::string_view name) {
@@ -27,7 +27,6 @@ bool FlattenUtility::Merge(Id<Layout> layout, CId<Layout> other, const Transform
         auto clone = comp->Clone<Component>(hierName(comp->GetName()));
         compMap.emplace(comp, layout->AddComponent(clone));
     }
-
 
     //ConnObj
     auto connObjIter = other->GetConnObjIter();
