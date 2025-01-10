@@ -116,13 +116,15 @@ void CellInst::FlattenImpl()
     NS_ASSERT(m_.flattenedLayout);
     auto iter = GetCellInstIter();
     while (auto cellInst = iter.Next()) {
+        NS_ASSERT(cellInst->m_.flattenedLayout);
         [[maybe_unused]] auto res =
         utils::FlattenUtility::Merge(m_.flattenedLayout,
-            cellInst->GetFlattenedLayout(),
-            cellInst->GetTransform(),
+            cellInst->m_.flattenedLayout, 
             cellInst->GetName());
         NS_ASSERT(res);
+        cellInst->m_.flattenedLayout.Destroy();
     }
+    m_.flattenedLayout->Transform(GetTransform());
 }
 
 } // namespace nano::package

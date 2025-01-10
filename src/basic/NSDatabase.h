@@ -139,6 +139,7 @@ protected:
     // members
     std::string m_name;
 private:
+    friend class package::utils::FlattenUtility;
     template <typename T> friend class Cloneable;
     void Rename(std::string name) { m_name = std::move(name); }
 };

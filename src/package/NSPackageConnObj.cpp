@@ -263,4 +263,9 @@ void PadstackInst::GetLayerRange(CId<StackupLayer> & top, CId<StackupLayer> & bo
     bot = m_.layerRange[1];
 }
 
+void PadstackInst::Transform(const Transform2D & transform)
+{
+    Transformable2D::AddTransform(transform);
+}
+
 } // namespace nano::package

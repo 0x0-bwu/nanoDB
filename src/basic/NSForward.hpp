@@ -103,6 +103,12 @@ using ShapePolygon           = nano::ShapePolygon;
 using ShapePolygonWithHoles  = nano::ShapePolygonWithHoles;
 using ShapeRect              = nano::ShapeRect;
 
+namespace utils {
+
+class FlattenUtility;
+
+}
+
 } // namespace package
 
 namespace parasitic {

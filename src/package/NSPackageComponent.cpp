@@ -57,6 +57,11 @@ CId<ComponentPin> Component::FindComponentPin(std::string_view layerName, std::s
     return CId<ComponentPin>();
 }
 
+void Component::Transform(const Transform2D & transform)
+{
+    Transformable2D::AddTransform(transform);
+}
+
 UPtr<Shape> Component::GetBoundary() const
 {
     auto shape = m_.footprint->GetBoundary()->UniqueClone();

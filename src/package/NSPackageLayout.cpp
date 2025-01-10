@@ -41,16 +41,28 @@ Id<Component> Layout::AddComponent(Id<Component> component)
     return m_.components.Add(component);
 }
 
+void Layout::Transform(const Transform2D & transform)
+{
+    if (m_.boundary)
+        m_.boundary->Transform(transform);
+    
+    for (auto & connObj : m_.connObjs)
+        connObj->Transform(transform);
+    
+    for (auto & component : m_.components)
+        component->Transform(transform);
+}
+
 Ptr<Layout> Layout::CloneFrom(const Layout & src)
 {
     m_.cell = src.m_.cell;
-    m_.boundary = src.m_.boundary->Clone();
+    if (src.m_.boundary)
+        m_.boundary = src.m_.boundary->Clone();
     
     m_.nets = src.m_.nets.Clone();
     HashMap<CId<Net>, CId<Net>> netMap{{CId<Net>(), CId<Net>()}};
-    for (auto [src, tar] : Zip(src.m_.nets, m_.nets)) {
+    for (auto [src, tar] : Zip(src.m_.nets, m_.nets))
         netMap.emplace(src, tar);
-    }
     
     m_.components = src.m_.components.Clone();
     HashMap<CId<Component>, CId<Component>> compMap{{CId<Component>(), CId<Component>()}};
