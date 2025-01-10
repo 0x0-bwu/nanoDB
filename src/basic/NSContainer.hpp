@@ -64,7 +64,7 @@ public:
         NS_ASSERT_MSG(res, "duplicated key in lut");
     }
     
-    void Remove(const Id<T> id)
+    void Remove(const Id<T> & id)
     {
         m_lut.erase(m_keyFn(id));
     }
@@ -101,12 +101,12 @@ public:
         hana::for_each(m_luts, [&](auto & c){ hana::second(c).Build(data); });
     }
 
-    void Add(Id<T> id)
+    void Add(const Id<T> & id)
     {
         hana::for_each(m_luts, [&](auto & c){ hana::second(c).Add(id); });
     }
 
-    void Remove(Id<T> id)
+    void Remove(const Id<T> & id)
     {
         hana::for_each(m_luts, [&](auto & c){ hana::second(c).Remove(id); });
     }
@@ -220,10 +220,11 @@ public:
 
     Id<T> Add(Id<T> id) { return emplace_back(id); }
 
-    void Remove(Id<T> id)
+    void Remove(Id<T> & id, bool destroy = false)
     {
         m_luts.Remove(id);
         m_data.erase(std::remove(m_data.begin(), m_data.end(), id), m_data.end());
+        if (destroy) id.Destroy();
     }
 
     IdVec<T, Luts> Clone() const requires (traits::Cloneable<T>)
@@ -232,6 +233,14 @@ public:
         for (auto id : m_data) res.Add(Id<T>(id->Clone()));
         return res;
     }
+
+    void Destroy()
+    {
+        for (auto id : m_data) id.Destroy();
+        Clear();
+    }
+
+    void Clear() { clear(); }
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     template <typename Archive>

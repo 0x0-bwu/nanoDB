@@ -19,7 +19,9 @@ void t_basic()
         auto cid2 = CId<Material>(id2);
         static_assert(std::is_same_v<decltype(cid2), CId<Material>>);
         BOOST_CHECK(size_t(id2) == size_t(cid2));
-    
+        id2.Destroy();
+        BOOST_CHECK(not id2);
+        BOOST_CHECK(cid2.operator->() == nullptr);
     }
     // toString
     {

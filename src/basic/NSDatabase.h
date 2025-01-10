@@ -91,13 +91,14 @@ public:
         return Register(Allocate(), new Derived(std::forward<Args>(args)...));
     }
 
-    bool Remove(const Id<T> & id)
+    bool Remove(Id<T> & id)
     {
         if (size_t(id) >= m_data.size()) return false;
         if (nullptr == m_data[id]) return false;
         m_recycler.Add(id);
         delete m_data[id];
         m_data[id] = nullptr;
+        id.makeInvalid();
         return true;
     }
 
@@ -371,7 +372,7 @@ inline Id<T> Create(Args &&... args)
 }
 
 template <typename T>
-inline bool Remove(const Id<T> & id)
+inline bool Remove(Id<T> & id)
 {
     return Database::Current().Remove<T>(id);
 }
@@ -421,6 +422,8 @@ public:
 
     T & operator * () const noexcept { return  nano::Get<T>(*this); }
     T * operator-> () const noexcept { return &nano::Get<T>(*this); }
+
+    void Destroy() { nano::Remove<T>(*this); }
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     template <typename Archive>
@@ -475,6 +478,8 @@ public:
 
     const T & operator * () const noexcept { return  nano::Get<T>(*this); }
     const T * operator-> () const noexcept { return &nano::Get<T>(*this); }
+
+    void Destroy() const { nano::Remove<T>(*this); }
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     template <typename Archive>

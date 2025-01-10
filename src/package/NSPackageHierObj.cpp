@@ -50,6 +50,7 @@ void HierObj::Flatten()
     for (auto & child : m_.children)
         child->Flatten();
     FlattenImpl();
+    m_.children.Destroy();
 }
 
 void HierObj::SetParent(CId<HierObj> parent)
@@ -79,6 +80,12 @@ CId<CircuitCell> CellInst::GetCell() const
     return m_.cell;
 }
 
+Id<Layout> CellInst::GetFlattenedLayout()
+{
+    //should call Flatten() first
+    return m_.flattenedLayout;
+}
+
 CId<Layout> CellInst::GetFlattenedLayout() const
 {
     //should call Flatten() first
@@ -104,7 +111,7 @@ auto CellInst::GetCellInstIter() const
 void CellInst::FlattenImpl()
 {
     if (m_.flattenedLayout)
-        nano::Remove(m_.flattenedLayout);
+        m_.flattenedLayout.Destroy();
     m_.flattenedLayout = m_.cell->GetLayout()->Clone();
     NS_ASSERT(m_.flattenedLayout);
     auto iter = GetCellInstIter();

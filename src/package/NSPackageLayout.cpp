@@ -55,6 +55,7 @@ Ptr<Layout> Layout::CloneFrom(const Layout & src)
     m_.components = src.m_.components.Clone();
     HashMap<CId<Component>, CId<Component>> compMap{{CId<Component>(), CId<Component>()}};
     HashMap<CId<ComponentPin>, CId<ComponentPin>> compPinMap{{CId<ComponentPin>(), CId<ComponentPin>()}};
+    HashMap<CId<ComponentLayer>, CId<ComponentLayer>> compLayerMap{{CId<ComponentLayer>(), CId<ComponentLayer>()}};
     for(auto [src, tar] : Zip(src.m_.components, m_.components)) {
         tar->SetLayout(CId<Layout>(GetCId()));
         compMap.emplace(src, tar);
@@ -77,8 +78,14 @@ Ptr<Layout> Layout::CloneFrom(const Layout & src)
     for (auto & connObj : m_.connObjs) {
         connObj->SetNet(netMap.at(connObj->GetNet()));
         if (auto bw = connObj->GetBondingWire(); bw) {
-            bw->SetStartPin(compPinMap.at(bw->GetStartPin()));
-            bw->SetEndPin(compPinMap.at(bw->GetEndPin()));
+            if (bw->GetStartPin())
+                bw->SetStartPin(compPinMap.at(bw->GetStartPin()));
+            else if (auto compLayer = CId<ComponentLayer>(bw->GetStartLayer()); compLayer)
+                bw->SetStartLayer(compLayerMap.at(compLayer));
+            if (bw->GetEndPin())
+                bw->SetEndPin(compPinMap.at(bw->GetEndPin()));
+            else if (auto compLayer = CId<ComponentLayer>(bw->GetEndLayer()); compLayer)
+                bw->SetEndLayer(compLayerMap.at(compLayer));
         }
     }
     return this;
