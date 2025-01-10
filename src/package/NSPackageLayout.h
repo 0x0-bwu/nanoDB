@@ -22,8 +22,10 @@ public:
     auto GetNetIter() const { return m_.nets.GetCIter<Net>(); }
     auto GetConnObjIter() { return m_.connObjs.GetIter<ConnObj>(); }
     auto GetConnObjIter() const { return m_.connObjs.GetCIter<ConnObj>(); }
-    auto GetCompoenntIter() { return m_.components.GetIter<Component>(); }
+    auto GetComponentIter() { return m_.components.GetIter<Component>(); }
     auto GetComponentIter() const { return m_.components.GetCIter<Component>(); }
+
+    void Transform(const Transform2D & transform);
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION

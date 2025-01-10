@@ -21,6 +21,7 @@ public:
     auto GetComponentLayerIter() { return m_.componentLayers.GetIter<ComponentLayer>(); }
     auto GetComponentLayerIter() const { return m_.componentLayers.GetCIter<ComponentLayer>(); }
 
+    void Transform(const Transform2D & transform);
 
     UPtr<Shape> GetBoundary() const;
 

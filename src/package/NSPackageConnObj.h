@@ -18,6 +18,8 @@ public:
     Id<PadstackInst> GetPadstackInst();
     CId<PadstackInst> GetPadstackInst() const;
 
+    virtual void Transform(const Transform2D & transform) = 0;
+
 protected:
     explicit ConnObj(CId<Net> net);
     ConnObj() = default;
@@ -59,7 +61,7 @@ public:
 
     void SetEndPin(CId<ComponentPin> connectedPin);
     CId<ComponentPin> GetEndPin() const;
-    
+
     void SetEndLayer(CId<Layer> layer, const NCoord2D & loc);
     void SetEndLayer(CId<Layer> layer);
     CId<Layer> GetEndLayer() const;
@@ -73,7 +75,7 @@ public:
     void SetSolderJoints(CId<Padstack> solderJoints);
     CId<Padstack> GetSolderJoints() const;
 
-    void Transform(const Transform2D & transform);
+    void Transform(const Transform2D & transform) override;
 
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(BondingWire)
@@ -98,7 +100,7 @@ public:
 
     CId<StackupLayer> GetStackupLayer() const;
 
-    void Transform(const Transform2D & transform);
+    void Transform(const Transform2D & transform) override;
 
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(RoutingWire)
@@ -118,6 +120,7 @@ public:
     void SetLayerRange(CId<StackupLayer> top, CId<StackupLayer> bot);
     void GetLayerRange(CId<StackupLayer> & top, CId<StackupLayer> & bot) const;
 
+    void Transform(const Transform2D & transform) override;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_DEFINE_CLASS_MEMBERS(
