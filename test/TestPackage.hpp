@@ -87,7 +87,7 @@ Id<FootprintCell> CreateSicFootprintCell(Id<Package> pkg)
     sicDie->SetHeight(0.18);
 
     auto topFootprint = sicDie->AddFootprint(nano::Create<Footprint>("Top", sicDie, FootprintLocation::TOP));
-    topFootprint->SetSolderBallBumpHeight(0.1);
+    topFootprint->SetSolderBallBumpThickenss(0.1);
     auto solder = pkg->GetMaterialLib()->FindMaterial("Solder");
     topFootprint->SetSolderMaterial(solder);
     topFootprint->SetBoundary(boundary);
@@ -101,7 +101,7 @@ Id<FootprintCell> CreateSicFootprintCell(Id<Package> pkg)
     topFootprint->AddPin(nano::Create<FootprintPin>("K", topFootprint, coordUnit.toCoord(FCoord2D(-2.00, -0.5)), IOType::INPUT));
 
     auto botFootprint = sicDie->AddFootprint(nano::Create<Footprint>("Bot", sicDie, FootprintLocation::BOT));
-    botFootprint->SetSolderBallBumpHeight(0.1);
+    botFootprint->SetSolderBallBumpThickenss(0.1);
     botFootprint->SetSolderMaterial(solder);
     botFootprint->AddPin(nano::Create<FootprintPin>("GND", botFootprint, coordUnit.toCoord(FCoord2D(0,  0)), IOType::INPUT));
     
@@ -121,7 +121,7 @@ Id<FootprintCell> CreateDiodeFootprintCell(Id<Package> pkg)
     diode->SetHeight(0.18);
 
     auto topFootprint = diode->AddFootprint(nano::Create<Footprint>("Top", diode, FootprintLocation::TOP));
-    topFootprint->SetSolderBallBumpHeight(0.1);
+    topFootprint->SetSolderBallBumpThickenss(0.1);
     auto solder = pkg->GetMaterialLib()->FindMaterial("Solder");
     topFootprint->SetSolderMaterial(solder);
     topFootprint->SetBoundary(boundary);
@@ -139,7 +139,7 @@ Id<FootprintCell> CreateDiodeFootprintCell(Id<Package> pkg)
     topFootprint->AddPin(nano::Create<FootprintPin>("J", topFootprint, coordUnit.toCoord(FCoord2D( 1.125, -1.50)), IOType::INPUT));
 
     auto botFootprint = diode->AddFootprint(nano::Create<Footprint>("Bot", diode, FootprintLocation::BOT));
-    botFootprint->SetSolderBallBumpHeight(0.1);
+    botFootprint->SetSolderBallBumpThickenss(0.1);
     botFootprint->SetSolderMaterial(solder);
     botFootprint->SetBoundary(boundary);
     botFootprint->AddPin(nano::Create<FootprintPin>("GND", botFootprint, coordUnit.toCoord(FCoord2D(0,  0)), IOType::INPUT));
@@ -161,7 +161,7 @@ Id<FootprintCell> CreateGateResistanceFootprintCell(Id<Package> pkg)
 
     auto solder = pkg->GetMaterialLib()->FindMaterial("Solder");
     auto botFootprint = res->AddFootprint(nano::Create<Footprint>("Bot", res, FootprintLocation::BOT));
-    botFootprint->SetSolderBallBumpHeight(0.1);
+    botFootprint->SetSolderBallBumpThickenss(0.1);
     botFootprint->SetSolderMaterial(solder);
     
     pkg->AddCell(res);
@@ -621,7 +621,7 @@ void t_create_package()
     auto gateResDef = detail::CreateGateResistanceFootprintCell(pkg);
 
     auto baseLayout = detail::CreateBaseLayout(pkg);
-    auto base = nano::Create<CellInst>("Base", baseLayout->GetCell());
+    auto base = pkg->SetTop(nano::Create<CellInst>("Base", baseLayout->GetCell()));
 
     auto driverLayout = detail::CreateDriverLayout(pkg); 
     auto driver = nano::Create<CellInst>("Driver", driverLayout->GetCell(), base);

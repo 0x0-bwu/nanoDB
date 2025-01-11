@@ -18,6 +18,13 @@ public:
     friend class BondingWire;
     Layer(std::string name, LayerType type);
     Layer() = default;
+
+    Id<ComponentLayer> GetComponentLayer();
+    CId<ComponentLayer> GetComponentLayer() const;
+
+    Id<StackupLayer> GetStackupLayer();
+    CId<StackupLayer> GetStackupLayer() const;
+
     LayerType GetLayerType() const { return m_.type; }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
@@ -76,6 +83,10 @@ public:
 
     auto GetComponentPinIter() { return m_.pins.GetIter<ComponentPin>(); }
     auto GetComponentPinIter() const { return m_.pins.GetCIter<ComponentPin>(); }
+
+    Float GetSolderBallBumpThickness() const;
+
+    bool isFlipped() const;
 
 private:
     void SetComponent(CId<Component> component);

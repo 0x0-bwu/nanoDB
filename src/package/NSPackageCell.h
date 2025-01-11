@@ -56,15 +56,18 @@ public:
     ComponentType GetComponentType() const;
     
     void SetBoundary(Id<Shape> boundary);
-    Id<Shape> GetBoundary() const;
+    CId<Shape> GetBoundary() const;
 
     void SetMaterial(Id<Material> material);
+    CId<Material> GetMaterial() const;
 
     void SetHeight(Float height);
 
     Id<Footprint> AddFootprint(Id<Footprint> interface);
 
     CId<Footprint> FindFootprint(std::string_view name) const;
+
+    virtual bool isBlackBox() const { return true; }
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION

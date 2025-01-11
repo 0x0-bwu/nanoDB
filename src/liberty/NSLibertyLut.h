@@ -8,7 +8,6 @@ class LutTemplate;
 class Lut : public Entity<Lut>
 {
 public:
-    friend class CcsLut;
     friend class LutParser;
     explicit Lut(Id<LutTemplate> lutTemplate);
     Lut() = default;

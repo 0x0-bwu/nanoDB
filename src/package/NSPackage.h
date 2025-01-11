@@ -29,10 +29,26 @@ public:
     CId<Cell> FindCell(std::string_view name) const;
     Id<Cell> FindCell(std::string_view name);
 
+    Id<CellInst> SetTop(Id<CellInst> top);
+    Id<CellInst> GetTop() { return m_.top; }
+    CId<CellInst> GetTop() const { return m_.top; }
+
+    auto GetCellIter();
+    auto GetCellIter() const;
+
+    auto GetPadstackIter();
+    auto GetPadstackIter() const;
+
+    auto GetStackupLayerIter() { return m_.stackupLayers.GetIter<StackupLayer>(); }
+    auto GetStackupLayerIter() const { return m_.stackupLayers.GetCIter<StackupLayer>(); }
+
+    bool isBlackBox() const override { return false; }
+
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_DEFINE_CLASS_MEMBERS(
     (CoordUnit, coordUnit),
+    (Id<CellInst>, top),
     (Id<MaterialLib>, matLib),
     (IdVec<Cell, NameLut>, cells),
     (IdVec<Padstack, NameLut>, padstacks),

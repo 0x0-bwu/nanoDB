@@ -269,8 +269,8 @@ public:
         return id;
     }
 
-    SPtr<T> SharedClone() const { return SPtr<T>(CloneImpl(Id<T>::INVALID_ID)); }
-    UPtr<T> UniqueClone() const { return UPtr<T>(CloneImpl(Id<T>::INVALID_ID)); }
+    SPtr<T> SharedClone() const { return SPtr<T>(CloneImpl(INVALID_ID)); }
+    UPtr<T> UniqueClone() const { return UPtr<T>(CloneImpl(INVALID_ID)); }
     
 protected:
     virtual Ptr<T> CloneImpl(IdType id) const = 0;
@@ -283,7 +283,7 @@ public:
     friend class Container<T>;
     virtual ~Entity() = default;
 
-    bool isValid() const { return m_id != Id<T>::INVALID_ID; }
+    bool isValid() const { return m_id != INVALID_ID; }
 
     template <typename Derived>
     bool Identical(const Index<Id<Derived>> & id) const
@@ -317,8 +317,8 @@ public:
     }
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 private:
-    IdType m_id = Id<T>::INVALID_ID;
-    IdType m_binding = Id<T>::INVALID_ID;
+    IdType m_id{INVALID_ID};
+    IdType m_binding{INVALID_ID};
 };
 
 namespace traits {
@@ -395,7 +395,6 @@ class Id : public Index<Id<T>>
 {
 public:
     using Index<Id<T>>::m_id;
-    using Index<Id<T>>::INVALID_ID;
     using SizeType = typename Index<Id<T>>::SizeType;
 
     Id() : Index<Id<T>>() {}
@@ -440,7 +439,6 @@ class CId : public Index<Id<T>>
 {
 public:
     using Index<Id<T>>::m_id;
-    using Index<Id<T>>::INVALID_ID;
     using SizeType = typename Index<Id<T>>::SizeType;
 
     CId() : Index<Id<T>>() {}
@@ -496,7 +494,7 @@ template <typename T>
 template <typename Other>
 void Entity<T>::Bind(const Index<Id<Other>> & other)
 {
-    if (m_binding == Id<T>::INVALID_ID)
+    if (m_binding == INVALID_ID)
         m_binding = IdType(nano::Create<Binding>());
     Id<Binding>(m_binding)->Set<Other>(other);
 }
@@ -505,7 +503,7 @@ template <typename T>
 template <typename Other>
 void Entity<T>::Unbind()
 {
-    if(m_binding != Id<T>::INVALID_ID)
+    if(m_binding != INVALID_ID)
         Id<Binding>(m_binding)->Unset<Other>();
 }
 
@@ -513,7 +511,7 @@ template <typename T>
 template <typename Other>
 CId<Other> Entity<T>::GetBind() const
 {
-    if(m_binding != Index<T>::INVALID_ID)
+    if(m_binding != INVALID_ID)
         return CId<Binding>(m_binding)->Get<Other>();
     return CId<Other>();
 }
