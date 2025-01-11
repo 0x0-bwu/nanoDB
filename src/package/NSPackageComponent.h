@@ -11,6 +11,7 @@ public:
     explicit Component(std::string name, CId<FootprintCell> footprint, CId<Layout> layout);
     Component();
 
+    CId<Material> GetMaterial() const;
     CId<FootprintCell> GetFootprint() const;
     CId<Layout> GetLayout() const;
 
@@ -25,6 +26,11 @@ public:
 
     UPtr<Shape> GetBoundary() const;
 
+    bool isFlipped() const { return m_.flipped; }
+    void SetFlipped(bool flipped) { m_.flipped = flipped; }
+
+    bool isBlackBox() const { return m_.footprint->isBlackBox(); }
+
 private:
     void SetLayout(CId<Layout> layout);
 
@@ -34,7 +40,8 @@ private:
     NS_DEFINE_CLASS_MEMBERS(
     (CId<FootprintCell>, footprint),
     (CId<Layout>, layout),
-    (IdVec<ComponentLayer, NameLut>, componentLayers)
+    (IdVec<ComponentLayer, NameLut>, componentLayers),
+    (bool, flipped)
     )
 };
 

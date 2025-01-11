@@ -4,7 +4,6 @@
 #define NANO_CURRENT_CXX_VERSION 20
 #undef GENERIC_CURRENT_CXX_VERSION
 #define GENERIC_CURRENT_CXX_VERSION NANO_CURRENT_CXX_VERSION
-#define NANO_BOOST_SERIALIZATION_SUPPORT
 
 #define NS_DEFINE_CONSTEXPR_STRING_VIEW(s) inline static constexpr std::string_view s = #s
 #define NS_INHERITANCE(CLASS, FROM, BASE)                                                      \
@@ -19,7 +18,7 @@ inline nano::Id<FROM> operator-- (nano::Id<CLASS> id, int) { return nano::Id<FRO
 /**/
 #define NS_INHERIT_FROM_BASE(CLASS, BASE) NS_INHERITANCE(CLASS, BASE, BASE)
 #define NS_DEFINE_CLASS_MEMBERS(...)                                                           \
-private:                                                                                       \
+protected:                                                                                     \
     struct NANO_CLASS_MEMBERS {                                                                \
     BOOST_HANA_DEFINE_STRUCT(NANO_CLASS_MEMBERS, __VA_ARGS__);} m_;                            \
     NANO_CLASS_MEMBERS * operator-> () noexcept { return &m_; }                                \

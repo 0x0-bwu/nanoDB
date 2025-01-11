@@ -6,7 +6,6 @@ namespace nano::package {
 class HierObj : public Entity<HierObj>
 {
 protected:
-    friend class CellInst;
     HierObj(CId<HierObj> parent);
     HierObj() = default;
 

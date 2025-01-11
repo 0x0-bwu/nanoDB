@@ -23,11 +23,17 @@ Component::Component(std::string name, CId<FootprintCell> footprint, CId<Layout>
 {
     m_.footprint = footprint;
     m_.layout = layout;
+    m_.flipped = false;
 }
 
 Component::Component()
  : Component("", CId<FootprintCell>(), CId<Layout>())
 {
+}
+
+CId<Material> Component::GetMaterial() const
+{
+    return m_.footprint->GetMaterial();
 }
 
 CId<FootprintCell> Component::GetFootprint() const
@@ -78,6 +84,7 @@ Ptr<Component> Component::CloneFrom(const Component & src)
     m_.componentLayers = src.m_.componentLayers.Clone();
     for (auto & layer : m_.componentLayers)
         layer->SetComponent(GetCId());
+    m_.flipped = src.m_.flipped;
     return this;
 }
 

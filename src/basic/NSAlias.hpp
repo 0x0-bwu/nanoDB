@@ -38,6 +38,8 @@ using UPtr = std::unique_ptr<T, Deleter>;
 
 using IdType = size_t;
 
+inline static constexpr auto INVALID_ID = std::numeric_limits<IdType>::max();
+
 using Int = int64_t;
 using Float = float;
 

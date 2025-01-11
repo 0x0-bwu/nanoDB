@@ -42,6 +42,27 @@ Layer::Layer(std::string name, LayerType type)
     m_.type = type;
 }
 
+Id<ComponentLayer> Layer::GetComponentLayer()
+{
+    return Id<ComponentLayer>(GetId());
+}
+
+CId<ComponentLayer> Layer::GetComponentLayer() const
+{
+    return CId<ComponentLayer>(GetCId());
+}
+
+Id<StackupLayer> Layer::GetStackupLayer()
+{
+    return Id<StackupLayer>(GetId());
+}
+
+CId<StackupLayer> Layer::GetStackupLayer() const
+{
+    return CId<StackupLayer>(GetCId());
+}
+
+
 Ptr<Layer> Layer::CloneFrom(const Layer & src)
 {
     NamedObj::CloneFrom(src);
@@ -126,6 +147,16 @@ void ComponentLayer::SetConnectedLayer(CId<Layer> layer)
 CId<Layer> ComponentLayer::GetConnectedLayer() const
 {
     return m_.connectedLayer;
+}
+
+Float ComponentLayer::GetSolderBallBumpThickness() const
+{
+    return m_.footprint->GetSolderBallBumpThickenss();
+}
+
+bool ComponentLayer::isFlipped() const
+{
+    return m_.component->isFlipped();
 }
 
 void ComponentLayer::SetComponent(CId<Component> component)

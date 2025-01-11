@@ -18,7 +18,10 @@ public:
 
     void SetSolderFillingMaterial(CId<Material> material);
     void SetSolderMaterial(CId<Material> material);
-    void SetSolderBallBumpHeight(Float height);
+
+    void SetSolderBallBumpThickenss(Float thickness);
+    Float GetSolderBallBumpThickenss() const;
+    
     void SetBoundary(CId<Shape> boundary);
 
     Id<FootprintPin> AddPin(Id<FootprintPin> pin);
@@ -33,7 +36,7 @@ private:
     (CId<Shape>, boundary),
     (CId<Material>, solderFillingMaterial),
     (CId<Material>, solderMaterial),
-    (Float, solderHeight)
+    (Float, solderThickness)
     )
 };
 

@@ -41,6 +41,11 @@ Id<Component> Layout::AddComponent(Id<Component> component)
     return m_.components.Add(component);
 }
 
+auto Layout::GetStackupLayerIter() const
+{
+    return m_.cell->GetPackage()->GetStackupLayerIter();
+}
+
 void Layout::Transform(const Transform2D & transform)
 {
     if (m_.boundary)

@@ -100,12 +100,12 @@ Id<CellInst> CellInst::AddCellInst(Id<CellInst> cellInst)
 
 auto CellInst::GetCellInstIter()
 {
-    return (*this)--->children.GetIter<CellInst>();
+    return HierObj::m_.children.GetIter<CellInst>();
 }
 
 auto CellInst::GetCellInstIter() const
 {
-    return (*this)--->children.GetCIter<CellInst>();
+    return HierObj::m_.children.GetCIter<CellInst>();
 }
 
 void CellInst::FlattenImpl()

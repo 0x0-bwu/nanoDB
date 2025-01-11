@@ -92,7 +92,7 @@ void FootprintCell::SetBoundary(Id<Shape> boundary)
     m_.boundary = boundary;
 }
 
-Id<Shape> FootprintCell::GetBoundary() const
+CId<Shape> FootprintCell::GetBoundary() const
 {
     return m_.boundary;
 }
@@ -100,6 +100,11 @@ Id<Shape> FootprintCell::GetBoundary() const
 void FootprintCell::SetMaterial(Id<Material> material)
 {
     m_.material = material;
+}
+
+CId<Material> FootprintCell::GetMaterial() const
+{
+    return m_.material;
 }
 
 void FootprintCell::SetHeight(Float height)

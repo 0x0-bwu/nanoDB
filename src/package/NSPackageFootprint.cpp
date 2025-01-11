@@ -22,7 +22,7 @@ Footprint::Footprint(std::string name, CId<FootprintCell> footprint, FootprintLo
 {
     m_.footprint = footprint;
     m_.location = location;
-    m_.solderHeight = 0;
+    m_.solderThickness = 0;
 }
 
 void Footprint::SetSolderFillingMaterial(CId<Material> material)
@@ -35,9 +35,14 @@ void Footprint::SetSolderMaterial(CId<Material> material)
     m_.solderMaterial = material;
 }
 
-void Footprint::SetSolderBallBumpHeight(Float height)
+void Footprint::SetSolderBallBumpThickenss(Float thickness)
 {
-    m_.solderHeight = height;
+    m_.solderThickness = thickness;
+}
+
+Float Footprint::GetSolderBallBumpThickenss() const
+{
+    return m_.solderThickness;
 }
 
 void Footprint::SetBoundary(CId<Shape> boundary)

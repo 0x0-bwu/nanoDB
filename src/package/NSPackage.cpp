@@ -63,4 +63,30 @@ Id<Cell> Package::FindCell(std::string_view name)
     return m_.cells.Lookup<lut::Name>(name);
 }
 
+Id<CellInst> Package::SetTop(Id<CellInst> top)
+{
+    m_.top = top;
+    return GetTop();
+}
+
+auto Package::GetCellIter()
+{
+    return m_.cells.GetIter<Cell>();
+}
+
+auto Package::GetCellIter() const
+{
+    return m_.cells.GetCIter<Cell>();
+}
+
+auto Package::GetPadstackIter()
+{
+    return m_.padstacks.GetIter<Padstack>();
+}
+
+auto Package::GetPadstackIter() const
+{
+    return m_.padstacks.GetCIter<Padstack>();
+}  
+
 } // namespace nano::package
