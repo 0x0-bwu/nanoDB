@@ -18,7 +18,10 @@ public:
 
     FootprintLocation GetLocation() const;
     void SetSolderFillingMaterial(CId<Material> material);
+    CId<Material> GetSolderFillingMaterial() const;
+
     void SetSolderMaterial(CId<Material> material);
+    CId<Material> GetSolderMaterial() const;
 
     void SetSolderBallBumpThickenss(Float thickness);
     Float GetSolderBallBumpThickenss() const;

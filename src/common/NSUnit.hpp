@@ -118,6 +118,12 @@ public:
         return coord * Scale2Unit();
     }
 
+    template <typename Coord>
+    Float toUnit(Coord coord, Unit unit) const
+    {
+        return coord * m_precision / generic::unit::Scale2Meter(unit);
+    }
+
 private:
     Float m_unit{1e-3};
     Float m_precision{1e-9};

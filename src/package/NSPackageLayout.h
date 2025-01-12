@@ -9,6 +9,8 @@ public:
     explicit Layout(CId<CircuitCell> cell);
     Layout() = default;
 
+    const CoordUnit & GetCoordUnit() const;
+
     void SetBoundary(Id<Shape> boundary);
     Id<Shape> GetBoundary() const { return m_.boundary; }
 
@@ -24,6 +26,8 @@ public:
     auto GetConnObjIter() const { return m_.connObjs.GetCIter<ConnObj>(); }
     auto GetComponentIter() { return m_.components.GetIter<Component>(); }
     auto GetComponentIter() const { return m_.components.GetCIter<Component>(); }
+    auto GetBondingWireIter() { return m_.connObjs.GetIter<BondingWire>(); }
+    auto GetBondingWireIter() const { return m_.connObjs.GetCIter<BondingWire>(); }
     auto GetStackupLayerIter() const { return m_.cell->GetPackage()->GetStackupLayerIter(); }
 
     void Transform(const Transform2D & transform);

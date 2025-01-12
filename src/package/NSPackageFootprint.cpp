@@ -35,6 +35,16 @@ void Footprint::SetSolderFillingMaterial(CId<Material> material)
     m_.solderFillingMaterial = material;
 }
 
+CId<Material> Footprint::GetSolderFillingMaterial() const
+{
+    return m_.solderFillingMaterial;
+}
+
+CId<Material> Footprint::GetSolderMaterial() const
+{
+    return m_.solderMaterial;
+}
+
 void Footprint::SetSolderMaterial(CId<Material> material)
 {
     m_.solderMaterial = material;

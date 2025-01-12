@@ -164,6 +164,16 @@ Float ComponentLayer::GetSolderBallBumpThickness() const
     return m_.connectedLayer ? m_.footprint->GetSolderBallBumpThickenss() : 0;
 }
 
+CId<Material> ComponentLayer::GetSolderFillingMaterial() const
+{
+    return m_.footprint->GetSolderFillingMaterial();
+}
+
+CId<Material> ComponentLayer::GetSolderMaterial() const
+{
+    return m_.footprint->GetSolderMaterial();
+}
+
 bool ComponentLayer::isFlipped() const
 {
     return m_.component->isFlipped();

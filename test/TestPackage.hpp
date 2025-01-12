@@ -682,13 +682,12 @@ void t_create_package()
     base->AddCellInst(topBridgeInst2);
 
     base->Flatten();
-    auto iter = baseLayout->GetConnObjIter();
-    while (auto connObj = iter.Next()) {
-        if (auto bw = connObj->GetBondingWire(); bw) {
-            if (generic::math::EQ<Float>(bw->GetRadius(),0.0635))
-                bw->SetSolderJoints(thinBwSolderDef);
-            else bw->SetSolderJoints(thickBwSolderDef);
-        }
+    auto bwIter = baseLayout->GetBondingWireIter();
+    while (auto bw = bwIter.Next()) {
+        if (generic::math::EQ<Float>(bw->GetRadius(),0.0635))
+            bw->SetSolderJoints(thinBwSolderDef);
+        else bw->SetSolderJoints(thickBwSolderDef);
+        bw->SetBondingWireType(BondingWireType::JEDEC4);
     }
     
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/CAS300M12BM2.xml";

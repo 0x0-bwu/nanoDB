@@ -12,6 +12,7 @@ public:
     bool isValid() const;
     ScenarioId GetScenario() const;
     Float GetLossPower(Float x) const;
+    CId<LookupTable> GetLookupTable() const { return m_.lut; }
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
