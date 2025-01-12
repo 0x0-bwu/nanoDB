@@ -21,6 +21,11 @@ Layout::Layout(CId<CircuitCell> cell)
     m_.cell = cell;
 }
 
+const CoordUnit & Layout::GetCoordUnit() const
+{
+    return GetCell()->GetPackage()->GetCoordUnit();
+}
+
 void Layout::SetBoundary(Id<Shape> boundary)
 {
     m_.boundary = boundary;

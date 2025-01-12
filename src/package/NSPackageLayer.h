@@ -88,6 +88,9 @@ public:
 
     Float GetSolderBallBumpThickness() const;
 
+    CId<Material> GetSolderFillingMaterial() const;
+    CId<Material> GetSolderMaterial() const;
+
     bool isFlipped() const;
 
 private:

@@ -119,6 +119,55 @@ bool LayoutRetriever::GetComponentHeightThickness(CId<Component> component, Floa
     return true;
 }
 
+bool LayoutRetriever::GetBondingWireSegments(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights) const
+{
+    switch (bw->GetBondingWireType())
+    {
+        case BondingWireType::SIMPLE :
+            return GetSimpleBondingWireSegments(bw, pt2ds, heights);
+        case BondingWireType::JEDEC4 :
+            return GetJedec4BondingWireSegments(bw, pt2ds, heights);
+        default:
+            NS_ASSERT_MSG(false, "unsupported bonding wire type");
+            return false;
+    }
+}
 
+bool LayoutRetriever::GetBondingWireSegmentsWithMinSeg(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights, size_t minSeg) const
+{
+    if (pt2ds.empty()) {
+        auto res =  GetBondingWireSegments(bw, pt2ds, heights);
+        if (not res) return false;
+    }
 
+    if (pt2ds.size() >= minSeg) return true;
+    auto midPoint = [&](const  NCoord2D & p1, Float h1, const  NCoord2D & p2, Float h2) {
+        return std::make_pair((p1 + p2) / 2, (h1 + h2) / 2);
+    };
+
+    std::vector<Float> newHts{heights.front()};
+    std::vector<NCoord2D> newPts{pt2ds.front()};
+    for (size_t i = 1; i < pt2ds.size(); ++i) {
+        auto [mPt, mHt] = midPoint(newPts.back(), newHts.back(), pt2ds.at(i), heights.at(i));
+        newPts.emplace_back(std::move(mPt));
+        newPts.emplace_back(pt2ds.at(i));
+        newHts.emplace_back(mHt);
+        newHts.emplace_back(heights.at(i));
+    }
+    std::swap(newHts, heights);
+    std::swap(newPts, pt2ds);
+    return GetBondingWireSegmentsWithMinSeg(bw, pt2ds, heights, minSeg);
+}
+
+bool LayoutRetriever::GetSimpleBondingWireSegments(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights) const
+{
+   //simple
+    return false;//todo  
+}
+
+bool LayoutRetriever::GetJedec4BondingWireSegments(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights) const
+{
+   //JEDEC4
+    return false;//todo
+}
 } // namespace nano::package::utils
