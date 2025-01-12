@@ -119,6 +119,11 @@ ComponentLayer::ComponentLayer(std::string name, CId<Component> component, CId<F
     m_.footprint = footprint;
 }
 
+ComponentLayer::ComponentLayer()
+ : ComponentLayer("", CId<Component>(), CId<Footprint>())
+{
+}
+
 CId<Footprint> ComponentLayer::GetFootprint() const
 {
     return m_.footprint;
@@ -127,6 +132,11 @@ CId<Footprint> ComponentLayer::GetFootprint() const
 CId<Component> ComponentLayer::GetComponent() const
 {
     return m_.component;
+}
+
+FootprintLocation ComponentLayer::GetLocation() const
+{
+    return m_.footprint->GetLocation();
 }
 
 Id<ComponentPin> ComponentLayer::AddPin(Id<ComponentPin> pin)
@@ -151,7 +161,7 @@ CId<Layer> ComponentLayer::GetConnectedLayer() const
 
 Float ComponentLayer::GetSolderBallBumpThickness() const
 {
-    return m_.footprint->GetSolderBallBumpThickenss();
+    return m_.connectedLayer ? m_.footprint->GetSolderBallBumpThickenss() : 0;
 }
 
 bool ComponentLayer::isFlipped() const

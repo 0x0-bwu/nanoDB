@@ -193,6 +193,16 @@ public:
 
     size_t size() const { return m_data.size(); }
 
+    size_t count(const Id<T> & id) const
+    {
+        return std::count(m_data.begin(), m_data.end(), id);
+    }
+
+    size_t count(const CId<T> & id) const
+    {
+        return count(id.ConstCast());
+    }
+
     ///
     template <typename Derived>
     using Iter = IdIterator<IdVec<T, Luts>, Derived, /*Mutable=*/true>;

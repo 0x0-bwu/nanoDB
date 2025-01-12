@@ -16,12 +16,13 @@ public:
     Footprint(std::string name, CId<FootprintCell> footprint, FootprintLocation location);
     Footprint() = default;
 
+    FootprintLocation GetLocation() const;
     void SetSolderFillingMaterial(CId<Material> material);
     void SetSolderMaterial(CId<Material> material);
 
     void SetSolderBallBumpThickenss(Float thickness);
     Float GetSolderBallBumpThickenss() const;
-    
+
     void SetBoundary(CId<Shape> boundary);
 
     Id<FootprintPin> AddPin(Id<FootprintPin> pin);

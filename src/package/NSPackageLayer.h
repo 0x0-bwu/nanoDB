@@ -70,10 +70,12 @@ class ComponentLayer : public Layer
 public:
     friend class Component;
     ComponentLayer(std::string name, CId<Component> component, CId<Footprint> footprint);
-    ComponentLayer() = default;
+    ComponentLayer();
 
     CId<Footprint> GetFootprint() const;
     CId<Component> GetComponent() const;
+
+    FootprintLocation GetLocation() const;
 
     Id<ComponentPin> AddPin(Id<ComponentPin> pin);
     CId<ComponentPin> FindPin(std::string_view name) const;

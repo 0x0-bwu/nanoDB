@@ -12,8 +12,8 @@ public:
 
     bool GetLayerHeightThickness(CId<Layer> layer, Float & elevation, Float & thickness) const;
     bool GetStackupLayerHeightThickness(CId<StackupLayer> stackupLayer, Float & elevation, Float & thickness) const;
-    bool GetComoponentLayerHeightThickness(CId<ComponentLayer> compLayer, Float & elevation, Float & thickness) const;
-    bool GetComponentBallBumpThickness(CId<ComponentLayer> compLayer, Float & thickness) const;
+    bool GetComponentLayerHeightThickness(CId<ComponentLayer> compLayer, Float & elevation, Float & thickness) const;
+    bool GetComponentHeightThickness(CId<Component> component, Float & elevation, Float & thickness) const;
 private:    
 
 private:  

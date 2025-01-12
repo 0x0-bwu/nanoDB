@@ -15,7 +15,7 @@ bool LayoutRetriever::GetLayerHeightThickness(CId<Layer> layer, Float & elevatio
     if (auto stackupLayer = layer->GetStackupLayer(); stackupLayer)
         return GetStackupLayerHeightThickness(stackupLayer, elevation, thickness);
     else if (auto componentLayer = layer->GetComponentLayer(); componentLayer)
-        return GetComoponentLayerHeightThickness(componentLayer, elevation, thickness);
+        return GetComponentLayerHeightThickness(componentLayer, elevation, thickness);
     else {
         NS_ASSERT_MSG(false, "invalid layer type");
         return false;
@@ -34,7 +34,7 @@ bool LayoutRetriever::GetStackupLayerHeightThickness(CId<StackupLayer> stackupLa
     return true;
 }
 
-bool LayoutRetriever::GetComoponentLayerHeightThickness(CId<ComponentLayer> compLayer, Float & elevation, Float & thickness) const
+bool LayoutRetriever::GetComponentLayerHeightThickness(CId<ComponentLayer> compLayer, Float & elevation, Float & thickness) const
 {
     auto iter = m_lyrHeightsMap.find(CId<Layer>(compLayer));
     if (iter != m_lyrHeightsMap.cend()) {
@@ -42,27 +42,14 @@ bool LayoutRetriever::GetComoponentLayerHeightThickness(CId<ComponentLayer> comp
         thickness = iter->second[1];
         return true;
     }
-
-    auto connectedLayer = compLayer->GetConnectedLayer();
-    if (not connectedLayer) return false;
-
-    Float refElevation{0}, refThickness{0};
-    if (not GetLayerHeightThickness(connectedLayer, refElevation, refThickness)) return false;
-    if (not GetComponentBallBumpThickness(compLayer, thickness)) return false;
-
-    if (compLayer->isFlipped()) {
-        elevation = refElevation - refThickness;
-    }
-    else elevation = refElevation + thickness;
-    m_lyrHeightsMap.emplace(compLayer, Arr2<Float>{elevation, thickness});
-    return true;
+    return false;
 }
 
-bool LayoutRetriever::GetComponentBallBumpThickness(CId<ComponentLayer> compLayer, Float & thickness) const
+bool LayoutRetriever::GetComponentHeightThickness(CId<Component> component, Float & elevation, Float & thickness) const
 {
-    NS_ASSERT(compLayer);
-    thickness = compLayer->GetSolderBallBumpThickness();
-    return true;
+    return false;
 }
+
+
 
 } // namespace nano::package::utils
