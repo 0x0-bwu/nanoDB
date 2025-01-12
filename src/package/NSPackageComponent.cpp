@@ -63,6 +63,14 @@ CId<ComponentPin> Component::FindComponentPin(std::string_view layerName, std::s
     return CId<ComponentPin>();
 }
 
+CId<ComponentLayer> Component::GetAssemblyLayer() const
+{
+    for (auto & layer : m_.componentLayers)
+        if (auto connectedLayer = layer->GetConnectedLayer(); connectedLayer)
+            return layer;
+    return CId<ComponentLayer>();
+}
+
 void Component::Transform(const Transform2D & transform)
 {
     Transformable2D::AddTransform(transform);

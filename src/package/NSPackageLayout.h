@@ -24,7 +24,7 @@ public:
     auto GetConnObjIter() const { return m_.connObjs.GetCIter<ConnObj>(); }
     auto GetComponentIter() { return m_.components.GetIter<Component>(); }
     auto GetComponentIter() const { return m_.components.GetCIter<Component>(); }
-    auto GetStackupLayerIter() const;
+    auto GetStackupLayerIter() const { return m_.cell->GetPackage()->GetStackupLayerIter(); }
 
     void Transform(const Transform2D & transform);
 

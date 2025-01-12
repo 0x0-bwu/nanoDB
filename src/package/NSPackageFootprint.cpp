@@ -25,6 +25,11 @@ Footprint::Footprint(std::string name, CId<FootprintCell> footprint, FootprintLo
     m_.solderThickness = 0;
 }
 
+FootprintLocation Footprint::GetLocation() const
+{
+    return m_.location;
+}
+
 void Footprint::SetSolderFillingMaterial(CId<Material> material)
 {
     m_.solderFillingMaterial = material;

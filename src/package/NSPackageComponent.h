@@ -19,6 +19,8 @@ public:
     CId<ComponentLayer> FindComponentLayer(std::string_view name) const;
     CId<ComponentPin> FindComponentPin(std::string_view layerName, std::string_view pinName) const;
 
+    CId<ComponentLayer> GetAssemblyLayer() const;
+
     auto GetComponentLayerIter() { return m_.componentLayers.GetIter<ComponentLayer>(); }
     auto GetComponentLayerIter() const { return m_.componentLayers.GetCIter<ComponentLayer>(); }
 
