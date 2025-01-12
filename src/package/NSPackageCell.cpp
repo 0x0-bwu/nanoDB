@@ -112,6 +112,11 @@ void FootprintCell::SetHeight(Float height)
     m_.height = height;
 }
 
+Float FootprintCell::GetHeight() const
+{
+    return m_.height;
+}
+
 Id<Footprint> FootprintCell::AddFootprint(Id<Footprint> footprint)
 {
     return m_.footprints.Add(footprint);

@@ -42,7 +42,8 @@ public:
     auto GetStackupLayerIter() { return m_.stackupLayers.GetIter<StackupLayer>(); }
     auto GetStackupLayerIter() const { return m_.stackupLayers.GetCIter<StackupLayer>(); }
 
-    bool isBlackBox() const override { return false; }
+    Float GetHeight() const override;
+    bool isBlackBox() const override;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;

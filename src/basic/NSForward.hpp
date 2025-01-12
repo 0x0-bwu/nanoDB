@@ -11,6 +11,10 @@ class Binding;
 template <typename T>
 class Cloneable;
 
+class LookupTable;
+class LookupTable1D;
+class LookupTable2D;
+
 class Material;
 class MaterialLib;
 class MaterialProp;
@@ -118,12 +122,19 @@ class Parasitic;
 
 } // namespace parasitic
 
+namespace power {
+
+class LossPower;
+
+} // namespace power
 
 template <typename... Args>
 class Collection;
 using Content = Collection<
     ///
     Binding,
+    ///
+    LookupTable,
     ///
     Material,
     MaterialLib,
@@ -161,7 +172,9 @@ using Content = Collection<
     package::Pin,
     ///
     parasitic::Net,
-    parasitic::Parasitic
+    parasitic::Parasitic,
+    ///
+    power::LossPower
 >;
 
 namespace hana = boost::hana;
@@ -170,6 +183,9 @@ namespace traits {
 using namespace std::literals::string_view_literals;
 inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<Binding                          >, "Binding"sv                        ),
+    hana::make_pair(hana::type_c<LookupTable                      >, "LookupTable"sv                    ),
+    hana::make_pair(hana::type_c<LookupTable1D                    >, "LookupTable1D"sv                  ),
+    hana::make_pair(hana::type_c<LookupTable2D                    >, "LookupTable2D"sv                  ),
     hana::make_pair(hana::type_c<Material                         >, "Material"sv                       ),
     hana::make_pair(hana::type_c<MaterialLib                      >, "MaterialLib"sv                    ),
     hana::make_pair(hana::type_c<MaterialProp                     >, "MaterialProp"sv                   ),
@@ -228,10 +244,13 @@ inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<package::RoutingWire             >, "PackageRoutingWire"sv             ),
     hana::make_pair(hana::type_c<package::StackupLayer            >, "PackageStackupLayer"sv            ),
     hana::make_pair(hana::type_c<parasitic::Net                   >, "ParasiticNet"sv                   ),
-    hana::make_pair(hana::type_c<parasitic::Parasitic             >, "Parasitic"sv                      )
+    hana::make_pair(hana::type_c<parasitic::Parasitic             >, "Parasitic"sv                      ),
+    hana::make_pair(hana::type_c<power::LossPower                 >, "PowerLossPower"sv                 )
 );
 
 inline constexpr static auto inheritanceMap = hana::make_map(
+    hana::make_pair(hana::type_c<LookupTable1D                    >, hana::type_c<LookupTable          >),
+    hana::make_pair(hana::type_c<LookupTable2D                    >, hana::type_c<LookupTable          >),
     hana::make_pair(hana::type_c<MaterialPropPolynomial           >, hana::type_c<MaterialProp         >),
     hana::make_pair(hana::type_c<MaterialPropTable                >, hana::type_c<MaterialProp         >),
     hana::make_pair(hana::type_c<MaterialPropValue                >, hana::type_c<MaterialProp         >),

@@ -89,4 +89,16 @@ auto Package::GetPadstackIter() const
     return m_.padstacks.GetCIter<Padstack>();
 }  
 
+Float Package::GetHeight() const
+{
+    return m_.stackupLayers.front()->GetElevation() - 
+           m_.stackupLayers.back()->GetElevation() +
+           m_.stackupLayers.back()->GetThickness();
+}
+
+bool Package::isBlackBox() const
+{
+    return false;
+}
+
 } // namespace nano::package

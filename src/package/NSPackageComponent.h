@@ -27,6 +27,7 @@ public:
     void Transform(const Transform2D & transform);
 
     UPtr<Shape> GetBoundary() const;
+    Float GetHeight() const;
 
     bool isFlipped() const { return m_.flipped; }
     void SetFlipped(bool flipped) { m_.flipped = flipped; }

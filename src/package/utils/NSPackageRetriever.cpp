@@ -42,12 +42,81 @@ bool LayoutRetriever::GetComponentLayerHeightThickness(CId<ComponentLayer> compL
         thickness = iter->second[1];
         return true;
     }
-    return false;
+
+    Float refElevation, refThickness;
+    thickness = compLayer->GetSolderBallBumpThickness();
+    auto location = compLayer->GetLocation();
+    if (location != FootprintLocation::TOP and
+        location != FootprintLocation::BOT) {
+        NS_ASSERT_MSG(false, "invalid footprint location");
+        return false;
+    }
+    if (auto connectedLayer = compLayer->GetConnectedLayer(); connectedLayer) {
+        if (not GetLayerHeightThickness(connectedLayer, refElevation, refThickness)) {
+            NS_ASSERT_MSG(false, "no connected layer height/thickness found");
+            return false;
+        }
+        if (compLayer->isFlipped()) {
+            elevation = FootprintLocation::TOP == location ? refElevation + thickness : refElevation;
+        }   
+        else {
+            elevation = FootprintLocation::TOP == location ? refElevation : refElevation + thickness;
+        }
+    }
+    else {
+        if (not GetComponentHeightThickness(compLayer->GetComponent(), refElevation, refThickness)) {
+            NS_ASSERT_MSG(false, "no component height/thickness found");
+            return false;
+        }
+        if (compLayer->isFlipped()) {
+            elevation = FootprintLocation::TOP == location ? refElevation - refThickness : refElevation;
+        }
+        else {
+            elevation = FootprintLocation::TOP == location ? refElevation : refElevation - refThickness;
+        }
+    }
+    m_lyrHeightsMap.emplace(compLayer, Arr2<Float>{elevation, thickness});
+    return true;
 }
 
 bool LayoutRetriever::GetComponentHeightThickness(CId<Component> component, Float & elevation, Float & thickness) const
 {
-    return false;
+    auto assemblyLayer = component->GetAssemblyLayer();
+    if (not assemblyLayer) {
+        NS_ASSERT_MSG(false, "no assembly layer found");
+        return false;
+    }
+    
+    Float refElevation{0}, refThickness{0};
+    if (not GetComponentLayerHeightThickness(assemblyLayer, refElevation, refThickness)) {
+        NS_ASSERT_MSG(false, "no assembly layer height/thickness found");
+        return false;
+    }
+
+    thickness = component->GetHeight();
+    auto location = assemblyLayer->GetLocation();
+    if (location != FootprintLocation::TOP and
+        location != FootprintLocation::BOT) {
+        NS_ASSERT_MSG(false, "invalid footprint location");
+        return false;
+    }
+    if (component->isFlipped()) {
+        if (FootprintLocation::TOP == location) {
+            elevation = refElevation + thickness;
+        }
+        else if (FootprintLocation::BOT == location) {
+            elevation = refElevation - refThickness;
+        }
+    }
+    else {
+        if (FootprintLocation::TOP == location) {
+            elevation = refElevation - refThickness;
+        }
+        else if (FootprintLocation::BOT == location) {
+            elevation = refElevation + thickness;
+        }
+    }
+    return true;
 }
 
 

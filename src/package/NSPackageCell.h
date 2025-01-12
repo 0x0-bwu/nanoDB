@@ -62,6 +62,7 @@ public:
     CId<Material> GetMaterial() const;
 
     void SetHeight(Float height);
+    virtual Float GetHeight() const;
 
     Id<Footprint> AddFootprint(Id<Footprint> interface);
 

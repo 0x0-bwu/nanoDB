@@ -4,6 +4,7 @@ add_subdirectory(common)
 add_subdirectory(liberty)
 add_subdirectory(package)
 add_subdirectory(parasitic)
+add_subdirectory(power)
 add_subdirectory(verilog)
 
 add_library(nanoDB SHARED NanoDB.cpp)
@@ -15,6 +16,7 @@ target_link_libraries(nanoDB
     nanoLiberty
     nanoPackage
     nanoParasitic
+    nanoPower
     nanoVerilog
     ${MALLOC_LIB}
     ${PNG_LIBRARY} 
