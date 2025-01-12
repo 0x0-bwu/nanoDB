@@ -18,7 +18,7 @@ private:
 
 private:  
     CId<Layout> m_layout;
-    mutable HashMap<CId<Layer>, Arr2<Float>> m_lyrHeightsMap;//[elevation, thickness]
+    mutable HashMap<CId<Layer>, Arr2<Float>> m_lyrHeightsMap;//[elevation, thickness], todo: mt-safe
 };
 
 } // namespace nano::package::utils

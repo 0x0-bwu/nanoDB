@@ -2,7 +2,6 @@
 #include "NSTraits.hpp"
 #include "generic/utils/LinearMap.hpp"
 #include "generic/utils/Version.hpp"
-#include "generic/utils/Index.hpp"
 
 #include <boost/noncopyable.hpp>
 #include <boost/hana.hpp>
@@ -13,9 +12,6 @@
 namespace nano {
 
 namespace hana = boost::hana;
-
-template<typename Tag>
-using Index = generic::utils::Index<Tag, IdType>;
 
 template<typename Key, typename Value>
 using LinearMap = generic::utils::LinearMap<Key, Value>;

@@ -6,3 +6,4 @@
 #include <core/verilog>
 #include <core/package>
 #include <core/parasitic>
+#include <core/power>

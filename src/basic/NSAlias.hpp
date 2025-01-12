@@ -1,8 +1,9 @@
 #pragma once
 #include "NSConfig.hpp"
 
-#include "generic/common/Exception.hpp"
+#include "generic/math/LookupTable.hpp"
 #include "generic/geometry/Point.hpp"
+#include "generic/utils/Index.hpp"
 #include "generic/tools/Log.hpp"
 
 #include <boost/algorithm/string/join.hpp>
@@ -38,6 +39,11 @@ using UPtr = std::unique_ptr<T, Deleter>;
 
 using IdType = size_t;
 
+template<typename Tag>
+using Index = generic::utils::Index<Tag, IdType>;
+
+using ScenarioId = Index<class Scenario>;
+
 inline static constexpr auto INVALID_ID = std::numeric_limits<IdType>::max();
 
 using Int = int64_t;
@@ -65,6 +71,9 @@ using NCoord = Int;
 using FCoord = Float;
 using NCoord2D = generic::geometry::Point2D<Int>;
 using FCoord2D = generic::geometry::Point2D<Float>;
+
+using Lut1D = generic::math::LookupTable<Float, 1>;
+using Lut2D = generic::math::LookupTable<Float, 2>;
 
 template <typename T> using Optional = boost::optional<T>;
 

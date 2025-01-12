@@ -83,6 +83,11 @@ UPtr<Shape> Component::GetBoundary() const
     return shape;
 }
 
+Float Component::GetHeight() const
+{
+    return m_.footprint->GetHeight();
+}
+
 Ptr<Component> Component::CloneFrom(const Component & src)
 {
     NamedObj::CloneFrom(src);

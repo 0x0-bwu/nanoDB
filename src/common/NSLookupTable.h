@@ -1,0 +1,53 @@
+#pragma once
+#include <core/basic>
+#include <core/common>
+
+namespace nano {
+
+class LookupTable : public Entity<LookupTable>
+{
+public:
+    virtual ~LookupTable() = default;
+    virtual bool isValid() const = 0;
+    virtual Float Lookup(Float x) const = 0;
+    virtual Float Lookup(Float x, Float y) const = 0;
+private:
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION;
+};
+
+class LookupTable1D : public LookupTable
+{
+public:
+    explicit LookupTable1D(std::vector<Float> x, std::vector<Float> y);
+    LookupTable1D() = default;
+
+    bool isValid() const override { return m_.lut.isValid(); }
+    Float Lookup(Float x) const override { return 0; /*todo*/ }
+    Float Lookup(Float x, Float y) const override { return 0; /*todo*/ }    
+private:
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION
+    NS_DEFINE_CLASS_MEMBERS(
+    (Lut1D, lut))
+};
+
+class LookupTable2D : public LookupTable
+{
+public:
+    explicit LookupTable2D(std::vector<Float> x, std::vector<Float> y, std::vector<Float> z);
+    LookupTable2D() = default;
+
+    bool isValid() const override { return m_.lut.isValid(); }
+    Float Lookup(Float x) const override { return 0; /*todo*/ } 
+    Float Lookup(Float x, Float y) const override { return 0; /*todo*/ }
+private:
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION
+    NS_DEFINE_CLASS_MEMBERS(
+    (Lut2D, lut))
+};
+
+} // namespace nano
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::LookupTable)
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::LookupTable1D)
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::LookupTable2D)
+NS_INHERIT_FROM_BASE(nano::LookupTable1D, nano::LookupTable);
+NS_INHERIT_FROM_BASE(nano::LookupTable2D, nano::LookupTable);

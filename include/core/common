@@ -1,5 +1,6 @@
 #pragma once
 #include "../../src/common/NSCommon.hpp"
+#include "../../src/common/NSLookupTable.h"
 #include "../../src/common/NSMaterial.h"
 #include "../../src/common/NSShape.h"
 #include "../../src/common/NSTransform.hpp"
