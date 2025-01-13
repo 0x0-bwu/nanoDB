@@ -37,12 +37,14 @@ NS_SERIALIZATION_FUNCTIONS_IMP(LookupTable2D)
 
 LookupTable1D::LookupTable1D(std::vector<Float> x, std::vector<Float> y)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.lut[0] = std::move(x);
     *(m_.lut) = std::move(y);
 }
 
 LookupTable2D::LookupTable2D(std::vector<Float> x, std::vector<Float> y, std::vector<Float> z)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.lut[0] = std::move(x);
     m_.lut[1] = std::move(y);
     *(m_.lut) = std::move(z);

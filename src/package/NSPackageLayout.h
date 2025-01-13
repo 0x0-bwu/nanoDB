@@ -35,7 +35,7 @@ public:
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLONE_FUNCTIONS_DECLARATION(Layout)
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (CId<CircuitCell>, cell),
     (Id<Shape>, boundary),
     (IdVec<Net, NameLut>, nets),

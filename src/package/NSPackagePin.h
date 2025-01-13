@@ -14,7 +14,7 @@ public:
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLONE_FUNCTIONS_DECLARATION(Pin)
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (IOType, ioType))
 };
 
@@ -27,7 +27,7 @@ public:
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(FootprintPin)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (CId<Footprint>, footprint),
     (CId<Padstack>, padstack),
     (NCoord2D, location))
@@ -48,7 +48,7 @@ private:
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(ComponentPin)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (CId<ComponentLayer>, componentLayer),
     (CId<FootprintPin>, footprintPin))
 };

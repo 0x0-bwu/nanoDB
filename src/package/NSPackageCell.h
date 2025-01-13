@@ -11,7 +11,7 @@ public:
     CId<Package> GetPackage() const { return m_.package; }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (CId<Package>, package)
     )
 };
@@ -29,7 +29,7 @@ public:
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (Id<Layout>, layout))
 };
 
@@ -71,7 +71,7 @@ public:
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (ComponentType, compType),
     (Id<Shape>, boundary),
     (Float, height),

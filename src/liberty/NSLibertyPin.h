@@ -9,13 +9,13 @@ class Pin : public NamedObj, public Entity<Pin>
 public:
     friend class PinParser;
     Pin(std::string name, Id<Cell> cell, IOType type = IOType::UNKNOWN);
-    Pin() = default;
 
     Id<Cell> GetCell() const;
 
 private:
+    Pin();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (Id<Cell>, cell),
     (IOType, ioType))
 };
@@ -31,10 +31,10 @@ class PwrGndPin : public Pin
 public:
     friend class PwrGndPinParser;
     PwrGndPin(std::string name, Id<Cell> cell, IOType type = IOType::UNKNOWN);
-    PwrGndPin() = default;
 private:
+    PwrGndPin();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (PGType, pgType),
     (std::string, voltageName))
 };
@@ -46,10 +46,10 @@ public:
     friend class SignalPinParser;
 protected:
     SignalPin(std::string name, Id<Cell> cell, IOType type = IOType::UNKNOWN);
-    SignalPin() = default;
 private:
+    SignalPin();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (std::string, relatedGndPin),
     (std::string, relatedPwrPin),
     (IdVec<InternalPower>, internalPower))
@@ -61,10 +61,10 @@ class InputPin : public SignalPin
 public:
     friend class InputPinParser;
     InputPin(std::string name, Id<Cell> cell);
-    InputPin() = default;
 private:
+    InputPin();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (Arr2<std::string>, driverWaveform),
     (Float, maxTransition),
     (Float, pinCapacitane),
@@ -79,10 +79,10 @@ class OutputPin : public SignalPin
 public:
     friend class OutputPinParser;
     OutputPin(std::string name, Id<Cell> cell);
-    OutputPin() = default;
 private:
+    OutputPin();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (std::string, function),
     (std::string, powerDownFunction),
     (std::string, outputVoltage),

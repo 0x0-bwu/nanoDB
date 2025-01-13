@@ -15,7 +15,7 @@ public:
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (Id<Inst>, inst),
     (Id<Net>, net),
     (IOType, ioType))

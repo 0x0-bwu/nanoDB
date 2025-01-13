@@ -24,7 +24,7 @@ public:
     Float Lookup(Float x, Float y) const override { return 0; /*todo*/ }    
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (Lut1D, lut))
 };
 
@@ -39,7 +39,7 @@ public:
     Float Lookup(Float x, Float y) const override { return 0; /*todo*/ }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (Lut2D, lut))
 };
 

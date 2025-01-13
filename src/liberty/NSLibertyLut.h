@@ -16,7 +16,7 @@ public:
 
 private:
 NS_SERIALIZATION_FUNCTIONS_DECLARATION
-NS_DEFINE_CLASS_MEMBERS(
+NS_CLASS_MEMBERS_DEFINE(
     (Id<LutTemplate>, lutTemplate),
     (LutIndices, indices),
     (LutNumbers, values))
@@ -31,7 +31,7 @@ public:
     CcsLut();
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (Float, referenceTime))
 };
 
@@ -45,7 +45,7 @@ public:
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (std::string,driverWaveformName))
 };
 

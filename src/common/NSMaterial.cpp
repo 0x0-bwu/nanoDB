@@ -191,6 +191,7 @@ Float MaterialPropPolynomial::Calculate(const std::vector<Float> & coefficients,
 Material::Material(std::string name)
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.type = MaterialType::RIGID;
 }
 
@@ -222,6 +223,7 @@ void Material::RemoveProperty(Prop prop)
 MaterialLib::MaterialLib(std::string name)
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE
 }
 
 void MaterialLib::AddMaterial(Id<Material> mat)

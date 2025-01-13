@@ -22,7 +22,7 @@ protected:
     virtual void FlattenImpl() = 0;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (CId<HierObj>, parent),
     (IdVec<HierObj>, children)
     )
@@ -50,7 +50,7 @@ protected:
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (CId<CircuitCell>, cell),
     (Id<Layout>, flattenedLayout))
 };

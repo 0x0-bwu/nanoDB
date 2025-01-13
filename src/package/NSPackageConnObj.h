@@ -27,7 +27,7 @@ protected:
     Ptr<ConnObj> CloneFrom(const ConnObj & src);
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (CId<Net>, net)
     )
 };
@@ -80,7 +80,7 @@ public:
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(BondingWire)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (CId<Material>, material),
     (Float, radius),
     (Float, height),
@@ -105,7 +105,7 @@ public:
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(RoutingWire)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (CId<StackupLayer>, layer),
     (Id<Shape>, shape)
     )
@@ -123,7 +123,7 @@ public:
     void Transform(const Transform2D & transform) override;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (CId<Padstack>, padstack),
     (CIdArr2<StackupLayer>, layerRange)
     )

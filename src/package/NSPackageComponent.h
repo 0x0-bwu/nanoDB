@@ -38,7 +38,7 @@ private:
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(Component)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (CId<FootprintCell>, footprint),
     (CId<Layout>, layout),
     (IdVec<ComponentLayer, NameLut>, componentLayers),

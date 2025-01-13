@@ -19,7 +19,7 @@ public:
     size_t NumOfCells() const;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (std::string, filename),
     (std::string, comment),
     (std::string, date),
