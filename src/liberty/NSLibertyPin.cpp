@@ -60,28 +60,58 @@ NS_SERIALIZATION_FUNCTIONS_IMP(OutputPin)
 Pin::Pin(std::string name, Id<Cell> cell, IOType type)
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.cell = cell;
     m_.ioType = type;
 }
 
+Pin::Pin()
+ : Pin("", Id<Cell>(), IOType::UNKNOWN)
+{
+}
+
 PwrGndPin::PwrGndPin(std::string name, Id<Cell> cell, IOType type)
  : Pin(std::move(name), cell, type)
+{
+    NS_CLASS_MEMBERS_INITIALIZE
+}
+
+PwrGndPin::PwrGndPin()
+ : PwrGndPin("", Id<Cell>(), IOType::UNKNOWN)
 {
 }
 
 SignalPin::SignalPin(std::string name, Id<Cell> cell, IOType type)
  : Pin(std::move(name), cell, type)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
+}
+
+SignalPin::SignalPin()
+ : SignalPin("", Id<Cell>(), IOType::UNKNOWN)
+{
 }
 
 InputPin::InputPin(std::string name, Id<Cell> cell)
  : SignalPin(std::move(name), cell, IOType::INPUT)
+{
+    NS_CLASS_MEMBERS_INITIALIZE
+}
+
+InputPin::InputPin()
+ : InputPin("", Id<Cell>())
 {
 }
 
 OutputPin::OutputPin(std::string name, Id<Cell> cell)
  : SignalPin(std::move(name), cell, IOType::OUTPUT)
  {
+    NS_CLASS_MEMBERS_INITIALIZE
  }
+
+OutputPin::OutputPin()
+ : OutputPin("", Id<Cell>())
+{
+}
 
 } // namespace nano::liberty

@@ -66,7 +66,7 @@ public:
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(ShapeRect)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (NBox2D, shape))
 };
 
@@ -90,7 +90,7 @@ public:
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(ShapePath)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (NPolyline, shape),
     (NCoord, width))
 };
@@ -116,7 +116,7 @@ public:
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(ShapeCircle)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (NCoord2D, center),
     (NCoord, radius))
 };
@@ -139,7 +139,7 @@ public:
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(ShapePolygon)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (NPolygon, shape))
 };
 
@@ -162,7 +162,7 @@ public:
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(ShapePolygonWithHoles)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (NPolygonWithHoles, shape))
 };
 
@@ -185,7 +185,7 @@ public:
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(ShapeFromTemplate)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (CId<Shape>, shape),
     (Transform2D, transform))
 };

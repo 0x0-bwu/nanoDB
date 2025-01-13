@@ -6,59 +6,6 @@
 #define GENERIC_CURRENT_CXX_VERSION NANO_CURRENT_CXX_VERSION
 
 #define NS_DEFINE_CONSTEXPR_STRING_VIEW(s) inline static constexpr std::string_view s = #s
-#define NS_INHERITANCE(CLASS, FROM, BASE)                                                      \
-static_assert(std::is_base_of_v<BASE, FROM >, "should be derived class or self");              \
-static_assert(std::is_base_of_v<FROM, CLASS>, "should be derived class or self");              \
-inline FROM & operator-- (CLASS & c) { return static_cast<FROM &>(c); }                        \
-inline FROM & operator-- (CLASS & c, int) { return static_cast<FROM &>(c); }                   \
-inline const FROM & operator-- (const CLASS & c) { return static_cast<const FROM &>(c); }      \
-inline const FROM & operator-- (const CLASS & c, int) { return static_cast<const FROM &>(c); } \
-inline nano::Id<FROM> operator-- (nano::Id<CLASS> id) { return nano::Id<FROM>(id); }           \
-inline nano::Id<FROM> operator-- (nano::Id<CLASS> id, int) { return nano::Id<FROM>(id); }      \
-/**/
-#define NS_INHERIT_FROM_BASE(CLASS, BASE) NS_INHERITANCE(CLASS, BASE, BASE)
-
-#include <boost/hana.hpp>
-#include <type_traits>
-#include <algorithm>
-#include <array>
-namespace nano::traits {
-template <typename Struct>
-constexpr Struct Init(Struct s)
-{
-    using namespace boost;
-    auto init = [](auto && self, auto & t) {
-        if      constexpr (std::is_same_v<decltype(t), float >) t = .0f;
-        else if constexpr (std::is_same_v<decltype(t), double>) t = .0;
-        else if constexpr (std::is_same_v<decltype(t), int   >) t = 0;
-        else if constexpr (std::is_same_v<decltype(t), size_t>) t = 0;
-        else if constexpr (std::is_pointer_v<decltype(t)>) t = nullptr;
-        else if constexpr (std::is_array_v<decltype(t)>)
-            std::for_each(t.begin(), t.end(), [&](auto & e){ self(self, e); });
-    };
-    hana::for_each(hana::accessors<Struct>(), [&](auto pair) { init(init, hana::second(pair)(s)); });
-    return s;
-}
-} // namespace nano::traits
-               
-#define NS_DEFINE_CLASS_MEMBERS(...)                                                           \
-protected:                                                                                     \
-    struct MEMBERS {                                                                           \
-    BOOST_HANA_DEFINE_STRUCT(MEMBERS, __VA_ARGS__);} m_ = nano::traits::Init(MEMBERS());       \
-    MEMBERS * operator-> () noexcept { return &m_; }                                           \
-public:                                                                                        \
-    const MEMBERS * operator->() const noexcept { return &m_; }                                \
-    const MEMBERS & operator* () const noexcept { return  m_; }                                \
-private:                                                                                       \
-/**/
-
-#define NS_CLONE_FUNCTIONS_DECLARATION(CLASS)                                                  \
-protected:                                                                                     \
-    CLASS * CloneFrom(const CLASS &);                                                          \
-    CLASS * CloneImpl(IdType id) const override                                                \
-    { auto clone = new CLASS; clone->SetId(id); return clone->CloneFrom(*this); }              \
-private:                                                                                       \
-/**/
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     #ifndef GENERIC_BOOST_SERIALIZATION_SUPPORT

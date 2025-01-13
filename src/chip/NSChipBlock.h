@@ -41,7 +41,7 @@ public:
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (IdVec<BTerm>, bterms),
     (IdVec<Inst>, insts),
     (IdVec<Net>, nets),

@@ -29,7 +29,7 @@ public:
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLONE_FUNCTIONS_DECLARATION(Layer)
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (LayerType, type)
     )
 };
@@ -57,7 +57,7 @@ public:
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(StackupLayer)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (Float, elevation),
     (Float, thickness),
     (CId<Material>, conductingMat),
@@ -98,7 +98,7 @@ private:
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(ComponentLayer)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (CId<Component>, component),
     (CId<Footprint>, footprint),
     (IdVec<ComponentPin, NameLut>, pins),

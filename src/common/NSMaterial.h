@@ -39,7 +39,7 @@ public:
     void GetDimensions(size_t & row, size_t & col) const override;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (std::vector<Float>, values))
 };
 
@@ -51,7 +51,7 @@ public:
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (std::map<Float, Id<MaterialProp>>, values))
 };
 
@@ -74,7 +74,7 @@ private:
     static Float Calculate(const std::vector<Float> & coefficients, Float index);
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (std::vector<std::vector<Float>>, coefficients))
 };
 
@@ -111,7 +111,7 @@ public:
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (MaterialType, type),
     (HashMap<Prop, Id<MaterialProp>>, props))
 };
@@ -127,7 +127,7 @@ public:
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
-    NS_DEFINE_CLASS_MEMBERS(
+    NS_CLASS_MEMBERS_DEFINE(
     (IdVec<Material, NameLut>, materials))
 };
 

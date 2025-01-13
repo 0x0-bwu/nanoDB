@@ -2,6 +2,7 @@
 #include "NSConfig.hpp"
 #include "NSAlias.hpp"
 #include "NSVersion.hpp"
+#include <boost/hana.hpp>
 #include <type_traits>
 namespace nano {
 

@@ -91,6 +91,7 @@ ShapeRect::ShapeRect(NCoord2D ll, NCoord2D ur)
 
 ShapeRect::ShapeRect(NBox2D box)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.shape = std::move(box);
 }
 
@@ -172,6 +173,7 @@ ShapeCircle::ShapeCircle(const CoordUnit & coordUnit, FCoord2D o, FCoord r)
 
 ShapeCircle::ShapeCircle(NCoord2D o, NCoord r)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.center = o;
     m_.radius = r;
 }
@@ -222,6 +224,7 @@ ShapePolygon::ShapePolygon(const CoordUnit & coordUnit, std::vector<FCoord2D> ou
 
 ShapePolygon::ShapePolygon(std::vector<NCoord2D> points, NCoord cornerR)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     NPolygon polygon;
     polygon.Set(std::move(points));
     if (cornerR > 0)

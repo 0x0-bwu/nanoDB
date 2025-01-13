@@ -2,6 +2,22 @@
 #include "NSForward.hpp"
 namespace nano::traits {
 
+// member init
+template <typename Struct>
+constexpr inline void Init(Struct & s)
+{
+    using namespace boost;
+    auto init = [](auto && self, auto & t) {
+        using T = std::decay_t<decltype(t)>;
+        if constexpr (hana::Struct<T>::value) Init(t); 
+        else if constexpr (std::is_arithmetic_v<T>) t = 0;
+        else if constexpr (std::is_pointer_v<T>) t = nullptr;
+        else if constexpr (std::is_array_v<T>)
+            std::for_each(t.begin(), t.end(), [&](auto & e){ self(self, e); });
+    };
+    hana::for_each(hana::accessors<Struct>(), [&](auto pair) { init(init, hana::second(pair)(s)); });
+}
+
 // inheritance
 template <typename T, typename = hana::when<true>>
 struct Base { using type = std::decay_t<T>; };
@@ -22,3 +38,36 @@ template <typename T>
 concept Nameable = requires (const T & t) { { t.GetName() } -> std::same_as<std::string_view>; }; 
 
 } // namespace nano::traits
+
+#define NS_INHERITANCE(CLASS, FROM, BASE)                                                      \
+static_assert(std::is_base_of_v<BASE, FROM >, "should be derived class or self");              \
+static_assert(std::is_base_of_v<FROM, CLASS>, "should be derived class or self");              \
+inline FROM & operator-- (CLASS & c) { return static_cast<FROM &>(c); }                        \
+inline FROM & operator-- (CLASS & c, int) { return static_cast<FROM &>(c); }                   \
+inline const FROM & operator-- (const CLASS & c) { return static_cast<const FROM &>(c); }      \
+inline const FROM & operator-- (const CLASS & c, int) { return static_cast<const FROM &>(c); } \
+inline nano::Id<FROM> operator-- (nano::Id<CLASS> id) { return nano::Id<FROM>(id); }           \
+inline nano::Id<FROM> operator-- (nano::Id<CLASS> id, int) { return nano::Id<FROM>(id); }      \
+/**/
+#define NS_INHERIT_FROM_BASE(CLASS, BASE) NS_INHERITANCE(CLASS, BASE, BASE)
+               
+#define NS_CLASS_MEMBERS_DEFINE(...)                                                           \
+protected:                                                                                     \
+    struct NANO_MEMBERS {                                                                      \
+    BOOST_HANA_DEFINE_STRUCT(NANO_MEMBERS, __VA_ARGS__);} m_;                                  \
+    NANO_MEMBERS * operator-> () noexcept { return &m_; }                                      \
+public:                                                                                        \
+    const NANO_MEMBERS * operator->() const noexcept { return &m_; }                           \
+    const NANO_MEMBERS & operator* () const noexcept { return  m_; }                           \
+private:                                                                                       \
+/**/
+
+#define NS_CLASS_MEMBERS_INITIALIZE nano::traits::Init(m_);
+
+#define NS_CLONE_FUNCTIONS_DECLARATION(CLASS)                                                  \
+protected:                                                                                     \
+    CLASS * CloneFrom(const CLASS &);                                                          \
+    CLASS * CloneImpl(IdType id) const override                                                \
+    { auto clone = new CLASS; clone->SetId(id); return clone->CloneFrom(*this); }              \
+private:                                                                                       \
+/**/
