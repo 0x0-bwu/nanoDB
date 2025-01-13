@@ -17,14 +17,38 @@ inline nano::Id<FROM> operator-- (nano::Id<CLASS> id) { return nano::Id<FROM>(id
 inline nano::Id<FROM> operator-- (nano::Id<CLASS> id, int) { return nano::Id<FROM>(id); }      \
 /**/
 #define NS_INHERIT_FROM_BASE(CLASS, BASE) NS_INHERITANCE(CLASS, BASE, BASE)
+
+#include <boost/hana.hpp>
+#include <type_traits>
+#include <algorithm>
+#include <array>
+namespace nano::traits {
+template <typename Struct>
+constexpr Struct Init(Struct s)
+{
+    using namespace boost;
+    auto init = [](auto && self, auto & t) {
+        if      constexpr (std::is_same_v<decltype(t), float >) t = .0f;
+        else if constexpr (std::is_same_v<decltype(t), double>) t = .0;
+        else if constexpr (std::is_same_v<decltype(t), int   >) t = 0;
+        else if constexpr (std::is_same_v<decltype(t), size_t>) t = 0;
+        else if constexpr (std::is_pointer_v<decltype(t)>) t = nullptr;
+        else if constexpr (std::is_array_v<decltype(t)>)
+            std::for_each(t.begin(), t.end(), [&](auto & e){ self(self, e); });
+    };
+    hana::for_each(hana::accessors<Struct>(), [&](auto pair) { init(init, hana::second(pair)(s)); });
+    return s;
+}
+} // namespace nano::traits
+               
 #define NS_DEFINE_CLASS_MEMBERS(...)                                                           \
 protected:                                                                                     \
-    struct NANO_CLASS_MEMBERS {                                                                \
-    BOOST_HANA_DEFINE_STRUCT(NANO_CLASS_MEMBERS, __VA_ARGS__);} m_;                            \
-    NANO_CLASS_MEMBERS * operator-> () noexcept { return &m_; }                                \
+    struct MEMBERS {                                                                           \
+    BOOST_HANA_DEFINE_STRUCT(MEMBERS, __VA_ARGS__);} m_ = nano::traits::Init(MEMBERS());       \
+    MEMBERS * operator-> () noexcept { return &m_; }                                           \
 public:                                                                                        \
-    const NANO_CLASS_MEMBERS * operator->() const noexcept { return &m_; }                     \
-    const NANO_CLASS_MEMBERS & operator* () const noexcept { return  m_; }                     \
+    const MEMBERS * operator->() const noexcept { return &m_; }                                \
+    const MEMBERS & operator* () const noexcept { return  m_; }                                \
 private:                                                                                       \
 /**/
 
@@ -72,15 +96,12 @@ private:                                                                        
     template void T::serialize<boost::archive::binary_oarchive>(boost::archive::binary_oarchive &, const unsigned int); \
     /**/
 
-    #define NS_SERIALIZATION_CLASS_MEMBERS(ARCHIVE)                                            \
-    {                                                                                          \
-        size_t index{0};                                                                       \
-        hana::for_each(hana::members(m_), [&](const auto & m) {                                \
-            auto & mm = const_cast<std::decay_t<decltype(m)>&>(m);                             \
-            auto tag = "member" + std::to_string(index++);                                     \
-            ARCHIVE & boost::serialization::make_nvp(tag.c_str(), mm);                         \
-        });                                                                                    \
-    }                                                                                          \
+    #define NS_SERIALIZATION_CLASS_MEMBERS(ARCHIVE)                                                                     \
+    {                                                                                                                   \
+        hana::for_each(hana::keys(m_), [&](auto key) {                                                                  \
+            ARCHIVE & boost::serialization::make_nvp(key.c_str(), hana::at_key(m_, key));                               \
+        });                                                                                                             \
+    }                                                                                                                   \
     /**/
 #else
     #define NS_SERIALIZATION_ENTITY_OBJECT_NVP(T)    

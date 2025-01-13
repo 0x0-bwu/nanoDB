@@ -4,7 +4,6 @@
 #include "generic/utils/Version.hpp"
 
 #include <boost/noncopyable.hpp>
-#include <boost/hana.hpp>
 #include <unordered_map>
 #include <typeindex>
 #include <string>
