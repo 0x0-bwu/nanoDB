@@ -1,4 +1,4 @@
-#include <core/chip>
+#include <nano/core/chip>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::chip::Chip)
 
 namespace nano::chip {

@@ -1,4 +1,4 @@
-#include <core/power>
+#include <nano/core/power>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::power::LossPower)
 
 namespace nano::power {

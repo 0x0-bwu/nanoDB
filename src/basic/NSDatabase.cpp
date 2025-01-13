@@ -5,7 +5,7 @@ NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::Content)
 #include "generic/tools/FileSystem.hpp"
 #include "generic/common/Archive.hpp"
 
-#include <nano>
+#include <nano/db>
 namespace nano {
 
 traits::NameIndexMap Binding::nameIndexMap = [](auto elements) {

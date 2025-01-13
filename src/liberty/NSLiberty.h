@@ -1,6 +1,6 @@
 #pragma once
-#include <core/basic>
-#include <core/common>
+#include <nano/common>
+
 namespace nano::liberty {
 
 inline static constexpr IdType FALL = 0;

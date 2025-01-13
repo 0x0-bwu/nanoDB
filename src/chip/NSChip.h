@@ -1,5 +1,6 @@
 #pragma once
-#include <core/basic>
+#include <nano/common>
+
 namespace nano::chip {
 
 class Chip : public NamedObj, public Entity<Chip>

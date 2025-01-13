@@ -1,7 +1,5 @@
 #pragma once
-#include <core/basic>
-#include <core/common>
-
+#include <nano/core/basic>
 namespace nano {
 
 class LookupTable : public Entity<LookupTable>

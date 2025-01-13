@@ -1,4 +1,4 @@
-#include <core/package>
+#include <nano/core/package>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::Footprint)
 
 namespace nano::package {

@@ -1,4 +1,4 @@
-#include <core/common>
+#include <nano/core/common>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::LookupTable)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::LookupTable1D)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::LookupTable2D)

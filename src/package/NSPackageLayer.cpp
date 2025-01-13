@@ -1,4 +1,4 @@
-#include <core/package>
+#include <nano/core/package>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::Layer)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::StackupLayer)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::ComponentLayer)

@@ -1,6 +1,5 @@
 #pragma once
-#include <core/basic>
-
+#include <nano/common>
 namespace nano::package {
 
 class Cell : public NamedObj, public Entity<Cell>

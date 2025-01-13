@@ -1,7 +1,6 @@
-#include "NSChipBTerm.h"
+#include <nano/core/chip>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::chip::BTerm)
 
-#include <core/chip>
 namespace nano::chip {
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT

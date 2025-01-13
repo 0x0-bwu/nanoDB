@@ -1,6 +1,6 @@
 #include "NSVerilog.h"
 #include "parser/NSVerilogParser.hpp"
-#include <core/chip>
+#include <nano/core/chip>
 namespace nano::verilog {
 
 using namespace ast;
