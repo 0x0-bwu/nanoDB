@@ -1,4 +1,4 @@
-#include <core/parasitic>
+#include <nano/core/parasitic>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::parasitic::Parasitic)
 
 #include "parasitic/parser/NSParasiticParser.hpp"

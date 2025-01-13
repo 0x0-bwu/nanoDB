@@ -2,7 +2,7 @@
 #define BOOST_TEST_INCLUDED
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_tools.hpp>
-#include <core/package>
+#include <nano/core/package>
 
 #include "generic/tools/FileSystem.hpp"
 #include "generic/math/MathUtility.hpp"

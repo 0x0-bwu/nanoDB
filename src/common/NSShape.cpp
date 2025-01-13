@@ -1,4 +1,4 @@
-#include <core/common>
+#include <nano/core/common>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::Shape)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::ShapeRect)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::ShapePath)

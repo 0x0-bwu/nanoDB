@@ -1,6 +1,5 @@
 #pragma once
-#include <core/basic>
-#include <core/common>
+#include <nano/common>
 namespace nano::power {
 
 class LossPower : public NamedObj, public Entity<LossPower>

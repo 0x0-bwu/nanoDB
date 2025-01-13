@@ -1,7 +1,5 @@
 #pragma once
-#include <core/basic>
-#include <core/common>
-
+#include <nano/common>
 namespace nano::package {
 
 class Component : public NamedObj, public Transformable2D, public Cloneable<Component>, public Entity<Component>

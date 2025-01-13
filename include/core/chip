@@ -1,7 +1,0 @@
-#pragma once
-#include "../../src/chip/NSChip.h"
-#include "../../src/chip/NSChipBlock.h"
-#include "../../src/chip/NSChipBTerm.h"
-#include "../../src/chip/NSChipInst.h"
-#include "../../src/chip/NSChipITerm.h"
-#include "../../src/chip/NSChipNet.h"

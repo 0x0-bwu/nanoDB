@@ -1,4 +1,4 @@
-#include <core/package>
+#include <nano/core/package>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::ConnObj)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::BondingWire)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::package::RoutingWire)

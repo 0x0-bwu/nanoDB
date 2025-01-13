@@ -1,6 +1,5 @@
 #pragma once
-#include <core/basic>
-
+#include <nano/common>
 namespace nano::package {
 
 class Net : public NamedObj, public Cloneable<Net>, public Entity<Net>

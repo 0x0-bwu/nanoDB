@@ -1,6 +1,5 @@
 #pragma once
-#include <core/basic>
-
+#include <nano/common>
 namespace nano::package {
 
 class Padstack : public NamedObj, public Entity<Padstack>

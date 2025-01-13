@@ -3,7 +3,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_tools.hpp>
 
-#include <nano>
+#include <nano/db>
 using namespace nano;
 using namespace boost::unit_test;
 

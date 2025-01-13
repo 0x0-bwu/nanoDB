@@ -1,6 +1,6 @@
 #pragma once
-#include <core/basic>
-#include <core/common>
+#include <nano/common>
+
 namespace nano::parasitic {
 
 Id<Parasitic> ReadSpef(std::string_view filename);

@@ -1,5 +1,5 @@
 #include "NSLiberty.h"
-#include <core/liberty>
+#include <nano/core/liberty>
 
 #include "liberty/parser/NSLibertyParser.hpp"
 namespace nano::liberty {

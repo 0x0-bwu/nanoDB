@@ -1,5 +1,5 @@
 #include "NSPackageFlatten.h"
-#include <core/package>
+#include <nano/core/package>
 
 #include <boost/algorithm/string.hpp>
 namespace nano::package::utils {

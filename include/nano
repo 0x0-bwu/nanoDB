@@ -1,9 +1,0 @@
-#pragma once
-#include <core/basic>
-#include <core/chip>
-#include <core/common>
-#include <core/liberty>
-#include <core/verilog>
-#include <core/package>
-#include <core/parasitic>
-#include <core/power>

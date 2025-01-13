@@ -1,4 +1,4 @@
-#include <core/liberty>
+#include <nano/core/liberty>
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::Lut)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::CcsLut)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::liberty::NormalizedDriverWaveform)

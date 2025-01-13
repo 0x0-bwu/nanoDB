@@ -1,3 +1,0 @@
-#pragma once
-#include "../../src/basic/NSContainer.hpp"
-#include "../../src/basic/NSDatabase.h"
