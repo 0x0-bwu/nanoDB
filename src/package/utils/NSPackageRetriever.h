@@ -14,9 +14,12 @@ public:
     bool GetStackupLayerHeightThickness(CId<StackupLayer> stackupLayer, Float & elevation, Float & thickness) const;
     bool GetComponentLayerHeightThickness(CId<ComponentLayer> compLayer, Float & elevation, Float & thickness) const;
     bool GetComponentHeightThickness(CId<Component> component, Float & elevation, Float & thickness) const;
+    bool GetBondingWireHeight(CId<BondingWire> bw, Float & start, Float & end, bool & startFlipped, bool & endFlipped) const;
     bool GetBondingWireSegments(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights) const; 
     bool GetBondingWireSegmentsWithMinSeg(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights, size_t minSeg) const;
 private:    
+    UPtr<Shape> GetBondingWireStartSolderJointShape(CId<BondingWire> bw, Float & thickness) const;
+    UPtr<Shape> GetBondingWireEndSolderJointShape(CId<BondingWire> bw, Float & thickness) const;
     bool GetSimpleBondingWireSegments(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights) const;
     bool GetJedec4BondingWireSegments(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights) const;
 private:  

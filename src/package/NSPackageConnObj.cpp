@@ -137,11 +137,12 @@ CId<ComponentPin> BondingWire::GetStartPin() const
     return m_.connectedPins[0];
 }
 
-void BondingWire::SetStartLayer(CId<Layer> layer, const NCoord2D & loc)
+void BondingWire::SetStartLayer(CId<Layer> layer, const NCoord2D & loc, bool flipped)
 {
     NS_ASSERT(CId<StackupLayer>(layer));
     SetStartLayer(layer);
     m_.locations[0] = loc;
+    m_.flipped[0] = flipped;
 }
 
 void BondingWire::SetStartLayer(CId<Layer> layer)
@@ -152,6 +153,20 @@ void BondingWire::SetStartLayer(CId<Layer> layer)
 CId<Layer> BondingWire::GetStartLayer() const
 {
     return m_.layers[0];   
+}
+
+NCoord2D BondingWire::GetStartLocation() const
+{
+    if (m_.connectedPins[0])
+        return m_.connectedPins[0]->GetLocation();
+    return m_.locations[0];
+}
+
+NCoord2D BondingWire::GetEndLocation() const
+{
+    if (m_.connectedPins[1])
+        return m_.connectedPins[1]->GetLocation();
+    return m_.locations[1];
 }
 
 void BondingWire::SetEndPin(CId<ComponentPin> connectedPin)
@@ -166,11 +181,12 @@ CId<ComponentPin> BondingWire::GetEndPin() const
     return m_.connectedPins[1];
 }
 
-void BondingWire::SetEndLayer(CId<Layer> layer, const NCoord2D & loc)
+void BondingWire::SetEndLayer(CId<Layer> layer, const NCoord2D & loc, bool flipped)
 {
     NS_ASSERT(CId<StackupLayer>(layer));
     SetEndLayer(layer);
     m_.locations[1] = loc;
+    m_.flipped[1] = flipped;
 }
 
 void BondingWire::SetEndLayer(CId<Layer> layer)

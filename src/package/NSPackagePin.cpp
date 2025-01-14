@@ -90,6 +90,14 @@ ComponentPin::ComponentPin() : ComponentPin("", CId<ComponentLayer>(), CId<Footp
 {
 }
 
+NCoord2D ComponentPin::GetLocation() const
+{
+    auto location = m_.footprintPin->GetLocation();
+    auto & transform = m_.componentLayer->GetComponent()->GetTransform();
+    generic::geometry::Transform(location, transform.GetTransform());
+    return location;
+}
+
 void ComponentPin::SetComponentLayer(CId<ComponentLayer> layer)
 {
     m_.componentLayer = layer;

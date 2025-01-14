@@ -34,8 +34,14 @@ using CPtr = const T*;
 template <typename T>
 using SPtr = std::shared_ptr<T>;
 
-template <typename T, typename Deleter = std::default_delete<T> >
-using UPtr = std::unique_ptr<T, Deleter>;
+template <typename T>
+using UPtr = std::unique_ptr<T>;
+
+template <typename T>
+using Ref = T &;
+
+template <typename T>
+using CRef = const T &;
 
 using IdType = size_t;
 

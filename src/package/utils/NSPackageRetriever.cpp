@@ -119,6 +119,28 @@ bool LayoutRetriever::GetComponentHeightThickness(CId<Component> component, Floa
     return true;
 }
 
+bool LayoutRetriever::GetBondingWireHeight(CId<BondingWire> bw, Float & start, Float & end, bool & startFlipped, bool & endFlipped) const
+{
+    Float elevation, thickness;
+    startFlipped = bw->isStartFlipped();
+    endFlipped = bw->isEndFlipped();
+    auto getHeight = [&](bool start, Float & height) {
+        auto layer = start ? bw->GetStartLayer() : bw->GetEndLayer();
+        if (not GetLayerHeightThickness(layer, elevation, thickness)) return false;
+
+        Float solderJointThickness;
+        [[maybe_unused]] auto solderJoint = start ? GetBondingWireStartSolderJointShape(bw, solderJointThickness) :
+                                                    GetBondingWireEndSolderJointShape(bw, solderJointThickness);
+        auto flipped = start ? startFlipped : endFlipped;
+        height = flipped ? elevation - thickness : elevation;
+        if (solderJoint) height = flipped ? height - solderJointThickness : height + solderJointThickness;
+        return true;
+    };
+    if (not getHeight(true, start)) return false;
+    if (not getHeight(false, end)) return false;
+    return true;   
+}
+
 bool LayoutRetriever::GetBondingWireSegments(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights) const
 {
     switch (bw->GetBondingWireType())
@@ -159,9 +181,47 @@ bool LayoutRetriever::GetBondingWireSegmentsWithMinSeg(CId<BondingWire> bw, std:
     return GetBondingWireSegmentsWithMinSeg(bw, pt2ds, heights, minSeg);
 }
 
+UPtr<Shape> LayoutRetriever::GetBondingWireStartSolderJointShape(CId<BondingWire> bw, Float & thickness) const
+{
+    if (auto sj = bw->GetSolderJoints(); sj) {
+        CId<Shape> shape;
+        if (sj->GetTopSolderBumpParameters(shape, thickness)) {
+            auto res = shape->UniqueClone();
+            auto loc = bw->GetStartLocation();
+            res->Transform(makeTransform2D(1.0, 0.0, loc[0], loc[1]));
+            return res;
+        }
+    }
+    return nullptr;
+}
+
+UPtr<Shape> LayoutRetriever::GetBondingWireEndSolderJointShape(CId<BondingWire> bw, Float & thickness) const
+{
+    if (auto sj = bw->GetSolderJoints(); sj) {
+        CId<Shape> shape;
+        if (sj->GetBotSolderBallParameters(shape, thickness)) {
+            auto res = shape->UniqueClone();
+            auto loc = bw->GetEndLocation();
+            res->Transform(makeTransform2D(1.0, 0.0, loc[0], loc[1]));
+            return res;
+        }
+    }
+    return nullptr;
+}
+
 bool LayoutRetriever::GetSimpleBondingWireSegments(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights) const
 {
    //simple
+    pt2ds.resize(4);
+    heights.resize(4);  
+    pt2ds[0] = bw->GetStartLocation();
+    pt2ds[3] = bw->GetEndLocation();
+    pt2ds[1] = pt2ds.at(0) + (pt2ds.at(3) - pt2ds.at(0)) * 0.125;
+    pt2ds[2] = pt2ds.at(0) + (pt2ds.at(3) - pt2ds.at(0)) * 0.875;
+    bool startFlipped, endFlipped;
+    if (not GetBondingWireHeight(bw, heights.front(), heights.back(), startFlipped, endFlipped)) return false;
+    heights[1] = startFlipped ? heights[0] - bw->GetHeight() : heights[0] + bw->GetHeight();
+    heights[2] = endFlipped ? heights[3] - bw->GetHeight() : heights[3] + bw->GetHeight();
     return false;//todo  
 }
 
@@ -170,4 +230,6 @@ bool LayoutRetriever::GetJedec4BondingWireSegments(CId<BondingWire> bw, std::vec
    //JEDEC4
     return false;//todo
 }
+
+
 } // namespace nano::package::utils

@@ -22,6 +22,10 @@ class FootprintPin : public Pin
 {
 public:
     FootprintPin(std::string name, CId<Footprint> footprint, NCoord2D location, IOType ioType);
+
+    void SetLocation(CRef<NCoord2D> location) { m_.location = location; }
+    CRef<NCoord2D> GetLocation() const { return m_.location; }
+
 private:
     FootprintPin();
     NS_CLONE_FUNCTIONS_DECLARATION(FootprintPin)
@@ -38,6 +42,7 @@ public:
     friend class ComponentLayer;
     ComponentPin(std::string name, CId<ComponentLayer> componentLayer, CId<FootprintPin> footprintPin);
 
+    NCoord2D GetLocation() const;
     CId<ComponentLayer> GetComponentLayer() const { return m_.componentLayer; }
 
 private:

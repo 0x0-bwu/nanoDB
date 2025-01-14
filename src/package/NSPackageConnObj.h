@@ -51,19 +51,26 @@ public:
     void SetHeight(Float height);
     Float GetHeight() const;
 
+    NCoord2D GetStartLocation() const;
+    NCoord2D GetEndLocation() const;
+
     void SetStartPin(CId<ComponentPin> connectedPin);
     CId<ComponentPin> GetStartPin() const;
 
-    void SetStartLayer(CId<Layer> layer, const NCoord2D & loc);
+    void SetStartLayer(CId<Layer> layer, const NCoord2D & loc, bool flipped = false);
     void SetStartLayer(CId<Layer> layer);
     CId<Layer> GetStartLayer() const;
 
     void SetEndPin(CId<ComponentPin> connectedPin);
     CId<ComponentPin> GetEndPin() const;
 
-    void SetEndLayer(CId<Layer> layer, const NCoord2D & loc);
+    void SetEndLayer(CId<Layer> layer, const NCoord2D & loc, bool flipped = false);
     void SetEndLayer(CId<Layer> layer);
     CId<Layer> GetEndLayer() const;
+
+    bool isStartFlipped() const { return m_.flipped[0]; }
+    bool isEndFlipped() const { return m_.flipped[1]; }
+
 
     void SetMaterial(CId<Material> material);
     CId<Material> GetMaterial() const;
@@ -88,7 +95,8 @@ private:
     (CIdArr2<ComponentPin>, connectedPins),
     (Arr2<NCoord2D>, locations),
     (CId<Padstack>, solderJoints),
-    (BondingWireType, type)
+    (BondingWireType, type),
+    (Arr2<bool>, flipped)
     )
 };
 

@@ -17,38 +17,62 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Padstack)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Padstack::Padstack(std::string name, Id<Package> package)
+Padstack::Padstack(std::string name, CId<Package> package)
  : NamedObj(std::move(name))
 {
     NS_CLASS_MEMBERS_INITIALIZE
     m_.package = package;
 }
 
-Padstack::Padstack() : Padstack("", Id<Package>())
+Padstack::Padstack() : Padstack("", CId<Package>())
 {
 }
 
-void Padstack::SetTopSolderBumpMaterial(Id<Material> material)
+void Padstack::SetTopSolderBumpMaterial(CId<Material> material)
 {
     m_.solderBump.material = material;
 }
 
-void Padstack::SetBotSolderBallMaterial(Id<Material> material)
+void Padstack::SetBotSolderBallMaterial(CId<Material> material)
 {
     m_.solderBall.material = material;
 }
 
-void Padstack::SetTopSolderBumpParameters(Id<Shape> shape, Float thickness)
+CId<Material> Padstack::GetTopSolderBumpMaterial() const
+{
+    return m_.solderBump.material;
+}
+
+CId<Material> Padstack::GetBotSolderBallMaterial() const
+{
+    return m_.solderBall.material;
+}
+
+void Padstack::SetTopSolderBumpParameters(CId<Shape> shape, Float thickness)
 {
     m_.solderBump.shape = shape;
     m_.solderBump.thickness = thickness;
 }
 
-void Padstack::SetBotSolderBallParameters(Id<Shape> shape, Float thickness)
+void Padstack::SetBotSolderBallParameters(CId<Shape> shape, Float thickness)
 {
     m_.solderBall.shape = shape;
     m_.solderBall.thickness = thickness;
 }
 
-} // nano::package
+bool Padstack::GetTopSolderBumpParameters(CId<Shape> & shape, Float & thickness) const
+{
+    shape = m_.solderBump.shape;
+    thickness = m_.solderBump.thickness;
+    return shape && thickness > 0;
+}
+
+bool Padstack::GetBotSolderBallParameters(CId<Shape> & shape, Float & thickness) const
+{
+    shape = m_.solderBall.shape;
+    thickness = m_.solderBall.thickness;
+    return shape && thickness > 0;
+}
+
+} // namespace nano::package
 
