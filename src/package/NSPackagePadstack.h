@@ -45,8 +45,8 @@ namespace nano::package
         {
             BOOST_HANA_DEFINE_STRUCT(Bump,
             (Float, thickness),
-            (Id<Shape>, shape),
-            (Id<Material>, material));
+            (CId<Shape>, shape),
+            (CId<Material>, material));
             Bump() { NS_INIT_HANA_STRUCT(*this) }
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
             template <typename Archive>
@@ -58,19 +58,24 @@ namespace nano::package
 #endif // NANO_BOOST_SERIALIZATION_SUPPORT
         };
         using Ball = Bump;
-        Padstack(std::string name, Id<Package> package);
+        Padstack(std::string name, CId<Package> package);
 
-        void SetTopSolderBumpMaterial(Id<Material> material);
-        void SetBotSolderBallMaterial(Id<Material> material);
-        void SetTopSolderBumpParameters(Id<Shape> shape, Float thickness);
-        void SetBotSolderBallParameters(Id<Shape> shape, Float thickness);
+        void SetTopSolderBumpMaterial(CId<Material> material);
+        void SetBotSolderBallMaterial(CId<Material> material);
+        CId<Material> GetTopSolderBumpMaterial() const;
+        CId<Material> GetBotSolderBallMaterial() const;
+        
+        void SetTopSolderBumpParameters(CId<Shape> shape, Float thickness);
+        void SetBotSolderBallParameters(CId<Shape> shape, Float thickness);
+        bool GetTopSolderBumpParameters(CId<Shape> & shape, Float & thickness) const;
+        bool GetBotSolderBallParameters(CId<Shape> & shape, Float & thickness) const;
 
     private:
         Padstack();
         NS_SERIALIZATION_FUNCTIONS_DECLARATION
         NS_CLASS_MEMBERS_DEFINE(
-            (Id<Package>, package),
-            (Id<Material>, material),
+            (CId<Package>, package),
+            (CId<Material>, material),
             (Bump, solderBump),
             (Ball, solderBall),
             (Via, via),
