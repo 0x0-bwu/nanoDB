@@ -39,7 +39,12 @@ void ComponentPin::serialize(Archive & ar, const unsigned int version)
 Pin::Pin(std::string name, IOType ioType)
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.ioType = ioType;
+}
+
+Pin::Pin() : Pin("", IOType::UNKNOWN)
+{
 }
 
 IOType Pin::GetIOType() const
@@ -57,8 +62,13 @@ Ptr<Pin> Pin::CloneFrom(const Pin & src)
 FootprintPin::FootprintPin(std::string name, CId<Footprint> footprint, NCoord2D location, IOType ioType)
  : Pin(std::move(name), ioType)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.footprint = footprint;
     m_.location = location;
+}
+
+FootprintPin::FootprintPin() : FootprintPin("", CId<Footprint>(), NCoord2D(), IOType::UNKNOWN)
+{
 }
 
 Ptr<FootprintPin> FootprintPin::CloneFrom(const FootprintPin & src)
@@ -69,10 +79,15 @@ Ptr<FootprintPin> FootprintPin::CloneFrom(const FootprintPin & src)
 }
 
 ComponentPin::ComponentPin(std::string name, CId<ComponentLayer> componentLayer, CId<FootprintPin> footprintPin)
- : Pin(std::move(name), footprintPin->GetIOType())
+ : Pin(std::move(name), footprintPin ? footprintPin->GetIOType() : IOType::UNKNOWN)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.componentLayer = componentLayer;
     m_.footprintPin = footprintPin;
+}
+
+ComponentPin::ComponentPin() : ComponentPin("", CId<ComponentLayer>(), CId<FootprintPin>())
+{
 }
 
 void ComponentPin::SetComponentLayer(CId<ComponentLayer> layer)

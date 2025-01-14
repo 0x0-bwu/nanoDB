@@ -6,7 +6,7 @@ class Cell : public NamedObj, public Entity<Cell>
 {
 protected:
     Cell(std::string name, CId<Package> package);
-    Cell() = default;
+    Cell();
 public:
     CId<Package> GetPackage() const { return m_.package; }
 private:
@@ -20,14 +20,13 @@ class CircuitCell : public Cell
 {
 public:
     CircuitCell(std::string name, CId<Package> package);
-    CircuitCell() = default;
 
     Id<Layout> SetLayout(Id<Layout> layout);
     CId<Layout> GetLayout() const;
     Id<Layout> GetLayout();
     
-
 private:
+    CircuitCell();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
     (Id<Layout>, layout))
@@ -49,7 +48,6 @@ class FootprintCell : public Cell
 {
 public:
     FootprintCell(std::string name, CId<Package> package);
-    FootprintCell();
 
     void SetComponentType(ComponentType type);
     ComponentType GetComponentType() const;
@@ -70,6 +68,7 @@ public:
     virtual bool isBlackBox() const { return true; }
 
 private:
+    FootprintCell();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLASS_MEMBERS_DEFINE(
     (ComponentType, compType),

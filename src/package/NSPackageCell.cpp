@@ -40,11 +40,21 @@ NS_SERIALIZATION_FUNCTIONS_IMP(FootprintCell)
 Cell::Cell(std::string name, CId<Package> package)
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.package = package;
+}
+
+Cell::Cell() : Cell("", CId<Package>())
+{
 }
 
 CircuitCell::CircuitCell(std::string name, CId<Package> package)
  : Cell(std::move(name), package)
+{
+    NS_CLASS_MEMBERS_INITIALIZE
+}
+
+CircuitCell::CircuitCell() : CircuitCell("", CId<Package>())
 {
 }
 
@@ -68,6 +78,7 @@ Id<Layout> CircuitCell::GetLayout()
 FootprintCell::FootprintCell(std::string name, CId<Package> package)
  : Cell(std::move(name), package)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.compType = ComponentType::INVALID;
     m_.height = 0;
 }

@@ -14,7 +14,6 @@ class Footprint : public NamedObj, public Entity<Footprint>
 {
 public:
     Footprint(std::string name, CId<FootprintCell> footprint, FootprintLocation location);
-    Footprint() = default;
 
     FootprintLocation GetLocation() const;
     void SetSolderFillingMaterial(CId<Material> material);
@@ -32,6 +31,7 @@ public:
     CId<FootprintPin> FindPin(std::string_view name) const;
 
 private:
+    Footprint();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLASS_MEMBERS_DEFINE(
     (CId<FootprintCell>, footprint),

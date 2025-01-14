@@ -20,6 +20,12 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Library)
 Library::Library(std::string name)
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE
+}
+
+Library::Library()
+ : Library("")
+{
 }
 
 void Library::SetFilename(std::string_view filename)

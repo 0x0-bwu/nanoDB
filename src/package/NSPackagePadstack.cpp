@@ -20,7 +20,12 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Padstack)
 Padstack::Padstack(std::string name, Id<Package> package)
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.package = package;
+}
+
+Padstack::Padstack() : Padstack("", Id<Package>())
+{
 }
 
 void Padstack::SetTopSolderBumpMaterial(Id<Material> material)

@@ -20,8 +20,13 @@ NS_SERIALIZATION_FUNCTIONS_IMP(LossPower)
 LossPower::LossPower(std::string name, ScenarioId scenario, CId<LookupTable> lut)
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.scenario = scenario;
     m_.lut = lut;
+}
+
+LossPower::LossPower() : LossPower("", ScenarioId(), CId<LookupTable>())
+{
 }
 
 bool LossPower::isValid() const

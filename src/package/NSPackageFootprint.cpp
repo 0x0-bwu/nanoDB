@@ -20,9 +20,13 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Footprint)
 Footprint::Footprint(std::string name, CId<FootprintCell> footprint, FootprintLocation location)
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE;
     m_.footprint = footprint;
     m_.location = location;
-    m_.solderThickness = 0;
+}
+
+Footprint::Footprint() : Footprint("", CId<FootprintCell>(), FootprintLocation::INVALID)
+{
 }
 
 FootprintLocation Footprint::GetLocation() const

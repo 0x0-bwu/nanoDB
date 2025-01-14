@@ -9,11 +9,11 @@ class Timing : public Entity<Timing>
 public:
     friend class TimingParser;
     explicit Timing(Id<SignalPin> pin);
-    Timing() = default;
 
     Id<SignalPin> GetPin() const;
 
 private:
+    Timing();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
     (Id<SignalPin>, pin),

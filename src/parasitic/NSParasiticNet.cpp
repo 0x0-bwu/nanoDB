@@ -21,9 +21,7 @@ template <typename Archive>
 void CouplingCap::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & boost::serialization::make_nvp("net", net);
-    ar & boost::serialization::make_nvp("cap", cap);
-    ar & boost::serialization::make_nvp("value", value);
+    NS_SERIALIZATION_HANA_STRUCT(ar, *this);
 }
 NS_SERIALIZATION_FUNCTIONS_IMP(CouplingCap)
 
@@ -31,10 +29,7 @@ template <typename Archive>
 void ConnectedPin::serialize(Archive & ar, const unsigned int version)
 {
     NS_UNUSED(version);
-    ar & boost::serialization::make_nvp("p", isPort);
-    ar & boost::serialization::make_nvp("io", ioType);
-    ar & boost::serialization::make_nvp("name", name);
-    ar & boost::serialization::make_nvp("coord", coord);
+    NS_SERIALIZATION_HANA_STRUCT(ar, *this);
 }
 NS_SERIALIZATION_FUNCTIONS_IMP(ConnectedPin)
 
@@ -43,7 +38,12 @@ NS_SERIALIZATION_FUNCTIONS_IMP(ConnectedPin)
 Net::Net(std::string name, size_t nodes)
  : NamedObj(std::move(name)), DirectedGraph(nodes)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.cap.Resize(nodes);
+}
+
+Net::Net() : Net("", 0)
+{
 }
 
 CapId Net::AddNode()

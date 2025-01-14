@@ -7,7 +7,6 @@ class Layout : public Cloneable<Layout>, public Entity<Layout>
 {
 public:
     explicit Layout(CId<CircuitCell> cell);
-    Layout() = default;
 
     const CoordUnit & GetCoordUnit() const;
 
@@ -33,6 +32,7 @@ public:
     void Transform(const Transform2D & transform);
 
 private:
+    Layout();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLONE_FUNCTIONS_DECLARATION(Layout)
     NS_CLASS_MEMBERS_DEFINE(

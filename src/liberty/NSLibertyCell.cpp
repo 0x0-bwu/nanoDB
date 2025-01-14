@@ -20,7 +20,13 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Cell)
 Cell::Cell(std::string name, Id<Library> library)
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.library = library;
+}
+
+Cell::Cell()
+ : Cell("", Id<Library>())
+{
 }
 
 void Cell::AddPwrGndPin(Id<PwrGndPin> pin)

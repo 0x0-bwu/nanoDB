@@ -9,7 +9,6 @@ class Cell : public NamedObj, public Entity<Cell>
 public:
     friend class CellParser;
     Cell(std::string name, Id<Library> library);
-    Cell() = default;
 
     Id<Library> GetLibrary() const;
 
@@ -27,6 +26,7 @@ public:
     size_t NumOfSignalPins() const;
 
 private:
+    Cell();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
     (Id<Library>, library),

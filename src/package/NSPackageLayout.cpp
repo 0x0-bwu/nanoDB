@@ -18,7 +18,12 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Layout)
 
 Layout::Layout(CId<CircuitCell> cell)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.cell = cell;
+}
+
+Layout::Layout() : Layout(CId<CircuitCell>())
+{
 }
 
 const CoordUnit & Layout::GetCoordUnit() const

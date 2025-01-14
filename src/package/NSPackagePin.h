@@ -7,7 +7,7 @@ class Pin : public NamedObj, public Cloneable<Pin>, public Entity<Pin>
 {
 protected:
     Pin(std::string name, IOType ioType);
-    Pin() = default;
+    Pin();
 public:
     IOType GetIOType() const;
 
@@ -22,9 +22,8 @@ class FootprintPin : public Pin
 {
 public:
     FootprintPin(std::string name, CId<Footprint> footprint, NCoord2D location, IOType ioType);
-    FootprintPin() = default;
-
 private:
+    FootprintPin();
     NS_CLONE_FUNCTIONS_DECLARATION(FootprintPin)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLASS_MEMBERS_DEFINE(
@@ -38,7 +37,6 @@ class ComponentPin : public Pin
 public:
     friend class ComponentLayer;
     ComponentPin(std::string name, CId<ComponentLayer> componentLayer, CId<FootprintPin> footprintPin);
-    ComponentPin() = default;
 
     CId<ComponentLayer> GetComponentLayer() const { return m_.componentLayer; }
 
@@ -46,6 +44,7 @@ private:
     void SetComponentLayer(CId<ComponentLayer> layer);
 
 private:
+    ComponentPin();
     NS_CLONE_FUNCTIONS_DECLARATION(ComponentPin)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLASS_MEMBERS_DEFINE(

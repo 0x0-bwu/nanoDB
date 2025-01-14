@@ -9,9 +9,9 @@ class Voltage : public NamedObj, public Entity<Voltage>
 public:
     friend class VoltageParser;
     explicit Voltage(std::string name);
-    Voltage() = default;
 
 private:
+    Voltage();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
     (Float, low),

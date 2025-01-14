@@ -8,7 +8,7 @@ class InternalPower : public Entity<InternalPower>
 {
 public:
     friend class InternalPowerParser;
-    InternalPower() = default;
+    InternalPower();
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;

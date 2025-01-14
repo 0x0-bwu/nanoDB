@@ -19,6 +19,11 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Package)
 Package::Package(std::string name)
  : FootprintCell(std::move(name), CId<Package>())
 {
+    NS_CLASS_MEMBERS_INITIALIZE
+}
+
+Package::Package() : Package("")
+{
 }
 
 Id<Cell> Package::AddCell(Id<Cell> cell)

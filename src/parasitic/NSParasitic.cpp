@@ -23,7 +23,12 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Parasitic)
 
 Parasitic::Parasitic(std::string filename)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.filename = std::move(filename);
+}
+
+Parasitic::Parasitic() : Parasitic("")
+{
 }
 
 Id<Net> Parasitic::FindNet(std::string_view name) const

@@ -8,7 +8,7 @@ class OutputCurrent : public Entity<OutputCurrent>
 {
 public:
     friend class OutputCurrentParser;
-    OutputCurrent() = default;
+    OutputCurrent();
 
     void AddCcsLut(Id<CcsLut> ccsLut);
 

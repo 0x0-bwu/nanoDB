@@ -38,7 +38,12 @@ NS_SERIALIZATION_FUNCTIONS_IMP(NormalizedDriverWaveform)
 
 Lut::Lut(Id<LutTemplate> lutTemplate)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.lutTemplate = lutTemplate;
+}
+
+Lut::Lut() : Lut(Id<LutTemplate>())
+{
 }
 
 size_t Lut::Dimension() const

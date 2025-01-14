@@ -18,7 +18,12 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Timing)
 
 Timing::Timing(Id<SignalPin> pin)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.pin = pin;
+}
+
+Timing::Timing() : Timing(Id<SignalPin>())
+{
 }
 
 Id<SignalPin> Timing::GetPin() const

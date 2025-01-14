@@ -42,14 +42,15 @@
     template void T::serialize<boost::archive::xml_oarchive>(boost::archive::xml_oarchive &, const unsigned int);       \
     template void T::serialize<boost::archive::binary_oarchive>(boost::archive::binary_oarchive &, const unsigned int); \
     /**/
-
-    #define NS_SERIALIZATION_CLASS_MEMBERS(ARCHIVE)                                                                     \
+    #define NS_SERIALIZATION_HANA_STRUCT(ARCHIVE, OBJECT)                                                               \
     {                                                                                                                   \
-        hana::for_each(hana::keys(m_), [&](auto key) {                                                                  \
-            ARCHIVE & boost::serialization::make_nvp(key.c_str(), hana::at_key(m_, key));                               \
+        auto & object = const_cast<std::decay_t<decltype(OBJECT)> &>(OBJECT);                                           \
+        hana::for_each(hana::keys(object), [&](auto key) {                                                              \
+            ARCHIVE & boost::serialization::make_nvp(key.c_str(), hana::at_key(object, key));                           \
         });                                                                                                             \
     }                                                                                                                   \
     /**/
+    #define NS_SERIALIZATION_CLASS_MEMBERS(ARCHIVE) NS_SERIALIZATION_HANA_STRUCT(ARCHIVE, m_)
 #else
     #define NS_SERIALIZATION_ENTITY_OBJECT_NVP(T)    
     #define NS_SERIALIZATION_CLASS_EXPORT(T)
@@ -58,5 +59,6 @@
     #define NS_SERIALIZATION_CLASS_EXPORT_IMP(T)
     #define NS_SERIALIZATION_FUNCTIONS_DECLARATION
     #define NS_SERIALIZATION_ABSTRACT_CLASS_FUNCTIONS_DECLARATION
+    #define NS_SERIALIZATION_HANA_STRUCT(ARCHIVE, OBJECT)
     #define NS_SERIALIZATION_CLASS_MEMBER(ARCHIVE)
 #endif //NANO_BOOST_SERIALIZATION_SUPPORT

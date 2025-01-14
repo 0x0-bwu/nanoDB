@@ -15,10 +15,11 @@ using DirectedGraph = generic::graph::model::DirectedGraph;
 
 struct CouplingCap
 {
-    Id<Net> net;
-    CapId cap;
-    Float value{0};
-    CouplingCap() = default;
+    BOOST_HANA_DEFINE_STRUCT(CouplingCap,
+    (Id<Net>, net),
+    (CapId, cap),
+    (Float, value));
+    CouplingCap() : CouplingCap(Id<Net>(), CapId(), 0) {}
     CouplingCap(Id<Net> net, CapId cap, Float value)
      : net(net), cap(cap), value(value) {}
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
@@ -27,11 +28,12 @@ struct CouplingCap
 using CouplingCaps = HashMap<CapId, std::vector<CouplingCap>>;
 struct ConnectedPin
 {
-    bool isPort;
-    IOType ioType;
-    std::string name;
-    Optional<FCoord2D> coord;
-    ConnectedPin() = default;
+    BOOST_HANA_DEFINE_STRUCT(ConnectedPin,
+    (bool, isPort),
+    (IOType, ioType),
+    (std::string, name),
+    (Optional<FCoord2D>, coord));
+    ConnectedPin() { NS_INIT_HANA_STRUCT(*this) }
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
 };
 
@@ -43,7 +45,6 @@ class Net : public NamedObj, public DirectedGraph, public Entity<Net>
 public:
     friend Id<Parasitic> ReadSpef(std::string_view filename);
     Net(std::string name, size_t nodes);
-    Net() = default;
 
     // overrides
     CapId AddNode() override;
@@ -59,6 +60,7 @@ public:
     void AddCouplingCap(CapId c1, Id<Net> net, CapId c2, Float cap);
 
 private:
+    Net();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
     (LinearMap<ResId, Float>, res),

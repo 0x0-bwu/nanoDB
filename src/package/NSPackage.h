@@ -8,7 +8,6 @@ class Package : public FootprintCell
 {
 public:
     Package(std::string name);
-    Package() = default;
 
     void SetCoordUnit(const CoordUnit & unit) { m_.coordUnit = unit; }
     const CoordUnit & GetCoordUnit() const { return m_.coordUnit; }
@@ -45,6 +44,7 @@ public:
     bool isBlackBox() const override;
 
 private:
+    Package();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
     (CoordUnit, coordUnit),

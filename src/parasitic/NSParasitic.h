@@ -10,12 +10,12 @@ class Parasitic : public Entity<Parasitic>
 public:
     friend Id<Parasitic> ReadSpef(std::string_view filename);
     explicit Parasitic(std::string filename);
-    Parasitic() = default;
 
     Id<Net> FindNet(std::string_view name) const;
 
     void ClearNets(bool remove);
 private:
+    Parasitic();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION 
     NS_CLASS_MEMBERS_DEFINE(
     (std::string, filename),

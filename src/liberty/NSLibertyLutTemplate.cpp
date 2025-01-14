@@ -19,6 +19,12 @@ NS_SERIALIZATION_FUNCTIONS_IMP(LutTemplate)
 LutTemplate::LutTemplate(std::string name)
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE
+}
+
+LutTemplate::LutTemplate()
+ : LutTemplate("")
+{
 }
 
 } // namespace nano::liberty

@@ -61,7 +61,8 @@ void t_save_design()
     BOOST_CHECK(block->GetNet(1).isNull());
 
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/nano.xml";
-    BOOST_CHECK(Database::Save("nano", filename, ArchiveFormat::XML));
+    auto saveState = Database::SaveCurrent(filename.c_str(), ArchiveFormat::XML);
+    BOOST_CHECK(saveState);
     Database::Shutdown();
 }
 
@@ -69,7 +70,8 @@ void t_load_design()
 {
     using namespace nano;
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/nano.xml";
-    BOOST_CHECK(Database::Load(filename, ArchiveFormat::XML));
+    auto loadState = Database::Load(filename.c_str(), ArchiveFormat::XML);
+    BOOST_CHECK(loadState);
     BOOST_CHECK(Database::Current().GetName() == "nano");
 
     auto inst1a = Id<chip::ITerm>(0);
