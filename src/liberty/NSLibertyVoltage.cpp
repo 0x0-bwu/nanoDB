@@ -20,6 +20,11 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Voltage)
 Voltage::Voltage(std::string name)
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE
+}
+
+Voltage::Voltage() : Voltage("")
+{
 }
 
 } // namespace nano::liberty

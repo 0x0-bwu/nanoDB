@@ -9,11 +9,11 @@ class LutTemplate : public NamedObj, public Entity<LutTemplate>
 public:
     friend class LutTemplateParser;
     explicit LutTemplate(std::string name);
-    LutTemplate() = default;
 
 private:
-NS_SERIALIZATION_FUNCTIONS_DECLARATION
-NS_CLASS_MEMBERS_DEFINE(
+    LutTemplate();
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION
+    NS_CLASS_MEMBERS_DEFINE(
     (std::vector<std::string>, variables),
     (LutIndices, indices))
 };

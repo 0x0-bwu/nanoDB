@@ -2,6 +2,17 @@
 #include "NSForward.hpp"
 namespace nano::traits {
 
+// std extention
+template<typename>
+struct is_std_array : std::false_type {};
+
+template<typename T, std::size_t N>
+struct is_std_array<std::array<T,N>> : std::true_type {};
+
+// 
+template <typename T>
+inline static constexpr bool IsArr = std::is_array_v<T> or is_std_array<T>::value;
+
 // member init
 template <typename Struct>
 constexpr inline void Init(Struct & s)
@@ -9,11 +20,12 @@ constexpr inline void Init(Struct & s)
     using namespace boost;
     auto init = [](auto && self, auto & t) {
         using T = std::decay_t<decltype(t)>;
-        if constexpr (hana::Struct<T>::value) Init(t); 
+        if constexpr (hana::Struct<T>::value) Init(t);
+        else if constexpr (IsArr<T>) {
+            for (size_t i = 0; i < std::size(t); ++i) self(self, t[i]);
+        }
         else if constexpr (std::is_arithmetic_v<T>) t = 0;
         else if constexpr (std::is_pointer_v<T>) t = nullptr;
-        else if constexpr (std::is_array_v<T>)
-            std::for_each(t.begin(), t.end(), [&](auto & e){ self(self, e); });
     };
     hana::for_each(hana::accessors<Struct>(), [&](auto pair) { init(init, hana::second(pair)(s)); });
 }
@@ -62,7 +74,8 @@ public:                                                                         
 private:                                                                                       \
 /**/
 
-#define NS_CLASS_MEMBERS_INITIALIZE nano::traits::Init(m_);
+#define NS_INIT_HANA_STRUCT(OBJECT) nano::traits::Init(OBJECT);
+#define NS_CLASS_MEMBERS_INITIALIZE NS_INIT_HANA_STRUCT(m_)
 
 #define NS_CLONE_FUNCTIONS_DECLARATION(CLASS)                                                  \
 protected:                                                                                     \
@@ -71,3 +84,5 @@ protected:                                                                      
     { auto clone = new CLASS; clone->SetId(id); return clone->CloneFrom(*this); }              \
 private:                                                                                       \
 /**/
+
+//EOL

@@ -6,7 +6,7 @@ class HierObj : public Entity<HierObj>
 {
 protected:
     HierObj(CId<HierObj> parent);
-    HierObj() = default;
+    HierObj();
 
     void SetParent(CId<HierObj> parent);
     CId<HierObj> GetParent() const;    
@@ -33,7 +33,6 @@ class CellInst : public NamedObj, public Transformable2D, public HierObj
 {
 public:
     CellInst(std::string name, CId<CircuitCell> cell, CId<CellInst> parent = CId<CellInst>());
-    CellInst() = default;
 
     CId<CircuitCell> GetCell() const;
 
@@ -49,6 +48,7 @@ protected:
     void FlattenImpl() override;
 
 private:
+    CellInst();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLASS_MEMBERS_DEFINE(
     (CId<CircuitCell>, cell),

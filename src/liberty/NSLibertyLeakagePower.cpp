@@ -16,4 +16,9 @@ NS_SERIALIZATION_FUNCTIONS_IMP(LeakagePower)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
+LeakagePower::LeakagePower()
+{
+    NS_CLASS_MEMBERS_INITIALIZE
+}
+
 } // namespace nano::liberty

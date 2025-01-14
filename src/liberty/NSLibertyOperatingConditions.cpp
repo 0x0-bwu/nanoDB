@@ -20,6 +20,12 @@ NS_SERIALIZATION_FUNCTIONS_IMP(OperatingConditions)
 OperatingConditions::OperatingConditions(std::string name)
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE
+}
+
+OperatingConditions::OperatingConditions()
+ : OperatingConditions("")
+{
 }
 
 

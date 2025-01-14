@@ -22,31 +22,6 @@ template <typename T>
 class Container
 {
 public:
-    class Recycler
-    {
-    public:
-        size_t Size() const { return m_ids.size(); }
-        bool Empty() const { return m_ids.empty(); }
-        void Add(const Id<T> & t) { m_ids.emplace_back(IdType(t)); }
-        void Clear() { m_ids.clear(); }
-        IdType Take()
-        {
-            auto t = m_ids.back();
-            m_ids.pop_back();
-            return t;
-        }
-
-    public:
-        template <typename Archive>
-        void serialize(Archive & ar, const unsigned int)
-        {
-            ar & boost::serialization::make_nvp("ids", m_ids);
-        }
-    private:
-        // members
-        std::vector<IdType> m_ids;
-    };
-
     ~Container() { Reset(); }
 
     template <typename Derived>
@@ -63,10 +38,7 @@ public:
         return (Derived&)(*m_data[IdType(id)]);
     }
     
-    IdType Allocate()
-    {
-        return m_recycler.Empty() ? IdType(m_data.Append(nullptr)) : m_recycler.Take();
-    }
+    IdType Allocate() { return IdType(m_data.Append(nullptr)); }
 
     template <typename Derived>
     Id<Derived> Register(IdType id, Derived * p)
@@ -86,23 +58,19 @@ public:
         return Register(Allocate(), new Derived(std::forward<Args>(args)...));
     }
 
-    bool Remove(Id<T> & id)
+    bool Remove(const Id<T> & id)
     {
         if (size_t(id) >= m_data.size()) return false;
         if (nullptr == m_data[id]) return false;
-        m_recycler.Add(id);
         delete m_data[id];
         m_data[id] = nullptr;
-        id.makeInvalid();
         return true;
     }
 
     void Reset()
     {
-        m_recycler.Clear();
         for (auto * p : m_data) {
-            if (not p) continue;
-            delete p;
+            if (p) delete p;
         }
         m_data.Clear();
     }
@@ -110,12 +78,10 @@ public:
     template <typename Archive>
     void serialize(Archive & ar, const unsigned int)
     {
-        ar & boost::serialization::make_nvp("recycler", m_recycler);
         ar & boost::serialization::make_nvp(toString<T>().data(), m_data);
     }
 private:
     // members
-    Recycler m_recycler;
     LinearMap<Id<T>, T*> m_data;
 };
 

@@ -13,12 +13,12 @@ enum class LayerType : int8_t
 
 class Layer : public NamedObj, public Cloneable<Layer>, public Entity<Layer>
 {
+protected:
+    Layer(std::string name, LayerType type);
+    Layer();
 public:
     friend class Layout;
     friend class BondingWire;
-    Layer(std::string name, LayerType type);
-    Layer() = default;
-
     Id<ComponentLayer> GetComponentLayer();
     CId<ComponentLayer> GetComponentLayer() const;
 
@@ -40,7 +40,6 @@ public:
     friend class Layout;
     StackupLayer(std::string name, LayerType type, 
         Float elevation, Float thickness, CId<Material> conductingMat, CId<Material> dielectricMat);
-    StackupLayer();
 
     void SetElevation(Float elevation) { m_.elevation = elevation; }
     Float GetElevation() const { return m_.elevation; }
@@ -55,6 +54,7 @@ public:
     CId<Material> GetDielectricMaterial() const;
 
 private:
+    StackupLayer();
     NS_CLONE_FUNCTIONS_DECLARATION(StackupLayer)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLASS_MEMBERS_DEFINE(

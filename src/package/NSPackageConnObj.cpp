@@ -49,7 +49,12 @@ void PadstackInst::serialize(Archive & ar, const unsigned int version)
 
 ConnObj::ConnObj(CId<Net> net)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.net = net;
+}
+
+ConnObj::ConnObj() : ConnObj(CId<Net>())
+{
 }
 
 Id<BondingWire> ConnObj::GetBondingWire()
@@ -91,6 +96,7 @@ Ptr<ConnObj> ConnObj::CloneFrom(const ConnObj & src)
 BondingWire::BondingWire(std::string name, CId<Net> net, Float radius)
  : NamedObj(std::move(name)), ConnObj(net)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.radius = radius;
 }
 
@@ -227,6 +233,11 @@ RoutingWire::RoutingWire(CId<Net> net, CId<StackupLayer> layer, Id<Shape> shape)
     m_.shape = shape;
 }
 
+RoutingWire::RoutingWire()
+ : RoutingWire(CId<Net>(), CId<StackupLayer>(), Id<Shape>())
+{
+}
+
 CId<StackupLayer> RoutingWire::GetStackupLayer() const
 {
     return m_.layer;
@@ -248,7 +259,13 @@ Ptr<RoutingWire> RoutingWire::CloneFrom(const RoutingWire & src)
 PadstackInst::PadstackInst(CId<Padstack> padstack, CId<Net> net)
  : ConnObj(net)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.padstack = padstack;
+}
+
+PadstackInst::PadstackInst()
+ : PadstackInst(CId<Padstack>(), CId<Net>())
+{
 }
 
 void PadstackInst::SetLayerRange(CId<StackupLayer> top, CId<StackupLayer> bot)

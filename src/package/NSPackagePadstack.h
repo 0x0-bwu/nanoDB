@@ -1,83 +1,81 @@
 #pragma once
 #include <nano/common>
-namespace nano::package {
-
-class Padstack : public NamedObj, public Entity<Padstack>
+namespace nano::package
 {
-public:
-    struct Via
+
+    class Padstack : public NamedObj, public Entity<Padstack>
     {
     public:
-        Float rotation{0};
-        NCoord2D offset{0, 0};
-        Id<Shape> shape;
-    #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
-        template <typename Archive>
-        void serialize(Archive & ar, const unsigned int version)
+        struct Via
         {
-            NS_UNUSED(version);
-            ar & boost::serialization::make_nvp("rotation", rotation);
-            ar & boost::serialization::make_nvp("offset", offset);
-            ar & boost::serialization::make_nvp("shape", shape);
-        }
-    #endif//NANO_BOOST_SERIALIZATION_SUPPORT
-    };
+            BOOST_HANA_DEFINE_STRUCT(Via,
+            (Float, rotation),
+            (NCoord2D, offset),
+            (Id<Shape>, shape));
+            Via() { NS_INIT_HANA_STRUCT(*this) }
+#ifdef NANO_BOOST_SERIALIZATION_SUPPORT
+            template <typename Archive>
+            void serialize(Archive &ar, const unsigned int version)
+            {
+                NS_UNUSED(version);
+                NS_SERIALIZATION_HANA_STRUCT(ar, *this);
+            }
+#endif // NANO_BOOST_SERIALIZATION_SUPPORT
+        };
 
-    struct Pad
-    {
-    public:
-        Id<StackupLayer> layer;
-        Float rotation{0};
-        NCoord2D offset{0, 0};
-        Id<Shape> shape;
-    #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
-        template <typename Archive>
-        void serialize(Archive & ar, const unsigned int version)
+        struct Pad
         {
-            NS_UNUSED(version);
-            ar & boost::serialization::make_nvp("layer", layer);
-            ar & boost::serialization::make_nvp("rotation", rotation);
-            ar & boost::serialization::make_nvp("offset", offset);
-            ar & boost::serialization::make_nvp("shape", shape);
-        }
-    #endif//NANO_BOOST_SERIALIZATION_SUPPORT
-    };
+            BOOST_HANA_DEFINE_STRUCT(Pad,
+            (Id<StackupLayer>, layer),
+            (Float, rotation),
+            (NCoord2D, offset),
+            (Id<Shape>, shape));
+            Pad() { NS_INIT_HANA_STRUCT(*this) }
+#ifdef NANO_BOOST_SERIALIZATION_SUPPORT
+            template <typename Archive>
+            void serialize(Archive &ar, const unsigned int version)
+            {
+                NS_UNUSED(version);
+                NS_SERIALIZATION_HANA_STRUCT(ar, *this);
+            }
+#endif // NANO_BOOST_SERIALIZATION_SUPPORT
+        };
 
-    struct Bump
-    {
-        Float thickness{0};
-        Id<Shape> shape;
-        Id<Material> material;
-    #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
-        template <typename Archive>
-        void serialize(Archive & ar, const unsigned int version)
+        struct Bump
         {
-            NS_UNUSED(version);
-            ar & boost::serialization::make_nvp("thickness", thickness);
-            ar & boost::serialization::make_nvp("shape", shape);
-            ar & boost::serialization::make_nvp("material", material);
-        }
-    #endif//NANO_BOOST_SERIALIZATION_SUPPORT
+            BOOST_HANA_DEFINE_STRUCT(Bump,
+            (Float, thickness),
+            (Id<Shape>, shape),
+            (Id<Material>, material));
+            Bump() { NS_INIT_HANA_STRUCT(*this) }
+#ifdef NANO_BOOST_SERIALIZATION_SUPPORT
+            template <typename Archive>
+            void serialize(Archive &ar, const unsigned int version)
+            {
+                NS_UNUSED(version);
+                NS_SERIALIZATION_HANA_STRUCT(ar, *this);
+            }
+#endif // NANO_BOOST_SERIALIZATION_SUPPORT
+        };
+        using Ball = Bump;
+        Padstack(std::string name, Id<Package> package);
+
+        void SetTopSolderBumpMaterial(Id<Material> material);
+        void SetBotSolderBallMaterial(Id<Material> material);
+        void SetTopSolderBumpParameters(Id<Shape> shape, Float thickness);
+        void SetBotSolderBallParameters(Id<Shape> shape, Float thickness);
+
+    private:
+        Padstack();
+        NS_SERIALIZATION_FUNCTIONS_DECLARATION
+        NS_CLASS_MEMBERS_DEFINE(
+            (Id<Package>, package),
+            (Id<Material>, material),
+            (Bump, solderBump),
+            (Ball, solderBall),
+            (Via, via),
+            (std::vector<Pad>, pads))
     };
-    using Ball = Bump;
-    Padstack(std::string name, Id<Package> package);
-    Padstack() = default;
-
-    void SetTopSolderBumpMaterial(Id<Material> material);
-    void SetBotSolderBallMaterial(Id<Material> material);
-    void SetTopSolderBumpParameters(Id<Shape> shape, Float thickness);
-    void SetBotSolderBallParameters(Id<Shape> shape, Float thickness);
-
-private:
-    NS_SERIALIZATION_FUNCTIONS_DECLARATION
-    NS_CLASS_MEMBERS_DEFINE(
-    (Id<Package>, package),
-    (Id<Material>, material),
-    (Bump, solderBump),
-    (Ball, solderBall),
-    (Via, via),
-    (std::vector<Pad>, pads))
-};
 
 } // namespace nano::package
 NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::package::Padstack)

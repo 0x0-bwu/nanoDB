@@ -21,4 +21,9 @@ void OutputCurrent::AddCcsLut(Id<CcsLut> ccsLut)
     m_.vectors.emplace_back(ccsLut);
 }
 
+OutputCurrent::OutputCurrent()
+{
+    NS_CLASS_MEMBERS_INITIALIZE
+}
+
 } // namespace nano::liberty

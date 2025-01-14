@@ -8,7 +8,7 @@ class LeakagePower : public Entity<LeakagePower>
 {
 public:
     friend class LeakagePowerParser;
-    LeakagePower() = default;
+    LeakagePower();
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;

@@ -16,4 +16,9 @@ NS_SERIALIZATION_FUNCTIONS_IMP(InternalPower)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
+InternalPower::InternalPower()
+{
+    NS_CLASS_MEMBERS_INITIALIZE
+}
+
 } // namespace nano::liberty

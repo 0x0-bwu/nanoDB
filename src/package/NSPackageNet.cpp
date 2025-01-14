@@ -20,7 +20,12 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Net)
 Net::Net(std::string name, CId<Layout> layout)
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.layout = layout;
+}
+
+Net::Net() : Net("", CId<Layout>())
+{
 }
 
 Ptr<Net> Net::CloneFrom(const Net & src)

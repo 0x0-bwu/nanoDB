@@ -22,7 +22,7 @@ public:
 
 protected:
     explicit ConnObj(CId<Net> net);
-    ConnObj() = default;
+    ConnObj();
 
     Ptr<ConnObj> CloneFrom(const ConnObj & src);
 private:
@@ -44,7 +44,6 @@ class BondingWire : public NamedObj, public ConnObj
 {
 public:
     BondingWire(std::string name, CId<Net> net, Float radius);
-    BondingWire();
 
     void SetRadius(Float radius);
     Float GetRadius() const;
@@ -78,6 +77,7 @@ public:
     void Transform(const Transform2D & transform) override;
 
 private:
+    BondingWire();
     NS_CLONE_FUNCTIONS_DECLARATION(BondingWire)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLASS_MEMBERS_DEFINE(
@@ -96,13 +96,13 @@ class RoutingWire : public ConnObj
 {
 public:
     RoutingWire(CId<Net> net, CId<StackupLayer> layer, Id<Shape> shape);
-    RoutingWire() = default;
 
     CId<StackupLayer> GetStackupLayer() const;
 
     void Transform(const Transform2D & transform) override;
 
 private:
+    RoutingWire();
     NS_CLONE_FUNCTIONS_DECLARATION(RoutingWire)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLASS_MEMBERS_DEFINE(
@@ -115,13 +115,13 @@ class PadstackInst : public ConnObj, public Transformable2D
 {
 public:
     PadstackInst(CId<Padstack> padstack, CId<Net> net);
-    PadstackInst() = default;
 
     void SetLayerRange(CId<StackupLayer> top, CId<StackupLayer> bot);
     void GetLayerRange(CId<StackupLayer> & top, CId<StackupLayer> & bot) const;
 
     void Transform(const Transform2D & transform) override;
 private:
+    PadstackInst();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLASS_MEMBERS_DEFINE(
     (CId<Padstack>, padstack),

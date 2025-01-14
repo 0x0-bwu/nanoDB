@@ -9,9 +9,9 @@ class OperatingConditions : public NamedObj, public Entity<OperatingConditions>
 public:
     friend class OperatingConditionsParser;
     explicit OperatingConditions(std::string name);
-    OperatingConditions() = default;
 
 private:
+    OperatingConditions();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
     (Int, process),

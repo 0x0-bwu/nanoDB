@@ -21,9 +21,9 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Component)
 Component::Component(std::string name, CId<FootprintCell> footprint, CId<Layout> layout)    
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE;
     m_.footprint = footprint;
     m_.layout = layout;
-    m_.flipped = false;
 }
 
 Component::Component()

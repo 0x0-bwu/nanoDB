@@ -7,7 +7,6 @@ class Component : public NamedObj, public Transformable2D, public Cloneable<Comp
 public:
     friend class Layout;
     explicit Component(std::string name, CId<FootprintCell> footprint, CId<Layout> layout);
-    Component();
 
     CId<Material> GetMaterial() const;
     CId<FootprintCell> GetFootprint() const;
@@ -36,6 +35,7 @@ private:
     void SetLayout(CId<Layout> layout);
 
 private:
+    Component();
     NS_CLONE_FUNCTIONS_DECLARATION(Component)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLASS_MEMBERS_DEFINE(

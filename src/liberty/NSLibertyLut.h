@@ -10,13 +10,13 @@ class Lut : public Entity<Lut>
 public:
     friend class LutParser;
     explicit Lut(Id<LutTemplate> lutTemplate);
-    Lut() = default;
+    Lut();
 
     size_t Dimension() const;
 
 private:
-NS_SERIALIZATION_FUNCTIONS_DECLARATION
-NS_CLASS_MEMBERS_DEFINE(
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION
+    NS_CLASS_MEMBERS_DEFINE(
     (Id<LutTemplate>, lutTemplate),
     (LutIndices, indices),
     (LutNumbers, values))

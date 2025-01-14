@@ -7,11 +7,11 @@ class Net : public NamedObj, public Cloneable<Net>, public Entity<Net>
 public:
     friend class Layout;
     Net(std::string name, CId<Layout> layout);
-    Net() = default;
 
     CId<Layout> GetLayout() const { return m_.layout; }
 
 private:
+    Net();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLONE_FUNCTIONS_DECLARATION(Net)
     NS_CLASS_MEMBERS_DEFINE(

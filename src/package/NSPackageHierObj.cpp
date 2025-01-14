@@ -42,7 +42,12 @@ void HierObj::SetHierSep(std::string sep)
 
 HierObj::HierObj(CId<HierObj> parent)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.parent = parent;
+}
+
+HierObj::HierObj() : HierObj(CId<HierObj>())
+{
 }
 
 void HierObj::Flatten()
@@ -72,7 +77,12 @@ Id<HierObj> HierObj::AddChild(Id<HierObj> child)
 CellInst::CellInst(std::string name, CId<CircuitCell> cell, CId<CellInst> parent)
  : NamedObj(std::move(name)), HierObj(parent)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.cell = cell;
+}
+
+CellInst::CellInst() : CellInst("", CId<CircuitCell>())
+{
 }
 
 CId<CircuitCell> CellInst::GetCell() const

@@ -39,7 +39,12 @@ void ComponentLayer::serialize(Archive & ar, const unsigned int version)
 Layer::Layer(std::string name, LayerType type)
  : NamedObj(std::move(name))
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.type = type;
+}
+
+Layer::Layer() : Layer("", LayerType::INVALID)
+{
 }
 
 Id<ComponentLayer> Layer::GetComponentLayer()
@@ -74,6 +79,7 @@ StackupLayer::StackupLayer(std::string name,  LayerType type,
     Float elevation, Float thickness, CId<Material> conductingMat, CId<Material> dielectricMat)
  : Layer(std::move(name), type)
 {
+    NS_CLASS_MEMBERS_INITIALIZE
     m_.elevation = elevation;
     m_.thickness = thickness;
     m_.conductingMat = conductingMat;

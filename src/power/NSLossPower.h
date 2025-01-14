@@ -6,7 +6,6 @@ class LossPower : public NamedObj, public Entity<LossPower>
 {
 public:
     LossPower(std::string name, ScenarioId scenario, CId<LookupTable> lut);
-    LossPower() = default;
 
     bool isValid() const;
     ScenarioId GetScenario() const;
@@ -14,6 +13,7 @@ public:
     CId<LookupTable> GetLookupTable() const { return m_.lut; }
 
 private:
+    LossPower();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLASS_MEMBERS_DEFINE(
     (ScenarioId, scenario),
