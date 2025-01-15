@@ -41,10 +41,10 @@ Id<StackupLayer> Package::AddStackupLayer(Id<StackupLayer> layer)
     return m_.stackupLayers.Add(layer);
 }
 
-void Package::SortStackupLayers(bool ascending)
+void Package::SortStackupLayers()
 {
     m_.stackupLayers.Sort([&](const Id<StackupLayer> & lhs, const Id<StackupLayer> & rhs) {
-        return ascending ? lhs->GetElevation() < rhs->GetElevation() : lhs->GetElevation() > rhs->GetElevation();
+        return lhs->GetElevation() > rhs->GetElevation();
     });
 }
 

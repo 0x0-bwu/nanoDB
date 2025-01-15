@@ -1,5 +1,5 @@
 #pragma once
-#include "NSDatabase.h"
+#include "NSTraits.hpp"
 #include "generic/utils/ZipView.hpp"
 
 namespace nano {

@@ -71,7 +71,6 @@ public:
     bool isStartFlipped() const { return m_.flipped[0]; }
     bool isEndFlipped() const { return m_.flipped[1]; }
 
-
     void SetMaterial(CId<Material> material);
     CId<Material> GetMaterial() const;
 
@@ -106,6 +105,7 @@ public:
     RoutingWire(CId<Net> net, CId<StackupLayer> layer, Id<Shape> shape);
 
     CId<StackupLayer> GetStackupLayer() const;
+    CId<Shape> GetShape() const;
 
     void Transform(const Transform2D & transform) override;
 
@@ -124,8 +124,13 @@ class PadstackInst : public ConnObj, public Transformable2D
 public:
     PadstackInst(CId<Padstack> padstack, CId<Net> net);
 
+    bool isLayerInRange(CId<StackupLayer> layer) const;
     void SetLayerRange(CId<StackupLayer> top, CId<StackupLayer> bot);
     void GetLayerRange(CId<StackupLayer> & top, CId<StackupLayer> & bot) const;
+
+    CId<Padstack> GetPadstack() const { return m_.padstack; }
+    UPtr<Shape> GetPadShape(CId<StackupLayer> layer) const;
+    UPtr<Shape> GetViaShape() const;
 
     void Transform(const Transform2D & transform) override;
 private:

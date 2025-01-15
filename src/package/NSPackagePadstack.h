@@ -11,8 +11,9 @@ namespace nano::package
             BOOST_HANA_DEFINE_STRUCT(Via,
             (Float, rotation),
             (NCoord2D, offset),
-            (Id<Shape>, shape));
+            (CId<Shape>, shape));
             Via() { NS_INIT_HANA_STRUCT(*this) }
+            UPtr<Shape> GetShape() const;
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
             template <typename Archive>
             void serialize(Archive &ar, const unsigned int version)
@@ -26,11 +27,11 @@ namespace nano::package
         struct Pad
         {
             BOOST_HANA_DEFINE_STRUCT(Pad,
-            (Id<StackupLayer>, layer),
             (Float, rotation),
             (NCoord2D, offset),
-            (Id<Shape>, shape));
+            (CId<Shape>, shape));
             Pad() { NS_INIT_HANA_STRUCT(*this) }
+            UPtr<Shape> GetShape() const;
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
             template <typename Archive>
             void serialize(Archive &ar, const unsigned int version)
@@ -70,8 +71,17 @@ namespace nano::package
         bool GetTopSolderBumpParameters(CId<Shape> & shape, Float & thickness) const;
         bool GetBotSolderBallParameters(CId<Shape> & shape, Float & thickness) const;
 
+        bool hasTopSolderBump() const;
+        bool hasBotSolderBall() const;
+
+        CId<Material> GetMaterial() const;
+
+        UPtr<Shape> GetPadShape(CId<StackupLayer> layer) const;
+        UPtr<Shape> GetViaShape() const;
+
     private:
         Padstack();
+        using Pads = HashMap<CId<StackupLayer>, Pad>;
         NS_SERIALIZATION_FUNCTIONS_DECLARATION
         NS_CLASS_MEMBERS_DEFINE(
             (CId<Package>, package),
@@ -79,7 +89,7 @@ namespace nano::package
             (Bump, solderBump),
             (Ball, solderBall),
             (Via, via),
-            (std::vector<Pad>, pads))
+            (Pads, pads))
     };
 
 } // namespace nano::package

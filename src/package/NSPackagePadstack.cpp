@@ -17,6 +17,22 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Padstack)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
+UPtr<Shape> Padstack::Via::GetShape() const
+{
+    if (not shape) return nullptr;
+    auto res = shape->UniqueClone();
+    res->Transform(makeTransform2D(1.0, rotation, offset[0], offset[1]));
+    return res;
+}
+
+UPtr<Shape> Padstack::Pad::GetShape() const
+{
+    if (not shape) return nullptr;
+    auto res = shape->UniqueClone();
+    res->Transform(makeTransform2D(1.0, rotation, offset[0], offset[1]));
+    return res;
+}
+
 Padstack::Padstack(std::string name, CId<Package> package)
  : NamedObj(std::move(name))
 {
@@ -74,5 +90,31 @@ bool Padstack::GetBotSolderBallParameters(CId<Shape> & shape, Float & thickness)
     return shape && thickness > 0;
 }
 
+bool Padstack::hasTopSolderBump() const
+{
+    return m_.solderBump.shape && m_.solderBump.thickness > 0;
+}
+
+bool Padstack::hasBotSolderBall() const
+{
+    return m_.solderBall.shape && m_.solderBall.thickness > 0;
+}
+
+CId<Material> Padstack::GetMaterial() const
+{
+    return m_.material;
+}
+
+UPtr<Shape> Padstack::GetPadShape(CId<StackupLayer> layer) const
+{
+    auto iter = m_.pads.find(layer);
+    if (iter == m_.pads.cend()) return nullptr;
+    return iter->second.GetShape();
+}
+
+UPtr<Shape> Padstack::GetViaShape() const
+{
+    return m_.via.GetShape();
+}
 } // namespace nano::package
 
