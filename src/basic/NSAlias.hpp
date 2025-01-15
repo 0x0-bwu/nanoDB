@@ -1,8 +1,8 @@
 #pragma once
 #include "NSConfig.hpp"
 
+#include "generic/geometry/Geometries.hpp"
 #include "generic/math/LookupTable.hpp"
-#include "generic/geometry/Point.hpp"
 #include "generic/utils/Index.hpp"
 #include "generic/tools/Log.hpp"
 
@@ -77,6 +77,16 @@ using NCoord = Int;
 using FCoord = Float;
 using NCoord2D = generic::geometry::Point2D<Int>;
 using FCoord2D = generic::geometry::Point2D<Float>;
+using NBox2D   = generic::geometry::Box2D<NCoord>;
+using FBox2D   = generic::geometry::Box2D<FCoord>;
+using NBox3D   = generic::geometry::Box3D<NCoord>;
+using FBox3D   = generic::geometry::Box3D<FCoord>;
+using NPolygon = generic::geometry::Polygon2D<NCoord>;
+using FPolygon = generic::geometry::Polygon2D<FCoord>;
+using NPolyline = generic::geometry::Polyline2D<NCoord>;
+using FPolyline = generic::geometry::Polyline2D<FCoord>;
+using NPolygonWithHoles = generic::geometry::PolygonWithHoles2D<NCoord>;
+using FPolygonWithHoles = generic::geometry::PolygonWithHoles2D<FCoord>;
 
 using Lut1D = generic::math::LookupTable<Float, 1>;
 using Lut2D = generic::math::LookupTable<Float, 2>;

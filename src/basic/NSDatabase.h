@@ -1,5 +1,7 @@
 #pragma once
+#include "NSContainer.hpp"  
 #include "NSTraits.hpp"
+
 #include "generic/utils/LinearMap.hpp"
 #include "generic/utils/Version.hpp"
 
@@ -56,6 +58,31 @@ public:
         static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
         static_assert(std::is_constructible_v<Derived, Args...>, "should be constructible from args...");
         return Register(Allocate(), new Derived(std::forward<Args>(args)...));
+    }
+
+    template <typename Derived, typename UnaryPred>
+    Id<Derived> FindOne(UnaryPred && pred) const
+    {
+        static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
+        for (size_t i = 0; i < m_data.size(); ++i) {
+            if (auto * d = dynamic_cast<Derived*>(m_data[i]); d) {
+                if (auto id = Id<Derived>(i); pred(id)) return id;
+            }
+        }
+        return Id<Derived>();
+    }
+
+    template <typename Derived, typename UnaryPred>
+    IdVec<Derived> FindAll(UnaryPred && pred) const
+    {
+        static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
+        IdVec<Derived> res;
+        for (size_t i = 0; i < m_data.size(); ++i) {
+            if (auto * d = dynamic_cast<Derived*>(m_data[i]); d) {
+                if (auto id = Id<Derived>(i); pred(id)) res.emplace_back(id);
+            }
+        }
+        return res;
     }
 
     bool Remove(const Id<T> & id)
@@ -135,6 +162,18 @@ public:
     bool Remove(Args &&... args)
     {
         return this->Get<traits::BaseOf<T>>().Remove(std::forward<Args>(args)...);
+    }
+
+    template <typename T, typename UnaryPred>
+    Id<T> FindOne(UnaryPred && pred) const
+    {
+        return this->Get<traits::BaseOf<T>>().template FindOne<T>(std::forward<UnaryPred>(pred));
+    }
+
+    template <typename T, typename UnaryPred>
+    IdVec<T> FindAll(UnaryPred && pred) const
+    {
+        return this->Get<traits::BaseOf<T>>().template FindAll<T>(std::forward<UnaryPred>(pred));
     }
 
     template <typename T>
@@ -337,6 +376,18 @@ template <typename T>
 inline bool Remove(Id<T> & id)
 {
     return Database::Current().Remove<T>(id);
+}
+
+template <typename T, typename UnaryPred>
+inline Id<T> FindOne(UnaryPred && pred)
+{
+    return Database::Current().FindOne<T>(std::forward<UnaryPred>(pred));
+}
+
+template <typename T, typename UnaryPred>
+inline IdVec<T> FindAll(UnaryPred && pred)
+{
+    return Database::Current().FindAll<T>(std::forward<UnaryPred>(pred));
 }
 
 template <typename T>

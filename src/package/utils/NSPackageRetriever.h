@@ -17,6 +17,8 @@ public:
     bool GetBondingWireHeight(CId<BondingWire> bw, Float & start, Float & end, bool & startFlipped, bool & endFlipped) const;
     bool GetBondingWireSegments(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights) const; 
     bool GetBondingWireSegmentsWithMinSeg(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights, size_t minSeg) const;
+    UPtr<Shape> GetBondingWireStartSolderJointParameters(CId<BondingWire> bw, CId<Material> & mat, Float & elevation, Float & thickness) const;
+    UPtr<Shape> GetBondingWireEndSolderJointParameters(CId<BondingWire> bw, CId<Material> & mat, Float & elevation, Float & thickness) const;
 private:    
     UPtr<Shape> GetBondingWireStartSolderJointShape(CId<BondingWire> bw, Float & thickness) const;
     UPtr<Shape> GetBondingWireEndSolderJointShape(CId<BondingWire> bw, Float & thickness) const;

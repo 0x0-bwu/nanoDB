@@ -3,20 +3,7 @@
 #include "NSTransform.hpp"
 #include "NSUnit.hpp"
 
-#include "generic/geometry/Geometries.hpp"
-
 namespace nano {
-
-using NBox2D   = generic::geometry::Box2D<NCoord>;
-using FBox2D   = generic::geometry::Box2D<FCoord>;
-using NBox3D   = generic::geometry::Box3D<NCoord>;
-using FBox3D   = generic::geometry::Box3D<FCoord>;
-using NPolygon = generic::geometry::Polygon2D<NCoord>;
-using FPolygon = generic::geometry::Polygon2D<FCoord>;
-using NPolyline = generic::geometry::Polyline2D<NCoord>;
-using FPolyline = generic::geometry::Polyline2D<FCoord>;
-using NPolygonWithHoles = generic::geometry::PolygonWithHoles2D<NCoord>;
-using FPolygonWithHoles = generic::geometry::PolygonWithHoles2D<FCoord>;
 
 inline static constexpr size_t NANO_SHAPE_CIRCLE_DIV = 32;
 enum class ShapeType

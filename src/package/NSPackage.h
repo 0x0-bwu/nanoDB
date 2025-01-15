@@ -19,7 +19,7 @@ public:
     Id<Cell> AddCell(Id<Cell> cell);
     Id<Padstack> AddPadstack(Id<Padstack> padstack);
     Id<StackupLayer> AddStackupLayer(Id<StackupLayer> layer);
-    void SortStackupLayers(bool ascending = false);
+    void SortStackupLayers();
 
     CId<StackupLayer> FindStackupLayer(std::string_view name) const;
     Id<StackupLayer> FindStackupLayer(std::string_view name);

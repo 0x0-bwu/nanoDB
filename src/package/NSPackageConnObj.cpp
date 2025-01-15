@@ -259,6 +259,11 @@ CId<StackupLayer> RoutingWire::GetStackupLayer() const
     return m_.layer;
 }
 
+CId<Shape> RoutingWire::GetShape() const
+{
+    return m_.shape;
+}
+
 void RoutingWire::Transform(const Transform2D & transform)
 {
     m_.shape->Transform(transform);
@@ -284,6 +289,12 @@ PadstackInst::PadstackInst()
 {
 }
 
+bool PadstackInst::isLayerInRange(CId<StackupLayer> layer) const
+{
+    auto elevation = layer->GetElevation();
+    return (not (elevation > m_.layerRange[0]->GetElevation())) and (not (elevation < m_.layerRange[1]->GetElevation()));
+}
+
 void PadstackInst::SetLayerRange(CId<StackupLayer> top, CId<StackupLayer> bot)
 {
     m_.layerRange[0] = top;
@@ -294,6 +305,20 @@ void PadstackInst::GetLayerRange(CId<StackupLayer> & top, CId<StackupLayer> & bo
 {
     top = m_.layerRange[0];
     bot = m_.layerRange[1];
+}
+
+UPtr<Shape> PadstackInst::GetPadShape(CId<StackupLayer> layer) const
+{
+    auto shape = m_.padstack->GetPadShape(layer);
+    if (shape) shape->Transform(GetTransform());
+    return shape;
+}
+
+UPtr<Shape> PadstackInst::GetViaShape() const
+{
+    auto shape = m_.padstack->GetViaShape();
+    if (shape) shape->Transform(GetTransform());
+    return shape;
 }
 
 void PadstackInst::Transform(const Transform2D & transform)

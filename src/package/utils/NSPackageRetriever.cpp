@@ -181,6 +181,30 @@ bool LayoutRetriever::GetBondingWireSegmentsWithMinSeg(CId<BondingWire> bw, std:
     return GetBondingWireSegmentsWithMinSeg(bw, pt2ds, heights, minSeg);
 }
 
+UPtr<Shape> LayoutRetriever::GetBondingWireStartSolderJointParameters(CId<BondingWire> bw, CId<Material> & mat, Float & elevation, Float & thickness) const
+{
+    auto shape = GetBondingWireStartSolderJointShape(bw, thickness);
+    if (nullptr == shape) return nullptr;
+    mat = bw->GetSolderJoints()->GetTopSolderBumpMaterial();
+    Float start{0}, end{0};
+    bool startFlipped{false}, endFlipped(false);
+    if (not GetBondingWireHeight(bw, start, end, startFlipped, endFlipped)) return nullptr;
+    elevation = startFlipped ? start + thickness : start;
+    return shape;
+
+}
+UPtr<Shape> LayoutRetriever::GetBondingWireEndSolderJointParameters(CId<BondingWire> bw, CId<Material> & mat, Float & elevation, Float & thickness) const
+{
+    auto shape = GetBondingWireEndSolderJointShape(bw, thickness);
+    if (nullptr == shape) return nullptr;
+    mat = bw->GetSolderJoints()->GetBotSolderBallMaterial();
+    Float start{0}, end{0};
+    bool startFlipped{false}, endFlipped(false);
+    if (not GetBondingWireHeight(bw, start, end, startFlipped, endFlipped)) return nullptr;
+    elevation = endFlipped ? end + thickness : end;
+    return shape;
+}
+
 UPtr<Shape> LayoutRetriever::GetBondingWireStartSolderJointShape(CId<BondingWire> bw, Float & thickness) const
 {
     if (auto sj = bw->GetSolderJoints(); sj) {
@@ -222,13 +246,22 @@ bool LayoutRetriever::GetSimpleBondingWireSegments(CId<BondingWire> bw, std::vec
     if (not GetBondingWireHeight(bw, heights.front(), heights.back(), startFlipped, endFlipped)) return false;
     heights[1] = startFlipped ? heights[0] - bw->GetHeight() : heights[0] + bw->GetHeight();
     heights[2] = endFlipped ? heights[3] - bw->GetHeight() : heights[3] + bw->GetHeight();
-    return false;//todo  
+    return true;
 }
 
 bool LayoutRetriever::GetJedec4BondingWireSegments(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights) const
 {
    //JEDEC4
-    return false;//todo
+    pt2ds.resize(4);
+    heights.resize(4);  
+    pt2ds[0] = bw->GetStartLocation();
+    pt2ds[1] = pt2ds.front();
+    pt2ds[3] = bw->GetEndLocation();
+    pt2ds[2] = pt2ds.at(0) + (pt2ds.at(3) - pt2ds.at(0)) * 0.125;
+    bool startFlipped, endFlipped;
+    if (not GetBondingWireHeight(bw, heights.front(), heights.back(), startFlipped, endFlipped)) return false;
+    heights[2] = heights[1] = startFlipped ? heights[0] - bw->GetHeight() : heights[0] + bw->GetHeight();
+    return true;
 }
 
 
