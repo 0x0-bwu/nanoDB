@@ -1,7 +1,7 @@
 #pragma once
 #include "NSTraits.hpp"
 #include "generic/utils/ZipView.hpp"
-
+#include <shared_mutex>
 namespace nano {
 
 template <typename IdContainer, typename T = typename IdContainer::object_type, bool Mutable = true>
@@ -51,34 +51,62 @@ class Lut
 {
 public:
     using Key = std::invoke_result_t<KeyFn, const Id<T>>;
-    void Build(const std::vector<Id<T>> & data)
-    {
-        Clear();
-        Reserve(data.size());
-        for(auto id : data) Add(id);
-    }
-    void Add(const Id<T> id)
+    explicit Lut(std::vector<Id<T>> & data)
+     : m_data(data) {}
+
+    void Add(const Id<T> & id)
     {
         NS_ASSERT(id);
-        [[maybe_unused]] auto res = m_lut.emplace(m_keyFn(id), id).second;
-        NS_ASSERT_MSG(res, "duplicated key in lut");
+        if (m_build) {
+            std::unique_lock l(m_mutex);
+            [[maybe_unused]] auto res = m_lut.emplace(m_keyFn(id), id).second;
+            NS_ASSERT_MSG(res, "duplicated key in lut");
+        }
     }
-    
+
     void Remove(const Id<T> & id)
     {
-        m_lut.erase(m_keyFn(id));
+        if (m_build) {
+            std::unique_lock l(m_mutex);
+            m_lut.erase(m_keyFn(id));
+        }
     }
 
     Id<T> Lookup(const Key & key) const
     {
+        Build();
+        std::shared_lock l(m_mutex);
         auto iter = m_lut.find(key);
         return iter == m_lut.cend() ? Id<T>() : iter->second;;
     }
-    void Reserve(size_t size) { m_lut.reserve(size); }
-    void Clear() { m_lut.clear(); }
+
+    void Clear()
+    {
+        std::unique_lock l(m_mutex);
+        m_build = false;
+        m_lut.clear();
+    }
+private:
+    void Build() const
+    {
+        if (m_build) return;
+        static std::mutex m;
+        std::lock_guard l(m);
+        if (m_build) return;
+        m_lut.reserve(m_data.size());
+        [[maybe_unused]] bool res{false};
+        for (auto id : m_data) {
+            res = m_lut.emplace(m_keyFn(id), id).second;
+            NS_ASSERT_MSG(res, "duplicated key in lut");
+        }
+        m_build = true;
+    }
 private:
     KeyFn m_keyFn;
-    HashMap<Key, Id<T>> m_lut;
+    std::vector<Id<T>> & m_data;
+    mutable HashMap<Key, Id<T>> m_lut;
+    mutable std::shared_mutex m_mutex;
+    mutable std::atomic<bool> m_build{false};
 };
 
 template <typename T>
@@ -94,37 +122,35 @@ template <typename T, typename... Lut>
 struct Luts
 {
 public:
-    using LutsMap = hana::map<hana::pair<hana::type<Lut>, Lut>...>;
+    using LutsMap = hana::map<hana::pair<hana::type<Lut>, UPtr<Lut>>...>;
 
-    void Build(const std::vector<Id<T>> & data)
+    explicit Luts(std::vector<Id<T>> & data)
     {
-        hana::for_each(m_luts, [&](auto & c){ hana::second(c).Build(data); });
+        hana::for_each(m_luts, [&](auto & c){ 
+            using LutType = typename std::decay_t<decltype(hana::first(c))>::type;
+            hana::second(c) = std::make_unique<LutType>(data); 
+        });
     }
 
     void Add(const Id<T> & id)
     {
-        hana::for_each(m_luts, [&](auto & c){ hana::second(c).Add(id); });
+        hana::for_each(m_luts, [&](auto & c){ hana::second(c)->Add(id); });
     }
 
     void Remove(const Id<T> & id)
     {
-        hana::for_each(m_luts, [&](auto & c){ hana::second(c).Remove(id); });
+        hana::for_each(m_luts, [&](auto & c){ hana::second(c)->Remove(id); });
     }
 
     template <template <typename> class L, typename K>
     Id<T> Lookup(K && key) const 
     {
-        return m_luts[hana::type_c<L<T>>].Lookup(std::forward<K>(key));
+        return m_luts[hana::type_c<L<T>>]->Lookup(std::forward<K>(key));
     } 
-
-    void Reserve(size_t size)
-    {
-        hana::for_each(m_luts, [&](auto & c){ hana::second(c).Reserve(size); });
-    }
 
     void Clear()
     {
-        hana::for_each(m_luts, [&](auto & c){ hana::second(c).Clear(); });
+        hana::for_each(m_luts, [&](auto & c){ hana::second(c)->Clear(); });
     }
 private:
     LutsMap m_luts;
@@ -151,6 +177,9 @@ public:
     using iterator = typename std::vector<Id<T>>::iterator;
     using const_iterator = typename std::vector<Id<T>>::const_iterator;
     using object_type = T;
+    IdVec() : m_luts(std::make_unique<Luts<T>>(m_data)) {}
+    explicit IdVec(std::vector<Id<T>> && data)
+     : IdVec() { m_data = std::move(data); }
 
     Id<T> & operator[] (size_t i) { return m_data[i]; }
     const Id<T> & operator[] (size_t i) const { return m_data[i]; }
@@ -175,19 +204,18 @@ public:
     Id<T> & emplace_back(Args && ... args)
     {
         auto & id = m_data.emplace_back(std::forward<Args>(args)...);
-        m_luts.Add(id);
+        m_luts->Add(id);
         return id;
     }
     
     void clear()
     {
-        m_luts.Clear();
+        m_luts->Clear();
         m_data.clear();
     }
 
     void reserve(size_t size)
     {
-        m_luts.Reserve(size);
         m_data.reserve(size);
     }
 
@@ -219,7 +247,7 @@ public:
     template <template <typename> class Lut, typename Key>
     Id<T> Lookup(Key && key) const 
     {
-        return m_luts.template Lookup<Lut>(std::forward<Key>(key));
+        return m_luts->template Lookup<Lut>(std::forward<Key>(key));
     }
 
     template <typename Func>
@@ -232,16 +260,16 @@ public:
 
     void Remove(Id<T> & id, bool destroy = false)
     {
-        m_luts.Remove(id);
+        m_luts->Remove(id);
         m_data.erase(std::remove(m_data.begin(), m_data.end(), id), m_data.end());
         if (destroy) id.Destroy();
     }
 
     IdVec<T, Luts> Clone() const requires (traits::Cloneable<T>)
     {
-        IdVec<T, Luts> res; res.reserve(m_data.size());
-        for (auto id : m_data) res.Add(Id<T>(id->Clone()));
-        return res;
+        std::vector<Id<T>> data; data.reserve(m_data.size());
+        for (auto id : m_data) data.emplace_back(Id<T>(id->Clone()));
+        return IdVec<T, Luts>(std::move(data));
     }
 
     void Destroy()
@@ -256,17 +284,12 @@ public:
     template <typename Archive>
     void serialize(Archive & ar, const unsigned int)
     {
-        if constexpr (Archive::is_saving::value)
-            ar & boost::serialization::make_nvp("data", m_data);
-        else {
-            ar & boost::serialization::make_nvp("data", m_data);
-            m_luts.Build(m_data);
-        }
+        ar & boost::serialization::make_nvp("data", m_data);
     }
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
 private:
-    Luts<T> m_luts;
+    UPtr<Luts<T>> m_luts;
     std::vector<Id<T>> m_data;
 };
 
