@@ -66,23 +66,22 @@ public:
         static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
         for (size_t i = 0; i < m_data.size(); ++i) {
             if (auto * d = dynamic_cast<Derived*>(m_data[i]); d) {
-                if (auto id = Id<Derived>(i); pred(id)) return id;
+                if (pred(*d)) return Id<Derived>(i);
             }
         }
         return Id<Derived>();
     }
 
-    template <typename Derived, typename UnaryPred>
-    IdVec<Derived> FindAll(UnaryPred && pred) const
+    template <typename Derived, typename UnaryPred, typename Vec = IdVec<Derived>>
+    void FindAll(UnaryPred && pred, Vec & vec) const
     {
         static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
-        IdVec<Derived> res;
+        vec.clear();
         for (size_t i = 0; i < m_data.size(); ++i) {
             if (auto * d = dynamic_cast<Derived*>(m_data[i]); d) {
-                if (auto id = Id<Derived>(i); pred(id)) res.emplace_back(id);
+                if (pred(*d)) vec.emplace_back(i);
             }
         }
-        return res;
     }
 
     bool Remove(const Id<T> & id)
@@ -170,10 +169,10 @@ public:
         return this->Get<traits::BaseOf<T>>().template FindOne<T>(std::forward<UnaryPred>(pred));
     }
 
-    template <typename T, typename UnaryPred>
-    IdVec<T> FindAll(UnaryPred && pred) const
+    template <typename T, typename UnaryPred, typename Vec = IdVec<T>>
+    void FindAll(UnaryPred && pred, Vec & vec) const
     {
-        return this->Get<traits::BaseOf<T>>().template FindAll<T>(std::forward<UnaryPred>(pred));
+        return this->Get<traits::BaseOf<T>>().template FindAll<T>(std::forward<UnaryPred>(pred), vec);
     }
 
     template <typename T>
@@ -384,10 +383,10 @@ inline Id<T> FindOne(UnaryPred && pred)
     return Database::Current().FindOne<T>(std::forward<UnaryPred>(pred));
 }
 
-template <typename T, typename UnaryPred>
-inline IdVec<T> FindAll(UnaryPred && pred)
+template <typename T, typename UnaryPred, typename Vec = IdVec<T>>
+inline void FindAll(UnaryPred && pred, Vec & vec)
 {
-    return Database::Current().FindAll<T>(std::forward<UnaryPred>(pred));
+    return Database::Current().FindAll<T>(std::forward<UnaryPred>(pred), vec);
 }
 
 template <typename T>
