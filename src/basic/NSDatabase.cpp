@@ -42,6 +42,16 @@ Content & Database::Current()
     return Instance().CurrentImpl();
 }
 
+std::string_view Database::CurrentDir()
+{
+    return Current().CurrentDir();
+}
+
+void Database::SetCurrentDir(std::string dir)
+{
+    return Current().SetCurrentDir(std::move(dir));
+}
+
 bool Database::Create(std::string name)
 {
     return Instance().CreateImpl(std::move(name));
@@ -204,6 +214,7 @@ bool Collection<Eles...>::Load(std::string_view filename, ArchiveFormat fmt)
         serialize(ia, version);
     }
     m_version = Version(version);
+    SetCurrentDir(generic::fs::DirName(filename).string() + '/' + GetName().data());
     return true;
 }
 

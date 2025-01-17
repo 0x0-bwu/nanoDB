@@ -34,7 +34,6 @@ private:
 
 enum class BondingWireType
 {
-    INVALID = -1,
     SIMPLE = 0,
     JEDEC4,
     // JEDEC5

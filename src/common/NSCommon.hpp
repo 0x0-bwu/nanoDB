@@ -6,10 +6,10 @@ namespace nano {
 
 enum class IOType : int8_t
 {
-    UNKNOWN = -1,
-    INPUT = 0,
-    INOUT = 1,
-    OUTPUT = 2,
+    UNKNOWN = 0,
+    INPUT = 1,
+    INOUT = 2,
+    OUTPUT = 3
 };
 
 } // namespace nano

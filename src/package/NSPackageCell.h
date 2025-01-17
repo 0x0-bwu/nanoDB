@@ -34,8 +34,8 @@ private:
 
 enum class ComponentType
 {
-    INVALID = -1,
-    OTHER = 0,
+    INVALID = 0,
+    OTHER = 1,
     RESISTOR,
     CAPACITOR,
     INDUCTOR,

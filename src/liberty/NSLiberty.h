@@ -32,9 +32,9 @@ enum class PGType : int8_t
 
 enum class TimingSense : int8_t
 {
-    NON_UNATE = -1,
-    NEGATIVE_UNATE = 0,
-    POSITIVE_UNATE = 1,
+    NON_UNATE = 0,
+    NEGATIVE_UNATE = 1,
+    POSITIVE_UNATE = 2,
 };
 
 enum class TimingType : int8_t

@@ -9,7 +9,7 @@ namespace nano  {
 
 using NPoint2D = generic::geometry::Point2D<NCoord>;
 using FPoint2D = generic::geometry::Point2D<FCoord>;
-enum class Mirror2D { NO = -1, X = 0, Y = 1, XY = 2 };
+enum class Mirror2D { NO = 0, X = 1, Y = 2, XY = 3 };
 
 struct TransformData2D
 {

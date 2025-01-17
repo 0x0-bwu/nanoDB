@@ -5,9 +5,9 @@ namespace nano::package {
 
 enum class LayerType : int8_t
 {
-    INVALID = -1,
-    DIELECTRIC = 0,
-    CONDUCTING = 1,
+    INVALID = 0,
+    DIELECTRIC = 1,
+    CONDUCTING = 2,
     COMPONENT = 10,
 };
 
