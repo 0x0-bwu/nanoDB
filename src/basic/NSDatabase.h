@@ -27,17 +27,16 @@ public:
     ~Container() { Reset(); }
 
     template <typename Derived>
-    Derived & operator[] (const Id<Derived> & id)
+    Derived * operator[] (const Id<Derived> & id)
     { 
         static_assert(std::is_same_v<traits::BaseOf<Derived>, T>, "should be derived class or self");
-        return (Derived&)(*m_data[IdType(id)]);
+        return static_cast<Derived *>(m_data[IdType(id)]);
     }   
 
     template <typename Derived>
-    const Derived & operator[] (const Id<Derived> & id) const
+    const Derived * operator[] (const Id<Derived> & id) const
     { 
-        static_assert(std::is_same_v<traits::BaseOf<Derived>, T>, "should be derived class or self");
-        return (Derived&)(*m_data[IdType(id)]);
+        return const_cast<Container<T>*>(this)->operator[]<Derived>(id);
     }
     
     IdType Allocate() { return IdType(m_data.Append(nullptr)); }
@@ -296,7 +295,7 @@ public:
     {
         static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
         using SizeType = typename Id<Derived>::SizeType;
-        return &Get<T>(Id<T>(SizeType(id))) == static_cast<const T*>(this);
+        return &(*Id<T>(SizeType(id))) == static_cast<const T*>(this);
     }
     
     /// binds
@@ -396,18 +395,6 @@ inline void FindAll(UnaryPred && pred, Vec & vec)
     return Database::Current().FindAll<T>(std::forward<UnaryPred>(pred), vec);
 }
 
-template <typename T>
-inline T & Get(const Id<T> & id)
-{
-    return Database::Current().Get<T>()[id];
-}
-
-template <typename T>
-inline const T & Get(const CId<T> & id)
-{
-    return Get<T>(id.ConstCast());
-}
-
 inline std::string_view CurrentDir()
 {
     return Database::CurrentDir();
@@ -450,15 +437,12 @@ public:
 
     T & operator * () const
     {
-        auto & d = nano::Get<T>(*this);
-        NS_ASSERT(&d); 
-        return d; 
+        return *(this->operator->());
     }
 
     T * operator-> () const 
     {
-        auto * p = &nano::Get<T>(*this);
-        NS_ASSERT(p);
+        auto * p = Database::Current().Get<T>()[Id<T>(m_id)];
         return p;
     }
 
@@ -514,8 +498,16 @@ public:
 
     Id<T> ConstCast() const { return Id<T>(m_id); }
 
-    const T & operator * () const noexcept { return  nano::Get<T>(*this); }
-    const T * operator-> () const noexcept { return &nano::Get<T>(*this); }
+    const T & operator * () const
+    {
+        return *(this->operator->());
+    }
+
+    const T * operator-> () const
+    {
+        auto * p = Database::Current().Get<T>()[Id<T>(m_id)];
+        return p;
+    }
 
     void Destroy() const { nano::Remove<T>(*this); }
 
