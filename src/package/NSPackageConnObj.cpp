@@ -97,6 +97,7 @@ BondingWire::BondingWire(std::string name, CId<Net> net, Float radius)
  : NamedObj(std::move(name)), ConnObj(net)
 {
     NS_CLASS_MEMBERS_INITIALIZE
+    m_.type = BondingWireType::SIMPLE;
     m_.radius = radius;
 }
 
@@ -237,6 +238,7 @@ void BondingWire::Transform(const Transform2D & transform)
 
 Ptr<BondingWire> BondingWire::CloneFrom(const BondingWire & src)
 {
+    NamedObj::CloneFrom(src);
     ConnObj::CloneFrom(src);
     m_ = src.m_;
     return this;

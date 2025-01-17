@@ -142,9 +142,13 @@ public:
     explicit Collection(std::string name)
      : NamedObj(std::move(name))
     {
+        SetCurrentDir(generic::fs::CurrentPath().string() + '/' + GetName().data());
     }
 
     ~Collection() { Reset(); }
+
+    void SetCurrentDir(std::string dir) { m_currentDir = std::move(dir); }
+    std::string_view CurrentDir() const { return m_currentDir; }
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     bool Save(std::string_view filename, ArchiveFormat fmt) const;
@@ -196,6 +200,7 @@ private:
     Collection() = default;
     // members
     CollectionMap m_data;
+    std::string m_currentDir;
     Version m_version{CURRENT_VERSION};
 };
 
@@ -210,6 +215,8 @@ public:
     Database & operator= (const Database &) = delete;
 
     static Content & Current();
+    static std::string_view CurrentDir();
+    static void SetCurrentDir(std::string dir);
     static bool Create(std::string name);
     static bool SetCurrent(std::string_view name);
     static Ptr<Content> Find(std::string_view name);
@@ -401,6 +408,16 @@ inline const T & Get(const CId<T> & id)
     return Get<T>(id.ConstCast());
 }
 
+inline std::string_view CurrentDir()
+{
+    return Database::CurrentDir();
+}
+
+inline void SetCurrentDir(std::string dir)
+{
+    Database::SetCurrentDir(std::move(dir));
+}
+
 template <typename T>
 class Id : public Index<Id<T>>
 {
@@ -431,8 +448,19 @@ public:
 
     bool operator!() const { return isNull(); }
 
-    T & operator * () const noexcept { return  nano::Get<T>(*this); }
-    T * operator-> () const noexcept { return &nano::Get<T>(*this); }
+    T & operator * () const
+    {
+        auto & d = nano::Get<T>(*this);
+        NS_ASSERT(&d); 
+        return d; 
+    }
+
+    T * operator-> () const 
+    {
+        auto * p = &nano::Get<T>(*this);
+        NS_ASSERT(p);
+        return p;
+    }
 
     void Destroy() { nano::Remove<T>(*this); }
 

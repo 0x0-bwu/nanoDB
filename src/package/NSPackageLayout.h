@@ -13,6 +13,7 @@ public:
     void SetBoundary(Id<Shape> boundary);
     Id<Shape> GetBoundary() const { return m_.boundary; }
 
+    CId<Package> GetPackage() const;
     CId<CircuitCell> GetCell() const { return m_.cell; }
 
     Id<Net> AddNet(Id<Net> net);
@@ -27,7 +28,7 @@ public:
     auto GetComponentIter() const { return m_.components.GetCIter<Component>(); }
     auto GetBondingWireIter() { return m_.connObjs.GetIter<BondingWire>(); }
     auto GetBondingWireIter() const { return m_.connObjs.GetCIter<BondingWire>(); }
-    auto GetStackupLayerIter() const { return m_.cell->GetPackage()->GetStackupLayerIter(); }
+    auto GetStackupLayerIter() const { return GetPackage()->GetStackupLayerIter(); }
 
     void Transform(const Transform2D & transform);
 

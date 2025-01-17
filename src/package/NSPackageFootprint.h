@@ -5,10 +5,10 @@ namespace nano::package {
 
 enum class FootprintLocation
 {
-    INVALID = -1,
-    BOT = 0,
-    TOP = 1,
-    OTHER = 2,
+    INVALID = 0,
+    BOT,
+    TOP,
+    OTHER
 };
 class Footprint : public NamedObj, public Entity<Footprint>
 {

@@ -13,7 +13,7 @@ void Cell::serialize(Archive & ar, const unsigned int version)
     NS_UNUSED(version);
     ar & NS_SERIALIZATION_ENTITY_OBJECT_NVP(Cell);
     ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(NamedObj);
-    // NS_SERIALIZATION_CLASS_MEMBERS(ar);
+    NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
 NS_SERIALIZATION_FUNCTIONS_IMP(Cell)
 

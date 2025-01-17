@@ -31,6 +31,11 @@ const CoordUnit & Layout::GetCoordUnit() const
     return GetCell()->GetPackage()->GetCoordUnit();
 }
 
+CId<Package> Layout::GetPackage() const
+{
+    return GetCell()->GetPackage();
+}
+
 void Layout::SetBoundary(Id<Shape> boundary)
 {
     m_.boundary = boundary;
