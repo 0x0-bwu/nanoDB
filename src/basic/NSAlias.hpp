@@ -58,6 +58,7 @@ using Float = float;
 template <typename Key, typename Value>
 using HashMap = std::unordered_map<Key, Value>;
 
+template <typename T> using Vec = std::vector<T>;
 template <typename T> using Arr2 = std::array<T, 2>;
 template <typename T> using Arr3 = std::array<T, 3>;
 template <typename T> using Arr4 = std::array<T, 4>;

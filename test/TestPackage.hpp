@@ -19,9 +19,9 @@ LossPowers CreateLossPowers()
 {
     LossPowers lossPowers;
     auto diodeLut = nano::Create<LookupTable1D>(
-        std::vector<Float>{TempUnit(25).inKelvins(), TempUnit(125).inKelvins(), TempUnit(150).inKelvins()}, std::vector<Float>{20.4, 21.7, 21.8});
+        Vec<Float>{TempUnit(25).inKelvins(), TempUnit(125).inKelvins(), TempUnit(150).inKelvins()}, Vec<Float>{20.4, 21.7, 21.8});
     auto dieLut = nano::Create<LookupTable1D>(
-       std::vector<Float>{TempUnit(25).inKelvins(), TempUnit(125).inKelvins(), TempUnit(150).inKelvins()}, std::vector<Float>{108.0, 124.0, 126.5});
+        Vec<Float>{TempUnit(25).inKelvins(), TempUnit(125).inKelvins(), TempUnit(150).inKelvins()}, Vec<Float>{108.0, 124.0, 126.5});
     lossPowers.emplace_back(nano::Create<power::LossPower>("Diode", ScenarioId(0), diodeLut));
     lossPowers.emplace_back(nano::Create<power::LossPower>("TopDie", ScenarioId(1), dieLut));
     lossPowers.emplace_back(nano::Create<power::LossPower>("BotDie", ScenarioId(2), dieLut));
@@ -43,8 +43,8 @@ void SetupMaterials(Id<Package> pkg)
     matLib->AddMaterial(matAl);
 
     auto matCu = nano::Create<Material>("Cu");
-    matCu->SetProperty(Material::THERMAL_CONDUCTIVITY, nano::Create<MaterialPropPolynomial>(std::vector<std::vector<Float>>{{437.6, -0.165, 1.825e-4, -1.427e-7, 3.979e-11}}));
-    matCu->SetProperty(Material::SPECIFIC_HEAT, nano::Create<MaterialPropPolynomial>(std::vector<std::vector<Float>>{{342.8, 0.134, 5.535e-5, -1.971e-7, 1.141e-10}}));
+    matCu->SetProperty(Material::THERMAL_CONDUCTIVITY, nano::Create<MaterialPropPolynomial>(Vec<Vec<Float>>{{437.6, -0.165, 1.825e-4, -1.427e-7, 3.979e-11}}));
+    matCu->SetProperty(Material::SPECIFIC_HEAT, nano::Create<MaterialPropPolynomial>(Vec<Vec<Float>>{{342.8, 0.134, 5.535e-5, -1.971e-7, 1.141e-10}}));
     matCu->SetProperty(Material::MASS_DENSITY, nano::Create<MaterialPropValue>(8850));
     matLib->AddMaterial(matCu);
 
@@ -56,14 +56,14 @@ void SetupMaterials(Id<Package> pkg)
     matLib->AddMaterial(matAir);
 
     auto matSiC = nano::Create<Material>("SiC");
-    matSiC->SetProperty(Material::THERMAL_CONDUCTIVITY, nano::Create<MaterialPropPolynomial>(std::vector<std::vector<Float>>{{1860, -11.7, 0.03442, -4.869e-5, 2.675e-8}}));
-    matSiC->SetProperty(Material::SPECIFIC_HEAT, nano::Create<MaterialPropPolynomial>(std::vector<std::vector<Float>>{{-3338, 33.12, -0.1037, 0.0001522, -8.553e-8}}));
+    matSiC->SetProperty(Material::THERMAL_CONDUCTIVITY, nano::Create<MaterialPropPolynomial>(Vec<Vec<Float>>{{1860, -11.7, 0.03442, -4.869e-5, 2.675e-8}}));
+    matSiC->SetProperty(Material::SPECIFIC_HEAT, nano::Create<MaterialPropPolynomial>(Vec<Vec<Float>>{{-3338, 33.12, -0.1037, 0.0001522, -8.553e-8}}));
     matSiC->SetProperty(Material::MASS_DENSITY, nano::Create<MaterialPropValue>(3210));
     matLib->AddMaterial(matSiC);
 
     auto matAlN = nano::Create<Material>("AlN");
-    matAlN->SetProperty(Material::THERMAL_CONDUCTIVITY, nano::Create<MaterialPropPolynomial>(std::vector<std::vector<Float>>{{421.7867, -1.1262, 0.001}}));
-    matAlN->SetProperty(Material::SPECIFIC_HEAT, nano::Create<MaterialPropPolynomial>(std::vector<std::vector<Float>>{{170.2, -2.018, 0.032, -8.957e-5, 1.032e-7, -4.352e-11}}));
+    matAlN->SetProperty(Material::THERMAL_CONDUCTIVITY, nano::Create<MaterialPropPolynomial>(Vec<Vec<Float>>{{421.7867, -1.1262, 0.001}}));
+    matAlN->SetProperty(Material::SPECIFIC_HEAT, nano::Create<MaterialPropPolynomial>(Vec<Vec<Float>>{{170.2, -2.018, 0.032, -8.957e-5, 1.032e-7, -4.352e-11}}));
     matAlN->SetProperty(Material::MASS_DENSITY, nano::Create<MaterialPropValue>(3260));
     matLib->AddMaterial(matAlN);
     
@@ -206,10 +206,10 @@ Id<Layout> CreateBaseLayout(Id<Package> pkg)
     layout->AddNet(nano::Create<Net>("Kelvin", layout));
     auto noNet = layout->AddNet(nano::Create<Net>("NoNet", layout));
 
-    std::vector<FCoord2D> dPLoc{
+    Vec<FCoord2D> dPLoc{
         {-3, 24}, {-3, 23.275}, {-3, 22.55}, {-4, 23.275}, {-4, 22.55}, {-3, 6.525}, {-3, 5.8}, {-3, 5.075}, {-4, 6.525}, {-4, 5.8},
     };
-    std::vector<FCoord2D> sPLoc{
+    Vec<FCoord2D> sPLoc{
         {3, 24}, {3, 23.275}, {3, 22.55}, {4, 21.825}, {3, 21.825}, {3, 6.525}, {3, 5.8}, {3, 5.075}, {3, 7.25}, {4, 7.25},
     };
 
@@ -228,7 +228,7 @@ Id<Layout> CreateBaseLayout(Id<Package> pkg)
         layout->AddConnObj(bw2);
     }
 
-    std::vector<FCoord2D> gPLoc{{-3, 3}, {-3, 1.8}};
+    Vec<FCoord2D> gPLoc{{-3, 3}, {-3, 1.8}};
     for (size_t i = 0; i < gPLoc.size(); ++i) {
         const auto & p = gPLoc.at(i);
         auto bw1 = nano::Create<BondingWire>("G1_" + std::to_string(i), noNet, 0.0635);
@@ -292,7 +292,7 @@ Id<Layout> CreateDriverLayout(Id<Package> pkg)
     auto layout = cell->SetLayout(nano::Create<Layout>(CId<CircuitCell>(cell)));
     BOOST_CHECK(layout);
 
-    auto boundary = nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-5.5, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {-5.5, 14.725}});
+    auto boundary = nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-5.5, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {-5.5, 14.725}});
     layout->SetBoundary(boundary);
 
     auto noNet = layout->AddNet(nano::Create<Net>("NoNet", layout));
@@ -301,26 +301,26 @@ Id<Layout> CreateDriverLayout(Id<Package> pkg)
     auto layer3 = pkg->FindStackupLayer("BotCuLayer");
     auto layer4 = pkg->FindStackupLayer("SolderLayer");
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{1.7,   9.625}, {4.7,   9.625}, {4.7, 13.925}, {1.7, 13.925}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{1.7,   9.625}, {4.7,   9.625}, {4.7, 13.925}, {1.7, 13.925}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{1.7,   4.325}, {4.7,   4.325}, {4.7,  8.625}, {1.7,  8.625}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{1.7,   4.325}, {4.7,   4.325}, {4.7,  8.625}, {1.7,  8.625}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{1.7, -13.925}, {4.7, -13.925}, {4.7,  1.075}, {3.2,  1.075}, {3.2, -1.775}, 
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{1.7, -13.925}, {4.7, -13.925}, {4.7,  1.075}, {3.2,  1.075}, {3.2, -1.775}, 
                        {4.2, -1.775}, {4.2, -4.925}, {3.2, -4.925}, {3.2, -7.025}, {4.2, -7.025}, {4.2, -11.425}, {1.7, -11.425}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{1.7, -10.325}, {3.2, -10.325}, {3.2, -8.225}, {2.2, -8.225}, {2.2, -3.875}, 
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{1.7, -10.325}, {3.2, -10.325}, {3.2, -8.225}, {2.2, -8.225}, {2.2, -3.875}, 
                        {3.2, -3.875}, {3.2, -2.825}, {2.2, -2.825}, {2.2, 2.175}, {4.7, 2.175}, {4.7, 3.225}, {1.7, 3.225}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer2, 
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{0.9, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {0.9, 14.725}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{0.9, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {0.9, 14.725}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer3,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{1.4, -14.225}, {5.0, -14.225}, {5.0, 14.225}, {1.4, 14.225}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{1.4, -14.225}, {5.0, -14.225}, {5.0, 14.225}, {1.4, 14.225}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer4,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{0.9, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {0.9, 14.725}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{0.9, -14.725}, {5.5, -14.725}, {5.5, 14.725}, {0.9, 14.725}}, 0.25)));
     
     return layout;
 }
 
-Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & locations, const LossPowers & lossPowers)
+Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const Vec<FCoord2D> & locations, const LossPowers & lossPowers)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
     auto cell = nano::Create<CircuitCell>("BotBridge", pkg);
@@ -336,28 +336,28 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
     auto layer3 = pkg->FindStackupLayer("BotCuLayer");
     auto layer4 = pkg->FindStackupLayer("SolderLayer");
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-15.45, -11.2}, {13.35, -11.2}, {13.95, -11.6}, {15.45, -11.6},
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-15.45, -11.2}, {13.35, -11.2}, {13.95, -11.6}, {15.45, -11.6},
                         {15.45, -10.8}, {-15.05, -10.8}, {-15.05, -1.3}, {-14.7, -0.7}, {-14.7, 11.45}, {-15.45, 11.45}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-14.2, -10.4}, {15.45, -10.4}, {15.45, -9.6}, {13.95, -9.6},
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-14.2, -10.4}, {15.45, -10.4}, {15.45, -9.6}, {13.95, -9.6},
                         {13.35, -10}, {-13.8, -10}, {-13.8, -2.55}, {-11.1, -2.55}, {-11.1, 11.45}, {-11.85, 11.45}, {-11.85, -2}, {-14.2, -2}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-12.6, -8.8}, {12.35, -8.8}, {12.95, -8.4}, {15.45, -8.4},
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-12.6, -8.8}, {12.35, -8.8}, {12.95, -8.4}, {15.45, -8.4},
                         {15.45, -5.97}, {7.95, -5.97}, {7.95, 9.03}, {15.45, 9.03}, {15.45, 11.45}, {-9.75, 11.45}, {-9.75, -3.75}, {-12.6, -3.75}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-13.65, -0.7}, {-12.9, -0.7}, {-12.9, 2.6}, {-13.65, 2.6}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-13.65, -0.7}, {-12.9, -0.7}, {-12.9, 2.6}, {-13.65, 2.6}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-13.65, 3.725}, {-12.9, 3.725}, {-12.9, 7.025}, {-13.65, 7.025}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-13.65, 3.725}, {-12.9, 3.725}, {-12.9, 7.025}, {-13.65, 7.025}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-13.65, 8.15}, {-12.9, 8.15}, {-12.9, 11.45}, {-13.65, 11.45}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-13.65, 8.15}, {-12.9, 8.15}, {-12.9, 11.45}, {-13.65, 11.45}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{9.5, -4.77}, {15.8, -4.77}, {15.8, 7.83}, {9.5, 7.83}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{9.5, -4.77}, {15.8, -4.77}, {15.8, 7.83}, {9.5, 7.83}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer2,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.75, -12.5}, {16.75, -12.5}, {16.75, 12.5}, {-16.75, 12.5}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-16.75, -12.5}, {16.75, -12.5}, {16.75, 12.5}, {-16.75, 12.5}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer3,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.25, -12}, {16.25, -12}, {16.25, 12}, {-16.25, 12}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-16.25, -12}, {16.25, -12}, {16.25, 12}, {-16.25, 12}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer4,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.75, -12.5}, {16.75, -12.5}, {16.75, 12.5}, {-16.75, 12.5}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-16.75, -12.5}, {16.75, -12.5}, {16.75, 12.5}, {-16.75, 12.5}}, 0.25)));
 
     auto botDieLossPower = lossPowers.Lookup<lut::Name>("BotDie");
     NS_ASSERT(botDieLossPower);
@@ -368,7 +368,7 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
     BOOST_CHECK(sicBotFp);
     auto sicTopFp = sicDie->FindFootprint("Top");
     BOOST_CHECK(sicTopFp);
-    std::vector<std::string> diePinNames{"G", "B", "D", "A", "C", "E", "K"};
+    Vec<std::string> diePinNames{"G", "B", "D", "A", "C", "E", "K"};
     for (size_t i = 0; i < dieComps.size(); ++i) {
         dieComps[i] = layout->AddComponent(nano::Create<Component>("Die" + std::to_string(i + 1), sicDie, layout));
         dieComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, locations.at(i)));
@@ -391,7 +391,7 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
     BOOST_CHECK(diodeBotFp);
     auto diodeTopFp = diode->FindFootprint("Top");
     BOOST_CHECK(diodeTopFp);
-    std::vector<std::string> diodePinNames{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
+    Vec<std::string> diodePinNames{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
     for (size_t i = 0; i < diodeComps.size(); ++i) {
         diodeComps[i] = layout->AddComponent(nano::Create<Component>("Diode" + std::to_string(i + 1), diode, layout));
         diodeComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, locations.at(i + dieComps.size())));
@@ -407,7 +407,7 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
     
     auto rg = CId<FootprintCell>(pkg->FindCell("Rg"));
     BOOST_CHECK(rg);
-    std::vector<FCoord2D> resLocs{{-14.17, 10.5}, {-14.17, 6.075}, {-14.17, 1.65}};
+    Vec<FCoord2D> resLocs{{-14.17, 10.5}, {-14.17, 6.075}, {-14.17, 1.65}};
     for (size_t i = 0; i < resLocs.size(); ++i) {
         auto res = layout->AddComponent(nano::Create<Component>("R" + std::to_string(i + 1), rg, layout));
         res->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, resLocs.at(i)));
@@ -415,7 +415,7 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
         compLayer->SetConnectedLayer(layer1);
     }
 
-    std::vector<FCoord2D> gateBwLocs{{-13.275f, 8.6f}, {-13.275f, 4.05f}, {-13.275f, -0.27f}};
+    Vec<FCoord2D> gateBwLocs{{-13.275f, 8.6f}, {-13.275f, 4.05f}, {-13.275f, -0.27f}};
     for (size_t i = 0; i < gateBwLocs.size(); ++i) {
         auto bw = nano::Create<BondingWire>("GateBw" + std::to_string(i), noNet, 0.0635);
         bw->SetStartPin(dieComps[i]->FindComponentPin("Top", "G"));
@@ -423,7 +423,7 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
         layout->AddConnObj(bw);
     }
 
-    std::vector<std::string> iPins{"A", "B", "C", "D", "E"};
+    Vec<std::string> iPins{"A", "B", "C", "D", "E"};
     for (size_t i = 0; i < dieComps.size(); ++i) {
         for (size_t j = 0; j < iPins.size(); ++j) {
             auto bw = nano::Create<BondingWire>(iPins.at(j), noNet, 0.15);
@@ -433,8 +433,8 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
         }
     }
 
-    std::vector<std::string> oPins{"F", "G", "H", "I", "J"};
-    std::vector<std::vector<FCoord2D>> diodePLocs {
+    Vec<std::string> oPins{"F", "G", "H", "I", "J"};
+    Vec<Vec<FCoord2D>> diodePLocs {
         {{12.650,  7.105}, {12.650,  6.380}, {11.075,  7.105}, {11.075,  6.380}, {11.075,  5.655}},
         {{14.225,  7.105}, {14.225,  6.380}, {12.650, -2.595}, {11.075, -2.595}, {11.075, -3.320}},
         {{12.650, -3.320}, {14.225, -3.320}, {11.075, -4.045}, {12.650, -4.045}, {14.225, -4.045}}
@@ -449,7 +449,7 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
         }
     }
 
-    std::vector<FCoord2D> kelvinBwPLocs{{-11.475, 8.15}, {-11.475, 3.6}, {-11.475, -0.72}};
+    Vec<FCoord2D> kelvinBwPLocs{{-11.475, 8.15}, {-11.475, 3.6}, {-11.475, -0.72}};
     for (size_t i = 0; i < kelvinBwPLocs.size(); ++i) {
         auto bw = nano::Create<BondingWire>("KelvinBw" + std::to_string(i), noNet, 0.0635);
         bw->SetStartPin(dieComps[i]->FindComponentPin("Top", "K"));
@@ -460,7 +460,7 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
 }
 
 
-Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & locations, const LossPowers & lossPowers)
+Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const Vec<FCoord2D> & locations, const LossPowers & lossPowers)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
     auto cell = nano::Create<CircuitCell>("TopBridge", pkg);
@@ -476,36 +476,36 @@ Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
     auto layer3 = pkg->FindStackupLayer("BotCuLayer");
     auto layer4 = pkg->FindStackupLayer("SolderLayer");
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-15.45, -11.6}, {-13.95, -11.6}, {-13.35, -11.2}, {13.35, -11.2},
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-15.45, -11.6}, {-13.95, -11.6}, {-13.35, -11.2}, {13.35, -11.2},
                         {13.95, -11.6}, {15.45, -11.6}, {15.45, -10.8}, {-15.45, -10.8}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1, 
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-15.45, -10.4}, {15.45, -10.4}, {15.45, -9.6}, {13.95, -9.6},
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-15.45, -10.4}, {15.45, -10.4}, {15.45, -9.6}, {13.95, -9.6},
                         {13.35, -10}, {-13.35, -10}, {-13.95, -9.6}, {-15.45, -9.6}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-15.45, -8.4}, {-12.95, -8.4}, {-12.35, -8.8}, {-9.15, -8.8},
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-15.45, -8.4}, {-12.95, -8.4}, {-12.35, -8.8}, {-9.15, -8.8},
                         {-9.15, -3.1}, {-15.45, -3.1}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-15.45, -1.9}, {-7.95, -1.9}, {-7.95, -8.8}, {9.75, -8.8},
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-15.45, -1.9}, {-7.95, -1.9}, {-7.95, -8.8}, {9.75, -8.8},
                         {9.75, 11.45}, {-7.95, 11.45}, {-7.95, 4.45}, {-15.45, 4.45}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-15.45, 5.65}, {-9.15, 5.65}, {-9.15, 11.45}, {-15.45, 11.45}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-15.45, 5.65}, {-9.15, 5.65}, {-9.15, 11.45}, {-15.45, 11.45}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{11.1, -8.5}, {12.9, -8.5}, {12.9, -6.55}, {11.85, -6.55}, {11.85, 11.45}, {11.1, 11.45}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{11.1, -8.5}, {12.9, -8.5}, {12.9, -6.55}, {11.85, -6.55}, {11.85, 11.45}, {11.1, 11.45}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{12.9, -5.5}, {13.65, -5.5}, {13.65, -2.2}, {12.9, -2.2}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{12.9, -5.5}, {13.65, -5.5}, {13.65, -2.2}, {12.9, -2.2}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{12.9, 0.95}, {13.65, 0.95}, {13.65, 4.25}, {12.9, 4.25}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{12.9, 0.95}, {13.65, 0.95}, {13.65, 4.25}, {12.9, 4.25}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{12.9,  7.4}, {13.65,  7.4}, {13.65, 10.7}, {12.9, 10.7}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{12.9,  7.4}, {13.65,  7.4}, {13.65, 10.7}, {12.9, 10.7}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer1,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{13.65, -8.5}, {15.45, -8.5}, {15.45, 11.45}, {14.7, 11.45},
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{13.65, -8.5}, {15.45, -8.5}, {15.45, 11.45}, {14.7, 11.45},
                         {14.7, -0.125}, {13.65, -0.125}, {13.65, -1.125}, {14.7, -1.125}, {14.7, -6.55}, {13.65, -6.55}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer2,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.75, -12.5}, {16.75, -12.5}, {16.75, 12.5}, {-16.75, 12.5}})));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-16.75, -12.5}, {16.75, -12.5}, {16.75, 12.5}, {-16.75, 12.5}})));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer3,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.25, -12}, {16.25, -12}, {16.25, 12}, {-16.25, 12}}, 0.25)));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-16.25, -12}, {16.25, -12}, {16.25, 12}, {-16.25, 12}}, 0.25)));
     layout->AddConnObj(nano::Create<RoutingWire>(noNet, layer4,
-                       nano::Create<ShapePolygon>(coordUnit, std::vector<FCoord2D>{{-16.75, -12.5}, {16.75, -12.5}, {16.75, 12.5}, {-16.75, 12.5}})));
+                       nano::Create<ShapePolygon>(coordUnit, Vec<FCoord2D>{{-16.75, -12.5}, {16.75, -12.5}, {16.75, 12.5}, {-16.75, 12.5}})));
     
     auto topDieLossPower = lossPowers.Lookup<lut::Name>("TopDie");
     NS_ASSERT(topDieLossPower);
@@ -516,7 +516,7 @@ Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
     BOOST_CHECK(sicBotFp);
     auto sicTopFp = sicDie->FindFootprint("Top");
     BOOST_CHECK(sicTopFp);
-    std::vector<std::string> diePinNames{"G", "B", "D", "A", "C", "E", "K"};
+    Vec<std::string> diePinNames{"G", "B", "D", "A", "C", "E", "K"};
     for (size_t i = 0; i < dieComps.size(); ++i) {
         dieComps[i] = layout->AddComponent(nano::Create<Component>("Die" + std::to_string(i + 1), sicDie, layout));
         dieComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, locations.at(i), Mirror2D::Y));
@@ -539,7 +539,7 @@ Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
     BOOST_CHECK(diodeBotFp);
     auto diodeTopFp = diode->FindFootprint("Top");
     BOOST_CHECK(diodeTopFp);
-    std::vector<std::string> diodePinNames{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
+    Vec<std::string> diodePinNames{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
     for (size_t i = 0; i < diodeComps.size(); ++i) {
         diodeComps[i] = layout->AddComponent(nano::Create<Component>("Diode" + std::to_string(i + 1), diode, layout));
         diodeComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, locations.at(i + dieComps.size()), Mirror2D::Y));
@@ -556,7 +556,7 @@ Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
 
     auto rg = CId<FootprintCell>(pkg->FindCell("Rg"));
     BOOST_CHECK(rg);
-    std::vector<FCoord2D> resLocs{{14.17, 8.35}, {14.17, 1.9}, {14.17, -4.55}};
+    Vec<FCoord2D> resLocs{{14.17, 8.35}, {14.17, 1.9}, {14.17, -4.55}};
     for (size_t i = 0; i < resLocs.size(); ++i) {
         auto res = layout->AddComponent(nano::Create<Component>("R" + std::to_string(i + 1), rg, layout));
         res->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, resLocs.at(i)));
@@ -564,7 +564,7 @@ Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
         compLayer->SetConnectedLayer(layer1);
     }
 
-    std::vector<FCoord2D> gateBwLocs{{13.275f, 10.25f}, {13.275f, 3.8f}, {13.275f, -2.65f}};
+    Vec<FCoord2D> gateBwLocs{{13.275f, 10.25f}, {13.275f, 3.8f}, {13.275f, -2.65f}};
     for (size_t i = 0; i < gateBwLocs.size(); ++i) {
         auto bw = nano::Create<BondingWire>("GateBw" + std::to_string(i), noNet, 0.0635);
         bw->SetStartPin(dieComps[i]->FindComponentPin("Top", "G"));
@@ -572,7 +572,7 @@ Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
         layout->AddConnObj(bw);
     }
 
-    std::vector<std::string> iPins{"A", "B", "C", "D", "E"};
+    Vec<std::string> iPins{"A", "B", "C", "D", "E"};
     for (size_t i = 0; i < dieComps.size(); ++i) {
         for (size_t j = 0; j < iPins.size(); ++j) {
             auto bw = nano::Create<BondingWire>(iPins.at(j), noNet, 0.15);
@@ -582,8 +582,8 @@ Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
         }
     }
 
-    std::vector<std::string> oPins{"F", "G", "H", "I", "J"};
-    std::vector<std::vector<FCoord2D>> diodePLocs {
+    Vec<std::string> oPins{"F", "G", "H", "I", "J"};
+    Vec<Vec<FCoord2D>> diodePLocs {
         {{-10.15, 10.7250}, {-10.15, 10.000}, {-10.15,  9.2700}, {-10.15,  8.5500}, {-10.15,  7.8250}},
         {{-10.15,  7.1000}, {-10.15,  6.375}, {-11.15,  6.3750}, {-10.15, -3.8125}, {-10.15, -4.5250}},
         {{-10.15, -5.2375}, {-10.15, -5.950}, {-10.15, -6.6625}, {-10.15, -7.3750}, {-10.15, -8.0875}}
@@ -598,7 +598,7 @@ Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
         }
     }
 
-    std::vector<FCoord2D> kelvinBwPLocs{{11.475, 8.08}, {11.475, 1.33}, {11.475, -5.42}};
+    Vec<FCoord2D> kelvinBwPLocs{{11.475, 8.08}, {11.475, 1.33}, {11.475, -5.42}};
     for (size_t i = 0; i < kelvinBwPLocs.size(); ++i) {
         auto bw = nano::Create<BondingWire>("KelvinBw" + std::to_string(i), noNet, 0.0635);
         bw->SetStartPin(dieComps[i]->FindComponentPin("Top", "K"));
@@ -613,7 +613,7 @@ Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
 
 void t_create_package()
 {
-    std::vector<Float> parameters = {
+    Vec<Float> parameters = {
         -5.23, 8.93, -5.23, 3.86, -5.23, -1.21, 3.71, 8.08, 3.71, 1.33, 3.71, -5.42,
         5.23, 8.08, 5.23, 1.33, 5.23, -5.42, -3.7, 8.08, -3.7, 1.33, -3.7, -5.42,
     };
@@ -657,7 +657,7 @@ void t_create_package()
     auto driver = nano::Create<CellInst>("Driver", driverLayout->GetCell(), base);
     driver->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {44, 0}, Mirror2D::XY));
     base->AddCellInst(driver);
-    std::vector<FCoord2D> botLocations;
+    Vec<FCoord2D> botLocations;
     for (size_t i = 0; i < 6; ++i)
         botLocations.emplace_back(parameters.at(i * 2), parameters.at(i * 2 + 1));
     auto botBridgeLayout = detail::CreateBotBridgeLayout(pkg, botLocations, lossPowers);
@@ -669,7 +669,7 @@ void t_create_package()
     botBridgeInst2->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {-17.75, -13}, Mirror2D::X));
     base->AddCellInst(botBridgeInst2);
 
-    std::vector<FCoord2D> topLocations;
+    Vec<FCoord2D> topLocations;
     for (size_t i = 0; i < 6; i++)
         topLocations.emplace_back(parameters.at(i * 2 + 12), parameters.at(i * 2 + 13));
     auto topBridgeLayout = detail::CreateTopBridgeLayout(pkg, topLocations, lossPowers);
