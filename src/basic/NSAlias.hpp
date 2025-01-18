@@ -62,6 +62,8 @@ template <typename T> using Vec = std::vector<T>;
 template <typename T> using Arr2 = std::array<T, 2>;
 template <typename T> using Arr3 = std::array<T, 3>;
 template <typename T> using Arr4 = std::array<T, 4>;
+template <typename T> using Arr5 = std::array<T, 5>;
+template <typename T> using Arr6 = std::array<T, 6>;
 template <typename T> using Arr9 = std::array<T, 9>;
 
 template <typename T> class Id;
