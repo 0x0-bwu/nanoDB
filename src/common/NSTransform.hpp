@@ -7,9 +7,13 @@
 
 namespace nano  {
 
-using NPoint2D = generic::geometry::Point2D<NCoord>;
-using FPoint2D = generic::geometry::Point2D<FCoord>;
-enum class Mirror2D { NO = 0, X = 1, Y = 2, XY = 3 };
+using Axis = generic::geometry::Axis;
+enum class Mirror2D : int8_t { NO = 0, X = 1, Y = 2, XY = 3 };
+inline Axis GetAxis(Mirror2D mirror)
+{
+    NS_ASSERT(mirror != Mirror2D::NO);
+    return static_cast<Axis>(static_cast<int8_t>(mirror) - 1);
+}
 
 struct TransformData2D
 {
@@ -18,12 +22,12 @@ struct TransformData2D
     Float scale = 1.0;
     Float rotation = 0;//Rotation (in radians) about point (0,0) in CCW direction
     Mirror2D mirror = Mirror2D::NO;//Mirror about X or Y axis
-    FPoint2D offset = FPoint2D(0, 0);
+    FCoord2D offset = FCoord2D(0, 0);
 
     bool isScaled() const { return generic::math::NE<Float>(scale, 1); }
     bool isRotated() const { return generic::math::NE<Float>(rotation, 0); }
     bool isMirrored() const { return mirror != Mirror2D::NO; }
-    bool isOffsetted() const { return offset != FPoint2D(0, 0); }
+    bool isOffsetted() const { return offset != FCoord2D(0, 0); }
     bool isTransformed() const { return isScaled() || isRotated() || isMirrored() || isOffsetted(); }
 
     Transform GetTransform() const
@@ -32,7 +36,7 @@ struct TransformData2D
         Transform transform;
         if(isScaled()) transform = makeScaleTransform2D<Float>(scale) * transform;
         if(isRotated()) transform = makeRotateTransform2D<Float>(rotation) * transform;
-        if(isMirrored()) transform = makeMirroredTransform2D<Float>(static_cast<generic::geometry::Axis>(mirror)) * transform;
+        if(isMirrored()) transform = makeMirroredTransform2D<Float>(GetAxis(mirror)) * transform;
         if(isOffsetted()) transform = makeShiftTransform2D<Float>(offset) * transform;
         return transform;
     }
@@ -99,8 +103,8 @@ public:
     Mirror2D & Mirror() { m_transform.reset(); return m_sequence.back().mirror; }
     const Mirror2D & Mirror() const { return m_sequence.back().mirror; }
 
-    FPoint2D & Offset() { m_transform.reset(); return m_sequence.back().offset; }
-    const FPoint2D & Offset() const { return m_sequence.back().offset; }
+    FCoord2D & Offset() { m_transform.reset(); return m_sequence.back().offset; }
+    const FCoord2D & Offset() const { return m_sequence.back().offset; }
 
     void Append(const Transform2D & transform)
     {
@@ -136,7 +140,7 @@ inline Transform2D makeTransform2D(Float scale, Float rotation, Float x, Float y
     Transform2D transform;
     transform.Scale() = scale;
     transform.Rotation() = rotation;
-    transform.Offset() = FPoint2D(x, y);
+    transform.Offset() = FCoord2D(x, y);
     transform.Mirror() = mirror;
     return transform;
 }

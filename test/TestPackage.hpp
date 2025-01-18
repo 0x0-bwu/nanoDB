@@ -320,7 +320,7 @@ Id<Layout> CreateDriverLayout(Id<Package> pkg)
     return layout;
 }
 
-Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & compLocs, const LossPowers & lossPowers)
+Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & locations, const LossPowers & lossPowers)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
     auto cell = nano::Create<CircuitCell>("BotBridge", pkg);
@@ -371,7 +371,7 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
     std::vector<std::string> diePinNames{"G", "B", "D", "A", "C", "E", "K"};
     for (size_t i = 0; i < dieComps.size(); ++i) {
         dieComps[i] = layout->AddComponent(nano::Create<Component>("Die" + std::to_string(i + 1), sicDie, layout));
-        dieComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, compLocs.at(i)));
+        dieComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, locations.at(i)));
         auto botLayer = dieComps[i]->AddComponentLayer(nano::Create<ComponentLayer>("Bot", dieComps[i], sicBotFp));
         botLayer->AddPin(nano::Create<ComponentPin>("GND", botLayer, sicBotFp->FindPin("GND")));
         botLayer->SetConnectedLayer(layer1);
@@ -394,7 +394,7 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
     std::vector<std::string> diodePinNames{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
     for (size_t i = 0; i < diodeComps.size(); ++i) {
         diodeComps[i] = layout->AddComponent(nano::Create<Component>("Diode" + std::to_string(i + 1), diode, layout));
-        diodeComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, compLocs.at(i)));
+        diodeComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, locations.at(i + dieComps.size())));
         auto botLayer = diodeComps[i]->AddComponentLayer(nano::Create<ComponentLayer>("Bot", diodeComps[i], diodeBotFp));
         botLayer->AddPin(nano::Create<ComponentPin>("GND", botLayer, diodeBotFp->FindPin("GND")));
         botLayer->SetConnectedLayer(layer1);
@@ -460,7 +460,7 @@ Id<Layout> CreateBotBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
 }
 
 
-Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & compLocs, const LossPowers & lossPowers)
+Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & locations, const LossPowers & lossPowers)
 {
     const auto & coordUnit = pkg->GetCoordUnit();
     auto cell = nano::Create<CircuitCell>("TopBridge", pkg);
@@ -519,7 +519,7 @@ Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
     std::vector<std::string> diePinNames{"G", "B", "D", "A", "C", "E", "K"};
     for (size_t i = 0; i < dieComps.size(); ++i) {
         dieComps[i] = layout->AddComponent(nano::Create<Component>("Die" + std::to_string(i + 1), sicDie, layout));
-        dieComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, compLocs.at(i)));
+        dieComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, locations.at(i), Mirror2D::Y));
         auto botLayer = dieComps[i]->AddComponentLayer(nano::Create<ComponentLayer>("Bot", dieComps[i], sicBotFp));
         botLayer->AddPin(nano::Create<ComponentPin>("GND", botLayer, sicBotFp->FindPin("GND")));
         botLayer->SetConnectedLayer(layer1);
@@ -542,7 +542,7 @@ Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const std::vector<FCoord2D> & 
     std::vector<std::string> diodePinNames{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
     for (size_t i = 0; i < diodeComps.size(); ++i) {
         diodeComps[i] = layout->AddComponent(nano::Create<Component>("Diode" + std::to_string(i + 1), diode, layout));
-        diodeComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, compLocs.at(i)));
+        diodeComps[i]->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, locations.at(i + dieComps.size()), Mirror2D::Y));
         auto botLayer = diodeComps[i]->AddComponentLayer(nano::Create<ComponentLayer>("Bot", diodeComps[i], diodeBotFp));
         botLayer->AddPin(nano::Create<ComponentPin>("GND", botLayer, diodeBotFp->FindPin("GND")));
         botLayer->SetConnectedLayer(layer1);
@@ -657,10 +657,10 @@ void t_create_package()
     auto driver = nano::Create<CellInst>("Driver", driverLayout->GetCell(), base);
     driver->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {44, 0}, Mirror2D::XY));
     base->AddCellInst(driver);
-    std::vector<FCoord2D> botCompLocs;
+    std::vector<FCoord2D> botLocations;
     for (size_t i = 0; i < 6; ++i)
-        botCompLocs.emplace_back(parameters.at(i * 2), parameters.at(i * 2 + 1));
-    auto botBridgeLayout = detail::CreateBotBridgeLayout(pkg, botCompLocs, lossPowers);
+        botLocations.emplace_back(parameters.at(i * 2), parameters.at(i * 2 + 1));
+    auto botBridgeLayout = detail::CreateBotBridgeLayout(pkg, botLocations, lossPowers);
 
     auto botBridgeInst1 = nano::Create<CellInst>("BotBridge1", botBridgeLayout->GetCell(), base);
     botBridgeInst1->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {-17.75, 13}));
@@ -669,10 +669,10 @@ void t_create_package()
     botBridgeInst2->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {-17.75, -13}, Mirror2D::X));
     base->AddCellInst(botBridgeInst2);
 
-    std::vector<FCoord2D> topCompLocs;
+    std::vector<FCoord2D> topLocations;
     for (size_t i = 0; i < 6; i++)
-        topCompLocs.emplace_back(parameters.at(i * 2 + 12), parameters.at(i * 2 + 13));
-    auto topBridgeLayout = detail::CreateTopBridgeLayout(pkg, topCompLocs, lossPowers);
+        topLocations.emplace_back(parameters.at(i * 2 + 12), parameters.at(i * 2 + 13));
+    auto topBridgeLayout = detail::CreateTopBridgeLayout(pkg, topLocations, lossPowers);
 
     auto topBridgeInst1 = nano::Create<CellInst>("TopBridge1", topBridgeLayout->GetCell(), base);
     topBridgeInst1->SetTransform(nano::CreateTransform2D(coordUnit, 1, 0, {17.75, 13}));
