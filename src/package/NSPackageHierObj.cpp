@@ -70,7 +70,7 @@ CId<HierObj> HierObj::GetParent() const
 
 Id<HierObj> HierObj::AddChild(Id<HierObj> child)
 {
-    child->SetParent(Entity<HierObj>::GetCId());
+    child->SetParent(CId<HierObj>(GetId()));
     return m_.children.Add(child);
 }
 

@@ -83,11 +83,11 @@ Ptr<Layout> Layout::CloneFrom(const Layout & src)
     HashMap<CId<Component>, CId<Component>> compMap{{CId<Component>(), CId<Component>()}};
     HashMap<CId<ComponentPin>, CId<ComponentPin>> compPinMap{{CId<ComponentPin>(), CId<ComponentPin>()}};
     HashMap<CId<ComponentLayer>, CId<ComponentLayer>> compLayerMap{{CId<ComponentLayer>(), CId<ComponentLayer>()}};
-    for(auto [src, tar] : Zip(src.m_.components, m_.components)) {
-        tar->SetLayout(CId<Layout>(GetCId()));
-        compMap.emplace(src, tar);
-        auto srcLayerIter = src->GetComponentLayerIter();
-        auto tarLayerIter = tar->GetComponentLayerIter();
+    for(auto [srcComp, tarComp] : Zip(src.m_.components, m_.components)) {
+        tarComp->SetLayout(CId<Layout>(GetId()));
+        compMap.emplace(srcComp, tarComp);
+        auto srcLayerIter = srcComp->GetComponentLayerIter();
+        auto tarLayerIter = tarComp->GetComponentLayerIter();
         while (auto srcLayer = srcLayerIter.Next()) {
             auto tarLayer = tarLayerIter.Next();
             NS_ASSERT(tarLayer);

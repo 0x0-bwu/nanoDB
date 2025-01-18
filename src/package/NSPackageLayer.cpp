@@ -49,24 +49,23 @@ Layer::Layer() : Layer("", LayerType::INVALID)
 
 Id<ComponentLayer> Layer::GetComponentLayer()
 {
-    return Id<ComponentLayer>(GetId());
+    return Cast<ComponentLayer>();
 }
 
 CId<ComponentLayer> Layer::GetComponentLayer() const
 {
-    return CId<ComponentLayer>(GetCId());
+    return Cast<ComponentLayer>();
 }
 
 Id<StackupLayer> Layer::GetStackupLayer()
 {
-    return Id<StackupLayer>(GetId());
+    return Cast<StackupLayer>();
 }
 
 CId<StackupLayer> Layer::GetStackupLayer() const
 {
-    return CId<StackupLayer>(GetCId());
+    return Cast<StackupLayer>();
 }
-
 
 Ptr<Layer> Layer::CloneFrom(const Layer & src)
 {
@@ -198,7 +197,7 @@ Ptr<ComponentLayer> ComponentLayer::CloneFrom(const ComponentLayer & src)
     m_.footprint = src.m_.footprint;
     m_.pins = src.m_.pins.Clone();
     for (auto & pin : m_.pins)
-        pin->SetComponentLayer(CId<ComponentLayer>(GetCId()));
+        pin->SetComponentLayer(CId<ComponentLayer>(GetId()));
     return this;
 }
     

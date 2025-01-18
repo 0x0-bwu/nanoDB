@@ -95,8 +95,9 @@ Ptr<Component> Component::CloneFrom(const Component & src)
     m_.footprint = src.m_.footprint;
     m_.layout = src.m_.layout;
     m_.componentLayers = src.m_.componentLayers.Clone();
-    for (auto & layer : m_.componentLayers)
-        layer->SetComponent(GetCId());
+    for (auto & layer : m_.componentLayers) {
+        layer->SetComponent(CId<Component>(GetId()));
+    }
     m_.flipped = src.m_.flipped;
     return this;
 }
