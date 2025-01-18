@@ -59,32 +59,32 @@ ConnObj::ConnObj() : ConnObj(CId<Net>())
 
 Id<BondingWire> ConnObj::GetBondingWire()
 {
-    return Id<BondingWire>(Entity<ConnObj>::GetId());
+    return Cast<BondingWire>();
 }
 
 CId<BondingWire> ConnObj::GetBondingWire() const
 {
-    return CId<BondingWire>(Entity<ConnObj>::GetCId());
+    return Cast<BondingWire>();
 }
 
 Id<RoutingWire> ConnObj::GetRoutingWire()
 {
-    return Id<RoutingWire>(Entity<ConnObj>::GetId());
+    return Cast<RoutingWire>();
 }
 
 CId<RoutingWire> ConnObj::GetRoutingWire() const
 {
-    return CId<RoutingWire>(Entity<ConnObj>::GetCId());
+    return Cast<RoutingWire>();
 }
 
 Id<PadstackInst> ConnObj::GetPadstackInst()
 {
-    return Id<PadstackInst>(Entity<ConnObj>::GetId());
+    return Cast<PadstackInst>();
 }
 
 CId<PadstackInst> ConnObj::GetPadstackInst() const
 {
-    return CId<PadstackInst>(Entity<ConnObj>::GetCId());
+    return Cast<PadstackInst>();
 }
 
 Ptr<ConnObj> ConnObj::CloneFrom(const ConnObj & src)

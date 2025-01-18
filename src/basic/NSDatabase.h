@@ -60,7 +60,7 @@ public:
     }
 
     template <typename Derived, typename UnaryPred>
-    Id<Derived> FindOne(UnaryPred && pred) const
+    Id<Derived> Find(UnaryPred && pred) const
     {
         static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
         for (size_t i = 0; i < m_data.size(); ++i) {
@@ -167,9 +167,9 @@ public:
     }
 
     template <typename T, typename UnaryPred>
-    Id<T> FindOne(UnaryPred && pred) const
+    Id<T> Find(UnaryPred && pred) const
     {
-        return this->Get<traits::BaseOf<T>>().template FindOne<T>(std::forward<UnaryPred>(pred));
+        return this->Get<traits::BaseOf<T>>().template Find<T>(std::forward<UnaryPred>(pred));
     }
 
     template <typename T, typename UnaryPred, typename Vec = IdVec<T>>
@@ -307,11 +307,24 @@ public:
 
     template <typename Other>
     CId<Other> GetBind() const;
+
+    template <typename Derived>
+    Id<Derived> Cast()
+    {
+        static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
+        return dynamic_cast<Derived *>(this) ? Id<Derived>(m_id) : Id<Derived>();
+    }
     
+    template <typename Derived>
+    CId<Derived> Cast() const
+    {
+        static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
+        return dynamic_cast<const Derived *>(this) ? CId<Derived>(m_id) : CId<Derived>();
+    }
+
 protected:
     void SetId(IdType id)  { m_id = id; }
-    Id<T> GetId() { return Id<T>(m_id); }
-    CId<T> GetCId() const { return CId<T>(m_id); }
+    IdType GetId() const { return m_id; }
 public:
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     template <typename Archive>
@@ -384,9 +397,9 @@ inline bool Remove(Id<T> & id)
 }
 
 template <typename T, typename UnaryPred>
-inline Id<T> FindOne(UnaryPred && pred)
+inline Id<T> Find(UnaryPred && pred)
 {
-    return Database::Current().FindOne<T>(std::forward<UnaryPred>(pred));
+    return Database::Current().Find<T>(std::forward<UnaryPred>(pred));
 }
 
 template <typename T, typename UnaryPred, typename Vec = IdVec<T>>
