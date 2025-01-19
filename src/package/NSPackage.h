@@ -37,8 +37,12 @@ public:
     auto GetPadstackIter();
     auto GetPadstackIter() const;
 
+    auto GetMaterialIter() { return m_.matLib->GetMaterialIter(); }
+    auto GetMaterialIter() const { return m_.matLib->GetMaterialIter(); }
+    
     auto GetStackupLayerIter() { return m_.stackupLayers.GetIter<StackupLayer>(); }
     auto GetStackupLayerIter() const { return m_.stackupLayers.GetCIter<StackupLayer>(); }
+    
 
     Float GetHeight() const override;
     bool isBlackBox() const override;

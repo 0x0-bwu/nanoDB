@@ -125,6 +125,9 @@ public:
     void AddMaterial(Id<Material> mat);
     Id<Material> FindMaterial(std::string_view name) const;
 
+    auto GetMaterialIter() { return m_.materials.GetIter<Material>(); }
+    auto GetMaterialIter() const { return m_.materials.GetCIter<Material>(); }
+
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
