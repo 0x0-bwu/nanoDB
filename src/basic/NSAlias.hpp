@@ -50,10 +50,18 @@ using Index = generic::utils::Index<Tag, IdType>;
 
 using ScenarioId = Index<class Scenario>;
 
-inline static constexpr auto INVALID_ID = std::numeric_limits<IdType>::max();
 
 using Int = int64_t;
 using Float = float;
+
+inline static constexpr auto INVALID_ID = std::numeric_limits<IdType>::max();
+inline static constexpr auto INVALID_FLOAT = std::numeric_limits<Float>::max();//std::nan(quiet_Nan) has issue with AppleClang with -ffast-math
+
+inline bool isValid(IdType id) { return id != INVALID_ID; }
+inline bool isValid(Float f) { return f != INVALID_FLOAT; }
+
+template <typename Key>
+using HashSet = std::unordered_set<Key>;
 
 template <typename Key, typename Value>
 using HashMap = std::unordered_map<Key, Value>;
@@ -80,6 +88,8 @@ using NCoord = Int;
 using FCoord = Float;
 using NCoord2D = generic::geometry::Point2D<Int>;
 using FCoord2D = generic::geometry::Point2D<Float>;
+using NCoord3D = generic::geometry::Point3D<Int>;
+using FCoord3D = generic::geometry::Point3D<Float>;
 using NBox2D   = generic::geometry::Box2D<NCoord>;
 using FBox2D   = generic::geometry::Box2D<FCoord>;
 using NBox3D   = generic::geometry::Box3D<NCoord>;

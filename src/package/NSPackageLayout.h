@@ -28,6 +28,8 @@ public:
     auto GetComponentIter() const { return m_.components.GetCIter<Component>(); }
     auto GetBondingWireIter() { return m_.connObjs.GetIter<BondingWire>(); }
     auto GetBondingWireIter() const { return m_.connObjs.GetCIter<BondingWire>(); }
+
+    auto GetMaterialIter() const { return GetPackage()->GetMaterialIter(); }
     auto GetStackupLayerIter() const { return GetPackage()->GetStackupLayerIter(); }
 
     void Transform(const Transform2D & transform);
