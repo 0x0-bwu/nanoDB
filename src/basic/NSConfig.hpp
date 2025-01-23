@@ -1,9 +1,12 @@
 #pragma once
 
-#define NANO_STRING(s) #s
 #define NANO_CURRENT_CXX_VERSION 20
-#undef GENERIC_CURRENT_CXX_VERSION
+#undef  GENERIC_CURRENT_CXX_VERSION
 #define GENERIC_CURRENT_CXX_VERSION NANO_CURRENT_CXX_VERSION
+
+#define NS_STRING(s) #s
+#define NS_EOL GENERIC_DEFAULT_EOL
+#define NS_SEPS GENERIC_FOLDER_SEPS
 
 #define NS_DEFINE_CONSTEXPR_STRING_VIEW(s) inline static constexpr std::string_view s = #s
 
@@ -16,7 +19,7 @@
     #include <boost/serialization/binary_object.hpp>
     #define NS_SERIALIZATION_ENTITY_OBJECT_NVP(name)                                           \
         boost::serialization::make_nvp(                                                        \
-            NANO_STRING(Entity_##name),                                                        \
+            NS_STRING(Entity_##name),                                                          \
             boost::serialization::base_object<Entity<name>>(*this)                             \
         )                                                                                      \
     /**/
@@ -51,6 +54,8 @@
     }                                                                                                                   \
     /**/
     #define NS_SERIALIZATION_CLASS_MEMBERS(ARCHIVE) NS_SERIALIZATION_HANA_STRUCT(ARCHIVE, m_)
+
+    namespace nano { using ArchiveFormat = generic::archive::ArchiveFormat; }
 #else
     #define NS_SERIALIZATION_ENTITY_OBJECT_NVP(T)    
     #define NS_SERIALIZATION_CLASS_EXPORT(T)
