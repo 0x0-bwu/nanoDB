@@ -1,4 +1,7 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-compare"
 #include "NSParasiticNet.h"
+#pragma GCC diagnostic pop
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::parasitic::Net)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::parasitic::CouplingCap)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::parasitic::ConnectedPin)
