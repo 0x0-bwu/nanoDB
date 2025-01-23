@@ -52,7 +52,10 @@ using ScenarioId = Index<class Scenario>;
 
 
 using Int = int64_t;
-using Float = float;
+
+using Float32 = float;
+using Float64 = double;
+using Float = Float32;
 
 inline static constexpr auto INVALID_ID = std::numeric_limits<IdType>::max();
 inline static constexpr auto INVALID_FLOAT = std::numeric_limits<Float>::max();//std::nan(quiet_Nan) has issue with AppleClang with -ffast-math

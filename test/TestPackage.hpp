@@ -690,7 +690,7 @@ void t_create_package()
         bw->SetBondingWireType(BondingWireType::JEDEC4);
     }
     
-    auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/CAS300M12BM2.xml";
+    auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/CAS300M12BM2.nano/database.xml";
     Database::SaveCurrent(filename, ArchiveFormat::XML);
     Database::Shutdown();
 }

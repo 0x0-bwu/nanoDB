@@ -1,5 +1,4 @@
 #pragma once
-#include "NSContainer.hpp"  
 #include "NSTraits.hpp"
 
 #include "generic/utils/LinearMap.hpp"
@@ -71,7 +70,7 @@ public:
         return Id<Derived>();
     }
 
-    template <typename Derived, typename UnaryPred, typename Vec = IdVec<Derived>>
+    template <typename Derived, typename UnaryPred, typename Vec>
     void FindAll(UnaryPred && pred, Vec & vec) const
     {
         static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
@@ -130,8 +129,6 @@ private:
     void Rename(std::string name) { m_name = std::move(name); }
 };
 
-enum class ArchiveFormat { TXT = 0, XML = 1, BIN = 2};
-
 template <typename... Eles>
 class Collection : public NamedObj
 {
@@ -172,7 +169,7 @@ public:
         return this->Get<traits::BaseOf<T>>().template Find<T>(std::forward<UnaryPred>(pred));
     }
 
-    template <typename T, typename UnaryPred, typename Vec = IdVec<T>>
+    template <typename T, typename UnaryPred, typename Vec>
     void FindAll(UnaryPred && pred, Vec & vec) const
     {
         return this->Get<traits::BaseOf<T>>().template FindAll<T>(std::forward<UnaryPred>(pred), vec);
@@ -402,7 +399,7 @@ inline Id<T> Find(UnaryPred && pred)
     return Database::Current().Find<T>(std::forward<UnaryPred>(pred));
 }
 
-template <typename T, typename UnaryPred, typename Vec = IdVec<T>>
+template <typename T, typename UnaryPred, typename Vec>
 inline void FindAll(UnaryPred && pred, Vec & vec)
 {
     return Database::Current().FindAll<T>(std::forward<UnaryPred>(pred), vec);
@@ -594,8 +591,8 @@ void serialize(Archive & ar, typename nano::Binding::BindingMap & m, const unsig
         }
     }
 }
-#endif//NANO_BOOST_SERIALIZATION_SUPPORT
 } // namespace boost::serialization
+#endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
 namespace std {
 template<typename T>

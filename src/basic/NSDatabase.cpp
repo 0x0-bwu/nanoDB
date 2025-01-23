@@ -166,56 +166,20 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Content);
 template <typename... Eles>
 bool Collection<Eles...>::Save(std::string_view filename, ArchiveFormat fmt) const
 {
-    auto dir = generic::fs::DirName(filename);
-    if (not generic::fs::CreateDir(dir)) return false;
-
-    std::ofstream ofs(filename.data());
-    if (not ofs.is_open()) return false;
-
     unsigned int version = CURRENT_VERSION.toInt();
-    if (fmt == ArchiveFormat::TXT) {
-        boost::archive::text_oarchive oa(ofs);
-        oa & boost::serialization::make_nvp("version", version);
-        const_cast<Collection<Eles...>&>(*this).serialize(oa, version);
-    }
-    else if (fmt == ArchiveFormat::XML) {
-        boost::archive::xml_oarchive oa(ofs);
-        oa & boost::serialization::make_nvp("version", version);
-        const_cast<Collection<Eles...>&>(*this).serialize(oa, version);
-    }
-    else if (fmt == ArchiveFormat::BIN) {
-        boost::archive::binary_oarchive oa(ofs);
-        oa & boost::serialization::make_nvp("version", version);
-        const_cast<Collection<Eles...>&>(*this).serialize(oa, version);
-    }
-    return true;
+    return generic::archive::Save(*this, version, filename, fmt);
 }
 
 template <typename... Eles>
 bool Collection<Eles...>::Load(std::string_view filename, ArchiveFormat fmt)
 {
-    std::ifstream ifs(filename.data());
-    if(!ifs.is_open()) return false;
-
     unsigned int version{0};
-    if(fmt == ArchiveFormat::TXT){
-        boost::archive::text_iarchive ia(ifs);
-        ia & boost::serialization::make_nvp("version", version);
-        serialize(ia, version);
+    if (generic::archive::Load(*this, version, filename, fmt)) {
+        SetCurrentDir(generic::fs::DirName(filename).string());
+        m_version = Version(version);
+        return true;
     }
-    else if(fmt == ArchiveFormat::XML){
-        boost::archive::xml_iarchive ia(ifs);
-        ia & boost::serialization::make_nvp("version", version);
-        serialize(ia, version);
-    }
-    else if(fmt == ArchiveFormat::BIN){
-        boost::archive::binary_iarchive ia(ifs);
-        ia & boost::serialization::make_nvp("version", version);
-        serialize(ia, version);
-    }
-    m_version = Version(version);
-    SetCurrentDir(generic::fs::DirName(filename).string() + '/' + GetName().data());
-    return true;
+    return false;
 }
 
 template bool Content::Save(std::string_view filename, ArchiveFormat fmt) const;
