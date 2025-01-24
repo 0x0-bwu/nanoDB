@@ -1,5 +1,6 @@
 #pragma once
 #include <nano/core/basic>
+
 namespace nano {
 
 class LookupTable : public Entity<LookupTable>
@@ -22,6 +23,7 @@ public:
     bool isValid() const override { return m_.lut.isValid(); }
     Float Lookup(Float x) const override { return 0; /*todo*/ }
     Float Lookup(Float x, Float y) const override { return 0; /*todo*/ }    
+    size_t Hash() const override { return nano::Hash(m_); }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLASS_MEMBERS_DEFINE(
@@ -37,6 +39,7 @@ public:
     bool isValid() const override { return m_.lut.isValid(); }
     Float Lookup(Float x) const override { return 0; /*todo*/ } 
     Float Lookup(Float x, Float y) const override { return 0; /*todo*/ }
+    size_t Hash() const override { return nano::Hash(m_); }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLASS_MEMBERS_DEFINE(

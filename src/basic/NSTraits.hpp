@@ -49,6 +49,9 @@ concept Cloneable = requires (T & t) { []<typename U>(nano::Cloneable<U> &){}(t)
 template <typename T>
 concept Nameable = requires (const T & t) { { t.GetName() } -> std::same_as<std::string_view>; }; 
 
+template<typename T>
+concept Hashable = requires(const T & t) { { std::hash<T>{}(t) } -> std::convertible_to<std::size_t>; };
+
 template <typename T>
 concept HanaStruct = hana::Struct<T>::value;
 

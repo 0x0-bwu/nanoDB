@@ -37,6 +37,8 @@ public:
 
     //1x1-simple, 3x1-anisotropic, 3x3-tensor
     void GetDimensions(size_t & row, size_t & col) const override;
+
+    size_t Hash() const override { return nano::Hash(m_); }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
@@ -49,6 +51,7 @@ public:
     // todo
     bool isPropTable() const override { return true; }
 
+    size_t Hash() const override { return nano::Hash(m_); } 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
@@ -70,6 +73,7 @@ public:
     //1x1-simple, 3x1-anisotropic, 3x3-tensor
     void GetDimensions(size_t & row, size_t & col) const override;
 
+    size_t Hash() const override { return nano::Hash(m_); } 
 private:
     static Float Calculate(const std::vector<Float> & coefficients, Float index);
 private:
@@ -109,6 +113,7 @@ public:
     void SetMaterialType(MaterialType type) { m_.type = type; }
     MaterialType GetMaterialType() const { return m_.type; }
 
+    size_t Hash() const override { return nano::Hash(m_); } 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
@@ -128,6 +133,7 @@ public:
     auto GetMaterialIter() { return m_.materials.GetIter<Material>(); }
     auto GetMaterialIter() const { return m_.materials.GetCIter<Material>(); }
 
+    size_t Hash() const override { return nano::Hash(m_); } 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
