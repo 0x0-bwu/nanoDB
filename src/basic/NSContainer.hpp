@@ -1,6 +1,7 @@
 #pragma once
 #include "NSTraits.hpp"
 #include "generic/utils/ZipView.hpp"
+#include "generic/tools/Hash.hpp"
 #include <shared_mutex>
 namespace nano {
 
@@ -301,3 +302,16 @@ auto Zip(Containers & ... containers)
 }
 
 } // namespace nano
+
+namespace std {
+
+template <typename T, template <typename> class Luts>
+struct hash<::nano::IdVec<T, Luts>>
+{
+    size_t operator() (const ::nano::IdVec<T, Luts> & v) const
+    {
+        return generic::hash::OrderedHash(v);
+    }
+};
+
+} // namespace std

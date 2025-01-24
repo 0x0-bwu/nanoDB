@@ -1,9 +1,6 @@
 #pragma once
-#define BOOST_TEST_INCLUDED
-#include <boost/test/unit_test.hpp>
-#include <boost/test/test_tools.hpp>
-
-#include "verilog/NSVerilog.h"
+#include "TestCommon.hpp"
+#include <nano/core/verilog>
 
 using namespace boost::unit_test;
 

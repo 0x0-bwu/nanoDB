@@ -1,13 +1,11 @@
 #pragma once
-#define BOOST_TEST_INCLUDED
+#include "TestCommon.hpp"
 #include "generic/tools/FileSystem.hpp"
-#include <boost/test/unit_test.hpp>
-#include <boost/test/test_tools.hpp>
-
 #include <nano/db>
 using namespace nano;
 using namespace boost::unit_test;
 
+std::string checksum;
 void t_save_design()
 {
     Database::Create("nano");
@@ -60,17 +58,18 @@ void t_save_design()
     Remove<chip::Net>(n2);
     BOOST_CHECK(block->GetNet(1).isNull());
 
-    auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/nano.xml";
-    auto saveState = Database::SaveCurrent(filename.c_str(), ArchiveFormat::XML);
+    auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/nano.nano/database.bin";
+    auto saveState = Database::SaveCurrent(filename.c_str(), ArchiveFormat::BIN);
     BOOST_CHECK(saveState);
+    checksum = Database::Current().Checksum();
     Database::Shutdown();
 }
 
 void t_load_design()
 {
     using namespace nano;
-    auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/nano.xml";
-    auto loadState = Database::Load(filename.c_str(), ArchiveFormat::XML);
+    auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/nano.nano/database.bin";
+    auto loadState = Database::Load(filename.c_str(), ArchiveFormat::BIN);
     BOOST_CHECK(loadState);
     BOOST_CHECK(Database::Current().GetName() == "nano");
 
@@ -79,6 +78,7 @@ void t_load_design()
     
     auto libPin = inst1a->GetBind<liberty::InputPin>();
     BOOST_CHECK(libPin and libPin->GetName() == "a");
+    BOOST_CHECK(Database::Current().Checksum() == checksum);
     Database::Shutdown();
 }
 
