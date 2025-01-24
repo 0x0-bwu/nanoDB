@@ -63,6 +63,9 @@ inline static constexpr auto INVALID_FLOAT = std::numeric_limits<Float>::max();/
 inline bool isValid(IdType id) { return id != INVALID_ID; }
 inline bool isValid(Float f) { return f != INVALID_FLOAT; }
 
+template <typename Key, typename Value>
+using Map = std::map<Key, Value>;
+
 template <typename Key>
 using HashSet = std::unordered_set<Key>;
 

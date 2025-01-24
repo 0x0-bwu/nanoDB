@@ -180,3 +180,16 @@ inline Transform2D CreateTransform2D(const CoordUnit & coordUnit, Float scale, F
 }
 
 } // namespace nano
+
+namespace std {
+
+template <>
+struct hash<::nano::Transform2D>
+{
+    size_t operator() (const ::nano::Transform2D & t) const
+    {
+        return hash<::nano::Transform2D::Transform>{}(t.GetTransform());
+    }
+};
+
+}

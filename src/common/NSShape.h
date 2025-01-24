@@ -176,7 +176,7 @@ public:
 
     void SetTemplate(CId<Shape> shape);
 
-    // size_t Hash() const override { return nano::hash(m_); }
+    size_t Hash() const override { return nano::Hash(m_); }
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(ShapeFromTemplate)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION

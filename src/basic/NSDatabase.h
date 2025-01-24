@@ -1,9 +1,7 @@
 #pragma once
-#include "NSTraits.hpp"
-
+#include "NSHash.hpp"
 #include "generic/utils/LinearMap.hpp"
 #include "generic/utils/Version.hpp"
-#include "generic/tools/Hash.hpp"
 
 #include <boost/noncopyable.hpp>
 #include <unordered_map>
@@ -611,44 +609,3 @@ void serialize(Archive & ar, typename nano::Binding::BindingMap & m, const unsig
 }
 } // namespace boost::serialization
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
-
-namespace std {
-template <typename T>
-struct hash<::nano::Id<T>>
-{
-    std::size_t operator() (const ::nano::Id<T> & id) const noexcept
-    {
-        return std::hash<::nano::IdType>()(::nano::IdType(id));
-    }
-};
-
-template <typename T>
-struct hash<::nano::CId<T>>
-{
-    std::size_t operator() (const ::nano::CId<T> & id) const noexcept
-    {
-        return std::hash<::nano::IdType>()(::nano::IdType(id));
-    }
-};
-
-template <::nano::traits::HanaStruct T>
-struct hash<T>
-{
-    std::size_t operator() (const T & t) const
-    {
-        size_t seed = 0;
-        boost::hana::for_each(boost::hana::keys(t), [&](auto key) {
-            using Value = std::decay_t<decltype(boost::hana::at_key(t, key))>;
-            seed = generic::hash::HashCombine(seed, std::hash<Value>()(boost::hana::at_key(t, key)));
-        }); 
-        return seed;
-    }
-};
-
-} // namespace std
-
-namespace nano {
-
-template <typename T> size_t Hash(const T & t) { return std::hash<T>()(t); }
-
-} // namespace nano
