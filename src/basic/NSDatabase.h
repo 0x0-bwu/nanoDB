@@ -3,6 +3,7 @@
 
 #include "generic/utils/LinearMap.hpp"
 #include "generic/utils/Version.hpp"
+#include "generic/tools/Hash.hpp"
 
 #include <boost/noncopyable.hpp>
 #include <unordered_map>
@@ -16,13 +17,12 @@ namespace hana = boost::hana;
 template<typename Key, typename Value>
 using LinearMap = generic::utils::LinearMap<Key, Value>;
 
-template <typename T> class Id;
 template <typename T> class Entity;
-
 template <typename T>
 class Container
 {
 public:
+    Container()  { static_assert(std::is_base_of_v<Entity<T>, T>, "T should be derived class of Entity<T>"); }
     ~Container() { Reset(); }
 
     template <typename Derived>
@@ -98,6 +98,12 @@ public:
         }
         m_data.Clear();
     }
+
+    size_t Hash() const
+    {
+        return generic::hash::OrderedHash(m_data, [&](auto * p) { return p ? p->Entity<T>::Hash() : 0; });        
+    }
+
 public:
     template <typename Archive>
     void serialize(Archive & ar, const unsigned int)
@@ -120,6 +126,7 @@ public:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
 protected:
     NamedObj() = default;
+    size_t Hash() const { return std::hash<std::string>()(m_name); }
     Ptr<NamedObj> CloneFrom(const NamedObj & src) { m_name = src.m_name; return this; }
     // members
     std::string m_name;
@@ -189,6 +196,16 @@ public:
         hana::for_each(m_data, [&](auto & c){
             Reset<typename std::decay_t<decltype(hana::first(c))>::type>();
         });
+    }
+
+    std::string Checksum() const
+    {
+        size_t sum = 0;
+        hana::for_each(m_data, [&](auto & c){
+            sum += Get<typename std::decay_t<decltype(hana::first(c))>::type>().Hash();
+        });
+        std::stringstream ss; ss << std::hex << sum;
+        return ss.str();
     }
 public:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
@@ -319,6 +336,7 @@ public:
         return dynamic_cast<const Derived *>(this) ? CId<Derived>(m_id) : CId<Derived>();
     }
 
+    virtual size_t Hash() const { return 0; }
 protected:
     void SetId(IdType id)  { m_id = id; }
     IdType GetId() const { return m_id; }
@@ -595,7 +613,7 @@ void serialize(Archive & ar, typename nano::Binding::BindingMap & m, const unsig
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
 namespace std {
-template<typename T>
+template <typename T>
 struct hash<::nano::Id<T>>
 {
     std::size_t operator() (const ::nano::Id<T> & id) const noexcept
@@ -604,7 +622,7 @@ struct hash<::nano::Id<T>>
     }
 };
 
-template<typename T>
+template <typename T>
 struct hash<::nano::CId<T>>
 {
     std::size_t operator() (const ::nano::CId<T> & id) const noexcept
@@ -613,4 +631,24 @@ struct hash<::nano::CId<T>>
     }
 };
 
+template <::nano::traits::HanaStruct T>
+struct hash<T>
+{
+    std::size_t operator() (const T & t) const
+    {
+        size_t seed = 0;
+        boost::hana::for_each(boost::hana::keys(t), [&](auto key) {
+            using Value = std::decay_t<decltype(boost::hana::at_key(t, key))>;
+            seed = generic::hash::HashCombine(seed, std::hash<Value>()(boost::hana::at_key(t, key)));
+        }); 
+        return seed;
+    }
+};
+
 } // namespace std
+
+namespace nano {
+
+template <typename T> size_t Hash(const T & t) { return std::hash<T>()(t); }
+
+} // namespace nano

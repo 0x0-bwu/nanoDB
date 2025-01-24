@@ -3,6 +3,8 @@
 #include "NSTransform.hpp"
 #include "NSUnit.hpp"
 
+#include "generic/geometry/HashFunction.hpp"
+
 namespace nano {
 
 inline static constexpr size_t NANO_SHAPE_CIRCLE_DIV = 32;
@@ -50,6 +52,7 @@ public:
     ShapeType GetType() const override { return ShapeType::RECTANGLE; }
     bool isValid() const override;
 
+    size_t Hash() const override { return nano::Hash(m_); }
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(ShapeRect)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
@@ -74,6 +77,7 @@ public:
     void SetWidth(NCoord width) { m_.width = width;}
     NCoord GetWidth() const { return m_.width; }
 
+    size_t Hash() const override { return nano::Hash(m_); }
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(ShapePath)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
@@ -100,6 +104,7 @@ public:
     NCoord2D GetCenter() const { return m_.center; }
     NCoord GetRadius() const { return m_.radius; }
 
+    size_t Hash() const override { return nano::Hash(m_); }
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(ShapeCircle)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
@@ -123,6 +128,7 @@ public:
     ShapeType GetType() const override { return ShapeType::POLYGON; }
     bool isValid() const override;
 
+    size_t Hash() const override { return nano::Hash(m_); }
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(ShapePolygon)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
@@ -146,6 +152,7 @@ public:
     void SetOutline(NPolygon outline);
     void AddHole(NPolygon hole);
 
+    size_t Hash() const override { return nano::Hash(m_); }
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(ShapePolygonWithHoles)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
@@ -169,6 +176,7 @@ public:
 
     void SetTemplate(CId<Shape> shape);
 
+    // size_t Hash() const override { return nano::hash(m_); }
 private:
     NS_CLONE_FUNCTIONS_DECLARATION(ShapeFromTemplate)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION

@@ -1,7 +1,5 @@
 #pragma once
-#define BOOST_TEST_INCLUDED
-#include <boost/test/unit_test.hpp>
-#include <boost/test/test_tools.hpp>
+#include "TestCommon.hpp"
 #include <nano/core/package>
 
 #include "generic/tools/FileSystem.hpp"
@@ -690,8 +688,9 @@ void t_create_package()
         bw->SetBondingWireType(BondingWireType::JEDEC4);
     }
     
-    auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/CAS300M12BM2.nano/database.xml";
-    Database::SaveCurrent(filename, ArchiveFormat::XML);
+    auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/CAS300M12BM2.nano/database.bin";
+    nano::test::variables[BOOST_HANA_STRING("package_checksum")] = Database::Current().Checksum();
+    Database::SaveCurrent(filename, ArchiveFormat::BIN);
     Database::Shutdown();
 }
 
