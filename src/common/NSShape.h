@@ -7,7 +7,7 @@
 
 namespace nano {
 
-inline static constexpr size_t NANO_SHAPE_CIRCLE_DIV = 32;
+inline static constexpr size_t NANO_SHAPE_CIRCLE_DIV = 16;
 enum class ShapeType
 {
     INVALID = 0,
