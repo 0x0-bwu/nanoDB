@@ -680,7 +680,7 @@ void t_create_package()
     base->AddCellInst(topBridgeInst2);
 
     base->Flatten();
-    auto bwIter = baseLayout->GetBondingWireIter();
+    auto bwIter = base->GetFlattenedLayout()->GetBondingWireIter();
     while (auto bw = bwIter.Next()) {
         if (generic::math::EQ<Float>(bw->GetRadius(),0.0635))
             bw->SetSolderJoints(thinBwSolderDef);
