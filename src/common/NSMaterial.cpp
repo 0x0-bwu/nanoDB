@@ -119,6 +119,20 @@ bool MaterialPropValue::GetTensorProperty(size_t row, size_t col, Float & value)
     return true;
 }
 
+bool MaterialPropValue::GetSimpleProperty([[maybe_unused]] Float index, Float & value) const
+{
+    return GetSimpleProperty(value);
+}
+bool MaterialPropValue::GetAnisotropicProperty([[maybe_unused]] Float index, size_t row, Float & value) const
+{
+    return GetAnisotropicProperty(row, value);
+}
+
+bool MaterialPropValue::GetTensorProperty([[maybe_unused]] Float index, size_t row, size_t col, Float & value) const
+{
+    return GetTensorProperty(row, col, value);
+}
+
 void MaterialPropValue::GetDimensions(size_t & row, size_t & col) const
 {
     if (auto size = m_.values.size(); 1 == size) {

@@ -11,6 +11,10 @@ public:
     virtual bool isPropTable() const { return false; }
     virtual bool isPropPolyNomial() const { return false; }
 
+    virtual bool GetSimpleProperty(Float, Float &) const = 0;
+    virtual bool GetAnisotropicProperty(Float, size_t, Float &) const = 0;
+    virtual bool GetTensorProperty(Float, size_t, size_t, Float &) const = 0;
+
     //1x1-simple, 3x1-anisotropic, 3x3-tensor
     virtual void GetDimensions(size_t & row, size_t & col) const { row = col = 0; }
 private:
@@ -35,6 +39,10 @@ public:
     bool GetAnisotropicProperty(size_t row, Float & value) const;
     bool GetTensorProperty(size_t row, size_t col, Float & value) const;
 
+    bool GetSimpleProperty(Float index, Float & value) const override;
+    bool GetAnisotropicProperty(Float index, size_t row, Float & value) const override;
+    bool GetTensorProperty(Float index, size_t row, size_t col, Float & value) const override;
+
     //1x1-simple, 3x1-anisotropic, 3x3-tensor
     void GetDimensions(size_t & row, size_t & col) const override;
 
@@ -51,6 +59,9 @@ public:
     // todo
     bool isPropTable() const override { return true; }
 
+    bool GetSimpleProperty(Float, Float &) const override { return false; }//todo
+    bool GetAnisotropicProperty(Float, size_t, Float &) const override { return false; }//todo
+    bool GetTensorProperty(Float, size_t, size_t, Float &) const override { return false; }//todo
     size_t Hash() const override { return nano::Hash(m_); } 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
@@ -66,9 +77,9 @@ public:
 
     bool isPropPolynomial() const { return true; }
 
-    bool GetSimpleProperty(Float index, Float & value) const;
-    bool GetAnisotropicProperty(Float index, size_t row, Float & value) const;
-    bool GetTensorProperty(Float index, size_t row, size_t col, Float & value) const;
+    bool GetSimpleProperty(Float index, Float & value) const override;
+    bool GetAnisotropicProperty(Float index, size_t row, Float & value) const override;
+    bool GetTensorProperty(Float index, size_t row, size_t col, Float & value) const override;
 
     //1x1-simple, 3x1-anisotropic, 3x3-tensor
     void GetDimensions(size_t & row, size_t & col) const override;

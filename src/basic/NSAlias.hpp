@@ -63,11 +63,17 @@ inline static constexpr auto INVALID_FLOAT = std::numeric_limits<Float>::max();/
 inline bool isValid(IdType id) { return id != INVALID_ID; }
 inline bool isValid(Float f) { return f != INVALID_FLOAT; }
 
+template <typename T1, typename T2>
+using Pair = std::pair<T1, T2>;
+
+template <typename T>
+using Set = std::set<T>;
+
 template <typename Key, typename Value>
 using Map = std::map<Key, Value>;
 
-template <typename Key>
-using HashSet = std::unordered_set<Key>;
+template <typename T>
+using HashSet = std::unordered_set<T>;
 
 template <typename Key, typename Value>
 using HashMap = std::unordered_map<Key, Value>;

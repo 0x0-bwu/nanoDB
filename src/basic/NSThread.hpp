@@ -10,4 +10,9 @@ inline ThreadPool & Pool()
     return pool;
 }
 
+inline size_t Threads()
+{
+    return Pool().Threads();
+}
+
 } // namespace nano
