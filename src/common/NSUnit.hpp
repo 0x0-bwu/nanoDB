@@ -155,6 +155,8 @@ public:
         return not (*this == other);
     }
 
+    Unit GetUnit() const { return m_unit; }
+
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     friend class boost::serialization::access;
 
