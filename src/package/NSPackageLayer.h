@@ -38,8 +38,10 @@ class StackupLayer : public Layer
 {
 public:
     friend class Layout;
+    StackupLayer(std::string name, LayerType type, Float elevation, Float thickness);
     StackupLayer(std::string name, LayerType type, 
-        Float elevation, Float thickness, CId<Material> conductingMat, CId<Material> dielectricMat);
+                 Float elevation, Float thickness, 
+                 CId<Material> conductingMat, CId<Material> dielectricMat);
 
     void SetElevation(Float elevation) { m_.elevation = elevation; }
     Float GetElevation() const { return m_.elevation; }

@@ -74,8 +74,14 @@ Ptr<Layer> Layer::CloneFrom(const Layer & src)
     return this;
 }
 
+StackupLayer::StackupLayer(std::string name, LayerType type, Float elevation, Float thickness)
+ : StackupLayer(std::move(name), type, elevation, thickness, CId<Material>(), CId<Material>())
+{
+}
+
 StackupLayer::StackupLayer(std::string name,  LayerType type, 
-    Float elevation, Float thickness, CId<Material> conductingMat, CId<Material> dielectricMat)
+                           Float elevation, Float thickness, 
+                           CId<Material> conductingMat, CId<Material> dielectricMat)
  : Layer(std::move(name), type)
 {
     NS_CLASS_MEMBERS_INITIALIZE
@@ -86,7 +92,7 @@ StackupLayer::StackupLayer(std::string name,  LayerType type,
 }
 
 StackupLayer::StackupLayer()
- : StackupLayer("", LayerType::INVALID, Float(0), Float(0), CId<Material>(), CId<Material>())
+ : StackupLayer("", LayerType::INVALID, Float(0), Float(0))
 {
 }
 

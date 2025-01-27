@@ -4,6 +4,9 @@
 #include <boost/test/test_tools.hpp>
 #include <boost/hana.hpp>
 
+#include "generic/tools/FileSystem.hpp"
+#include "generic/math/MathUtility.hpp"
+
 namespace nano::test {
 namespace hana = boost::hana;
 auto variables = hana::make_map(

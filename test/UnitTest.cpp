@@ -2,6 +2,7 @@
 #include <boost/test/included/unit_test.hpp>
 #include <boost/stacktrace.hpp>
 #include "TestParasitic.hpp"
+#include "TestPackageExtension.hpp"
 #include "TestPackage.hpp"
 #include "TestLiberty.hpp"
 #include "TestVerilog.hpp"
@@ -10,6 +11,7 @@
 
 using namespace boost::unit_test;
 extern test_suite * create_nano_parasitic_test_suite();
+extern test_suite * create_nano_package_extension_test_suite();
 extern test_suite * create_nano_package_test_suite();
 extern test_suite * create_nano_verilog_test_suite();
 extern test_suite * create_nano_liberty_test_suite();
@@ -44,6 +46,7 @@ test_suite * init_unit_test_suite(int argc, char* argv[])
     framework::master_test_suite().add(create_nano_liberty_test_suite());
     framework::master_test_suite().add(create_nano_verilog_test_suite());
     framework::master_test_suite().add(create_nano_package_test_suite());
+    framework::master_test_suite().add(create_nano_package_extension_test_suite());
     framework::master_test_suite().add(create_nano_parasitic_test_suite());
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     framework::master_test_suite().add(create_nano_archive_test_suite());

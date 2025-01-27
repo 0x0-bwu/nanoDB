@@ -2,8 +2,6 @@
 #include "TestCommon.hpp"
 #include <nano/core/parasitic>
 
-#include "generic/tools/FileSystem.hpp"
-
 using namespace nano;
 using namespace boost::unit_test;
 
