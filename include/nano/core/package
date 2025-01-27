@@ -1,4 +1,5 @@
 #pragma once
+#include "common"
 #include "../../../src/package/NSPackage.h"
 #include "../../../src/package/NSPackageCell.h"
 #include "../../../src/package/NSPackageConnObj.h"
@@ -10,5 +11,6 @@
 #include "../../../src/package/NSPackageNet.h"
 #include "../../../src/package/NSPackagePadstack.h"
 #include "../../../src/package/NSPackagePin.h"
+#include "../../../src/package/extension/NSPackageExtension.h"
 #include "../../../src/package/utils/NSPackageFlatten.h"
 #include "../../../src/package/utils/NSPackageRetriever.h"

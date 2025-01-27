@@ -2,7 +2,7 @@
 #include "NSForward.hpp"
 namespace nano::traits {
 
-// std extention
+// std extension
 template<typename>
 struct is_std_array : std::false_type {};
 

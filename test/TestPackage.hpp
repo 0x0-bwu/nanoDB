@@ -2,9 +2,6 @@
 #include "TestCommon.hpp"
 #include <nano/core/package>
 
-#include "generic/tools/FileSystem.hpp"
-#include "generic/math/MathUtility.hpp"
-
 using namespace nano;
 using namespace boost::unit_test;
 
