@@ -40,6 +40,11 @@ private:
     void CreateLayers(Id<pkg::Package> pkg);
     void CreateNets(Id<pkg::Layout> layout);
     
+    CId<pkg::Material> GetOrCreateMaterial(std::string_view name);
+
+    //
+    void ImportComponent(const Component & comp, Id<pkg::Layout> layout);
+
     template <typename... Args>
     static void GetValue(const std::string & s, Args & ...args)
     {
@@ -90,6 +95,7 @@ private:
     {
         HashMap<IdType, CId<pkg::Layer>> layer;
         HashMap<IdType, CId<pkg::Net>> net;
+        HashMap<std::string_view, CId<pkg::Material>> material;
     };
     Lut m_lut;
     

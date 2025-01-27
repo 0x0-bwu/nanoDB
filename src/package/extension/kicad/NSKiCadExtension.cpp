@@ -347,13 +347,19 @@ void KiCadExtension::CreateLayers(Id<pkg::Package> pkg)
     for (const auto & [kName, kLayer] : m_kicad->layers) {
         if (kLayer.id > NANO_KICAD_PCB_LAYER_BOTTOM_ADHES_ID)
             continue;
-        LayerType type = kLayer.type == Layer::Type::CONDUCTING ?
-                         LayerType::CONDUCTING : LayerType::DIELECTRIC;
-        auto layer = nano::Create<pkg::StackupLayer>(kName, type, elevation, kLayer.thickness);
-        //todo, materail
-        m_lut.layer.emplace(kLayer.id, layer);
-        elevation -= kLayer.thickness;
-        pkg->AddStackupLayer(layer);
+        if (kLayer.type == Layer::Type::CONDUCTING or
+            kLayer.type == Layer::Type::DIELECTRIC) {
+            LayerType type = kLayer.type == Layer::Type::CONDUCTING ?
+                            LayerType::CONDUCTING : LayerType::DIELECTRIC;
+            auto layer = nano::Create<pkg::StackupLayer>(kName, type, elevation, kLayer.thickness);
+            auto mat = GetOrCreateMaterial(kLayer.material);
+            if (type == LayerType::DIELECTRIC)
+                layer->SetDielectricMaterial(mat);
+            else layer->SetConductingMaterial(mat);
+            m_lut.layer.emplace(kLayer.id, layer);
+            elevation -= kLayer.thickness;
+            pkg->AddStackupLayer(layer);
+        }
     }
 }
 
@@ -369,5 +375,22 @@ void KiCadExtension::CreateNets(Id<pkg::Layout> layout)
 void KiCadExtension::CreateBoundary(Id<pkg::Layout> layout)
 {
 }
+
+CId<pkg::Material> KiCadExtension::GetOrCreateMaterial(std::string_view name)
+{
+    auto iter = m_lut.material.find(name);
+    if (iter != m_lut.material.cend())
+        return iter->second;
+    auto mat = nano::Create<pkg::Material>(name.data());
+    return m_lut.material.emplace(name, mat).first->second;
+}
+
+void KiCadExtension::ImportComponent(const Component & comp, Id<pkg::Layout> layout)
+{
+    for (const auto & segment : comp.segments) {
+        //todo
+    }
+}
+
 
 } // namespace nano::package::extension::kicad
