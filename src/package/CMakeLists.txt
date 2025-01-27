@@ -1,5 +1,5 @@
 add_library(nanoPackage
-    extension/kicad/NSKicadExtension.cpp
+    extension/kicad/NSKiCadExtension.cpp
     extension/kicad/NSKiCadObject.cpp
     extension/kicad/NSKiCadParser.cpp
     extension/NSPackageExtension.cpp
