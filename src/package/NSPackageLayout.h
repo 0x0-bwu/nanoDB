@@ -28,6 +28,10 @@ public:
     auto GetComponentIter() const { return m_.components.GetCIter<Component>(); }
     auto GetBondingWireIter() { return m_.connObjs.GetIter<BondingWire>(); }
     auto GetBondingWireIter() const { return m_.connObjs.GetCIter<BondingWire>(); }
+    auto GetRoutingWireIter() { return m_.connObjs.GetIter<RoutingWire>(); }
+    auto GetRoutingWireIter() const { return m_.connObjs.GetCIter<RoutingWire>(); }
+    auto GetPadstackInstIter() { return m_.connObjs.GetIter<PadstackInst>(); }
+    auto GetPadstackInstIter() const { return m_.connObjs.GetCIter<PadstackInst>(); }
 
     auto GetMaterialIter() const { return GetPackage()->GetMaterialIter(); }
     auto GetStackupLayerIter() const { return GetPackage()->GetStackupLayerIter(); }

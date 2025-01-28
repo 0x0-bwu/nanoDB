@@ -13,4 +13,5 @@
 #include "../../../src/package/NSPackagePin.h"
 #include "../../../src/package/extension/NSPackageExtension.h"
 #include "../../../src/package/utils/NSPackageFlatten.h"
+#include "../../../src/package/utils/NSPackageRenderer.h"
 #include "../../../src/package/utils/NSPackageRetriever.h"
