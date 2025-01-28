@@ -141,7 +141,7 @@ bool LayoutRetriever::GetBondingWireHeight(CId<BondingWire> bw, Float & start, F
     return true;   
 }
 
-bool LayoutRetriever::GetBondingWireSegments(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights) const
+bool LayoutRetriever::GetBondingWireSegments(CId<BondingWire> bw, Vec<NCoord2D> & pt2ds, Vec<Float> & heights) const
 {
     switch (bw->GetBondingWireType())
     {
@@ -155,7 +155,7 @@ bool LayoutRetriever::GetBondingWireSegments(CId<BondingWire> bw, std::vector<NC
     }
 }
 
-bool LayoutRetriever::GetBondingWireSegmentsWithMinSeg(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights, size_t minSeg) const
+bool LayoutRetriever::GetBondingWireSegmentsWithMinSeg(CId<BondingWire> bw, Vec<NCoord2D> & pt2ds, Vec<Float> & heights, size_t minSeg) const
 {
     if (pt2ds.empty()) {
         auto res =  GetBondingWireSegments(bw, pt2ds, heights);
@@ -167,8 +167,8 @@ bool LayoutRetriever::GetBondingWireSegmentsWithMinSeg(CId<BondingWire> bw, std:
         return std::make_pair((p1 + p2) / 2, (h1 + h2) / 2);
     };
 
-    std::vector<Float> newHts{heights.front()};
-    std::vector<NCoord2D> newPts{pt2ds.front()};
+    Vec<Float> newHts{heights.front()};
+    Vec<NCoord2D> newPts{pt2ds.front()};
     for (size_t i = 1; i < pt2ds.size(); ++i) {
         auto [mPt, mHt] = midPoint(newPts.back(), newHts.back(), pt2ds.at(i), heights.at(i));
         newPts.emplace_back(std::move(mPt));
@@ -233,7 +233,7 @@ UPtr<Shape> LayoutRetriever::GetBondingWireEndSolderJointShape(CId<BondingWire> 
     return nullptr;
 }
 
-bool LayoutRetriever::GetSimpleBondingWireSegments(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights) const
+bool LayoutRetriever::GetSimpleBondingWireSegments(CId<BondingWire> bw, Vec<NCoord2D> & pt2ds, Vec<Float> & heights) const
 {
    //simple
     pt2ds.resize(4);
@@ -249,7 +249,7 @@ bool LayoutRetriever::GetSimpleBondingWireSegments(CId<BondingWire> bw, std::vec
     return true;
 }
 
-bool LayoutRetriever::GetJedec4BondingWireSegments(CId<BondingWire> bw, std::vector<NCoord2D> & pt2ds, std::vector<Float> & heights) const
+bool LayoutRetriever::GetJedec4BondingWireSegments(CId<BondingWire> bw, Vec<NCoord2D> & pt2ds, Vec<Float> & heights) const
 {
    //JEDEC4
     pt2ds.resize(4);
@@ -261,6 +261,51 @@ bool LayoutRetriever::GetJedec4BondingWireSegments(CId<BondingWire> bw, std::vec
     bool startFlipped, endFlipped;
     if (not GetBondingWireHeight(bw, heights.front(), heights.back(), startFlipped, endFlipped)) return false;
     heights[2] = heights[1] = startFlipped ? heights[0] - bw->GetHeight() : heights[0] + bw->GetHeight();
+    return true;
+}
+
+bool LayoutRetriever::GetLayerPolygons(CId<StackupLayer> layer, Vec<NPolygon> & polygons, Vec<CId<Net>> & nets) const
+{
+    nets.clear();
+    polygons.clear();
+    auto addPolygon = [&](NPolygon shape, const CId<Net> & net, bool isHole = false) {
+        if (isHole == shape.isCCW()) shape.Reverse();
+        polygons.emplace_back(std::move(shape));
+        nets.emplace_back(net);
+    };
+    auto addPolygonWithHoles = [&](NPolygonWithHoles shape, const CId<Net> & net) {
+        addPolygon(std::move(shape.outline), net);
+        for (auto & hole : shape.holes) {
+            addPolygon(std::move(hole), net, true);
+        }
+    };
+    auto addShape = [&](const Shape & shape, const CId<Net> & net = CId<Net>()) {
+        if (shape.hasHole())
+            addPolygonWithHoles(shape.GetContour(), net);
+        else addPolygon(shape.GetOutline(), net);
+    };
+
+    auto boundary = m_layout->GetBoundary();
+    NS_ASSERT(boundary);
+    addShape(*boundary);
+
+    auto rwIter = m_layout->GetRoutingWireIter();
+    while (auto rw = rwIter.Next()) {
+        if (rw->GetStackupLayer() == layer) {
+            if (auto shape = rw->GetShape(); shape)
+                addShape(*shape, rw->GetNet());
+        }
+    }
+
+    auto psIter = m_layout->GetPadstackInstIter();
+    while (auto ps = psIter.Next()) {
+        if (ps->isLayerInRange(layer)) {
+            if (auto shape = ps->GetViaShape(); shape)
+                addShape(*shape, ps->GetNet());
+            if (auto shape = ps->GetPadShape(layer); shape)
+                addShape(*shape, ps->GetNet());
+        }
+    }
     return true;
 }
 
