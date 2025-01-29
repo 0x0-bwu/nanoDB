@@ -50,7 +50,7 @@ struct VerilogGrammar : qi::grammar<Iterator, ast::VerilogDescription(), Skipper
     qi::rule<Iterator, std::string()> supply;
     qi::rule<Iterator, std::string()> comment;
     qi::rule<Iterator, std::string()> constant;
-    qi::rule<Iterator, std::vector<std::string>(), Skipper> ports;
+    qi::rule<Iterator, Vec<std::string>(), Skipper> ports;
     qi::rule<Iterator, ast::Binding(), Skipper> binding;
     qi::rule<Iterator, ast::Bindings(), Skipper> bindings;
     qi::rule<Iterator, ast::Aggregate(), Skipper> aggregate;

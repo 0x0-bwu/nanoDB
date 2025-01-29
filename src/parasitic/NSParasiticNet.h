@@ -25,7 +25,7 @@ struct CouplingCap
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
 };
 
-using CouplingCaps = HashMap<CapId, std::vector<CouplingCap>>;
+using CouplingCaps = HashMap<CapId, Vec<CouplingCap>>;
 struct ConnectedPin
 {
     BOOST_HANA_DEFINE_STRUCT(ConnectedPin,
@@ -37,7 +37,7 @@ struct ConnectedPin
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
 };
 
-using ConnectedPins = std::vector<ConnectedPin>;
+using ConnectedPins = Vec<ConnectedPin>;
 
 Id<Parasitic> ReadSpef(std::string_view filename);
 class Net : public NamedObj, public DirectedGraph, public Entity<Net>

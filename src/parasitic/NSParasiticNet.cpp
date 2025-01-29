@@ -101,7 +101,7 @@ void Net::AddCouplingCap(CapId c1, Id<Net> net, CapId c2, Float cap)
 {
     auto iter = m_.ccap.find(c1);
     if (iter == m_.ccap.end())
-        iter = m_.ccap.emplace(c1, std::vector<CouplingCap>{}).first;
+        iter = m_.ccap.emplace(c1, Vec<CouplingCap>{}).first;
     iter->second.emplace_back(net, c2, cap);
 }
 

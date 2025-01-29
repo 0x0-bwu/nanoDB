@@ -1,6 +1,7 @@
 #include "NSKiCadExtension.h"
 #include <nano/core/package>
 
+#include "generic/geometry/Utility.hpp"
 namespace nano::package::extension::kicad {
 
 KiCadExtension::KiCadExtension()
@@ -113,8 +114,8 @@ void KiCadExtension::ExtractFootprint(const Tree & node)
         const auto & branches = iter->branches;
         if ("layer" == iter->value) {
             auto layer = m_kicad->FindLayer(branches.front().value);
-            comp.layerId = layer ? layer->id : INVALID_ID;
-            comp.flipped = (0 != comp.layerId);
+            comp.layer = layer ? layer->id : INVALID_ID;
+            comp.flipped = (0 != comp.layer);
         }
         else if ("at" == iter->value)
             TryGetValue(branches, comp.location[0], comp.location[1], comp.angle);
@@ -137,10 +138,10 @@ void KiCadExtension::ExtractSegment(const Tree & node)
         else if ("width" == sub.value)
             GetValue(sub.branches, segment.width);
         else if ("net" == sub.value)
-            GetValue(sub.branches, segment.netId);
+            GetValue(sub.branches, segment.net);
         else if ("layer" == sub.value) {
             if (auto layer = m_kicad->FindLayer(sub.branches.front().value); layer)
-                segment.layerId = layer->id;
+                segment.layer = layer->id;
         }
     }
     m_current.comp->segments.emplace_back(std::move(segment));
@@ -151,10 +152,10 @@ void KiCadExtension::ExtractZone(const Tree & node)
     Zone zone;
     for (const auto & sub : node.branches) {
         if ("net" == sub.value)
-            GetValue(sub.branches, zone.netId);
+            GetValue(sub.branches, zone.net);
         else if ("layer" == sub.value) {
             if (auto layer = m_kicad->FindLayer(sub.branches.front().value); layer)
-                zone.layerId = layer->id;
+                zone.layer = layer->id;
         }
         else if ("polygon" == sub.value) {
             for (const auto & polygon : sub.branches) {
@@ -182,7 +183,7 @@ void KiCadExtension::ExtractVia(const Tree & node)
         else if ("size" == sub.value)
             GetValue(sub.branches, via.size);
         else if ("net" == sub.value)
-            GetValue(sub.branches, via.netId);
+            GetValue(sub.branches, via.net);
         else if ("layers" == sub.value) {
             for (size_t i = 0; i < via.layers.size(); ++i) {
                 if (auto layer = m_kicad->FindLayer(sub.branches.at(i).value); layer)
@@ -243,6 +244,10 @@ void KiCadExtension::ExtractLine(const Tree & node)
             GetValue(sub.branches, line.end[0], line.end[1]);
         else if ("stroke" == sub.value)
             ExtractStroke(sub, line);
+        else if ("layer" == sub.value) {
+            auto layer = m_kicad->FindLayer(sub.branches.front().value);
+            if (layer) line.layer = layer->id;
+        }
     }
     m_current.comp->lines.emplace_back(std::move(line));
 }
@@ -270,7 +275,7 @@ void KiCadExtension::ExtractPad(const Tree & node)
         else if ("roundrect_rratio" == iter->value)
             GetValue(iter->branches, pad.roundrectRatio);
         else if ("net" == iter->value)
-            GetValue(iter->branches, pad.netId);
+            GetValue(iter->branches, pad.net);
         else if ("primitives" == iter->value) {
             for (const auto & primNode : iter->branches) {
                 if ("gr_poly" == primNode.value) {
@@ -296,7 +301,7 @@ void KiCadExtension::ExtractPad(const Tree & node)
     m_current.comp->pads.emplace_back(std::move(pad));
 }
 
-void KiCadExtension::ExtractPoints(const Tree & node, std::vector<FCoord2D> & points)
+void KiCadExtension::ExtractPoints(const Tree & node, Vec<FCoord2D> & points)
 {
     points.clear();
     points.reserve(node.branches.size());
@@ -330,14 +335,19 @@ Id<Package> KiCadExtension::CreatePackage()
     auto pkg = nano::Create<pkg::Package>(m_kicad->name);
     CoordUnit coordUnit(CoordUnit::Unit::Millimeter);
     pkg->SetCoordUnit(coordUnit);
+    CreateLayers(pkg);
 
-    // top call
+    // top cell
     auto cell = nano::Create<pkg::CircuitCell>(m_kicad->name, pkg);
     auto layout = nano::Create<pkg::Layout>(cell);
     cell->SetLayout(layout);
 
-    CreateLayers(pkg);
     CreateNets(layout);
+    CreateBoundary(*m_kicad, layout);
+    CreateRoutingWires(*m_kicad, layout);
+
+    auto top = nano::Create<pkg::CellInst>(m_kicad->name, cell);
+    pkg->SetTop(top);
     return pkg;
 }
 
@@ -356,7 +366,7 @@ void KiCadExtension::CreateLayers(Id<pkg::Package> pkg)
             if (type == LayerType::DIELECTRIC)
                 layer->SetDielectricMaterial(mat);
             else layer->SetConductingMaterial(mat);
-            m_lut.layer.emplace(kLayer.id, layer);
+            m_lut.stackupLayers.emplace(kLayer.id, layer);
             elevation -= kLayer.thickness;
             pkg->AddStackupLayer(layer);
         }
@@ -367,13 +377,66 @@ void KiCadExtension::CreateNets(Id<pkg::Layout> layout)
 {
     for (const auto & [kNetId, kNet] : m_kicad->nets) {
         auto net = nano::Create<pkg::Net>(kNet.name, layout);
-        m_lut.net.emplace(kNetId, net);
+        m_lut.nets.emplace(kNetId, net);
         layout->AddNet(net);
     }
 }
 
-void KiCadExtension::CreateBoundary(Id<pkg::Layout> layout)
+void KiCadExtension::CreateBoundary(const Component & comp, Id<pkg::Layout> layout)
 {
+    Vec<NPolygon> polygons;
+    const auto & coordUnit = layout->GetCoordUnit();
+    for (const auto & line : comp.lines) {
+        if (NANO_KICAD_PCB_LAYER_EDGE_CUT_ID == line.layer) {
+            auto s = coordUnit.toCoord(line.start);
+            auto e = coordUnit.toCoord(line.end);
+            auto & polygon = polygons.emplace_back();
+            polygon << s << e;
+        }
+    }
+    auto polygon = generic::geometry::ConvexHull(polygons);
+    auto shape = nano::Create<ShapePolygon>(std::move(polygon));
+    layout->SetBoundary(shape);
+}
+
+void KiCadExtension::CreateRoutingWires(const Component & comp, Id<pkg::Layout> layout)
+{
+    const auto & coordUnit = layout->GetCoordUnit();
+    for (const auto & segment : comp.segments) {
+        if (auto layer = m_lut.FindStackupLayer(segment.layer); layer) {
+            auto shape = nano::Create<pkg::ShapePath>(coordUnit, Vec<FCoord2D>{segment.start, segment.end}, segment.width);
+            auto net = m_lut.FindNet(segment.net);
+            auto wire = nano::Create<pkg::RoutingWire>(net, layer, shape);
+            layout->AddConnObj(wire);
+        }
+    }
+
+    Vec<NPolygon> holes;
+    for (const auto & zone : comp.zones) {
+        auto layer = m_lut.FindStackupLayer(zone.layer);
+        if (not layer) continue;
+        
+        Id<Shape> shape;
+        auto net = m_lut.FindNet(zone.net);
+        // auto shape = nano::Create<pkg::ShapePolygon>(coordUnit, zone.polygon);
+        // auto wire = nano::Create<pkg::RoutingWire>(net, layer, shape);
+        // layout->AddConnObj(wire);
+        for (const auto & fp : zone.filledPolygons) {
+            auto polygon = NPolygon(coordUnit.toCoord(fp));
+            generic::geometry::Simplify(polygon, holes);
+            if (not holes.empty()) {
+                NPolygonWithHoles pwh;
+                pwh.outline = std::move(polygon);
+                pwh.holes = std::move(holes);
+                shape = nano::Create<pkg::ShapePolygonWithHoles>(std::move(pwh));
+            }
+            else
+                shape = nano::Create<pkg::ShapePolygon>(std::move(polygon));
+            
+            auto wire = nano::Create<pkg::RoutingWire>(net, layer, shape);
+            layout->AddConnObj(wire);
+        }
+    }
 }
 
 CId<pkg::Material> KiCadExtension::GetOrCreateMaterial(std::string_view name)
@@ -385,12 +448,16 @@ CId<pkg::Material> KiCadExtension::GetOrCreateMaterial(std::string_view name)
     return m_lut.material.emplace(name, mat).first->second;
 }
 
-void KiCadExtension::ImportComponent(const Component & comp, Id<pkg::Layout> layout)
+CId<pkg::StackupLayer> KiCadExtension::Lut::FindStackupLayer(IdType id) const
 {
-    for (const auto & segment : comp.segments) {
-        //todo
-    }
+    auto iter = stackupLayers.find(id);
+    return iter == stackupLayers.cend() ? CId<pkg::StackupLayer>() : iter->second;
 }
 
+CId<pkg::Net> KiCadExtension::Lut::FindNet(IdType id) const
+{
+    auto iter = nets.find(id);
+    return iter == nets.cend() ? CId<pkg::Net>() : iter->second;
+}
 
 } // namespace nano::package::extension::kicad

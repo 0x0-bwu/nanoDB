@@ -20,7 +20,7 @@ struct SimpleAttribute
 struct ComplexAttribute
 {
     std::string name;
-    std::vector<SimpleAttribute::Value> values;
+    Vec<SimpleAttribute::Value> values;
 };
 
 enum class AttributeType : int8_t
@@ -71,7 +71,7 @@ struct GroupStatement
 {
     std::string groupName;
     std::string name;
-    std::vector<AttributeStatement> statements;
+    Vec<AttributeStatement> statements;
 };
 
 using LibertyDescription = GroupStatement;

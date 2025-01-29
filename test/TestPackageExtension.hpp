@@ -11,6 +11,13 @@ void t_kicad1()
 
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/package/test.kicad_pcb";
     auto pkg = CreateFromKiCad(filename.c_str());
+    auto top = pkg->GetTop();
+    top->Flatten();
+
+    auto layout = top->GetFlattenedLayout();
+
+    nano::package::utils::LayoutRenderer renderer(layout);
+    renderer.WritePNG(generic::fs::DirName(filename).string() + "/test");
     BOOST_CHECK(pkg);
     Database::Shutdown();
 }
@@ -21,6 +28,12 @@ void t_kicad2()
 
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/package/jetson-nano-baseboard.kicad_pcb";
     auto pkg = CreateFromKiCad(filename.c_str());
+
+    auto top = pkg->GetTop();
+
+    auto layout = top->GetCell()->GetLayout();
+    nano::package::utils::LayoutRenderer renderer(layout);
+    renderer.WritePNG(generic::fs::DirName(filename).string() + "/jetson-nano-baseboard");
     BOOST_CHECK(pkg);
     Database::Shutdown();
 }

@@ -128,6 +128,18 @@ Ptr<ShapeRect> ShapeRect::CloneFrom(const ShapeRect & src)
     return this;
 }
 
+ShapePath::ShapePath(const CoordUnit & coordUnit, Vec<FCoord2D> points, FCoord width)
+ : ShapePath(coordUnit.toCoord(points), coordUnit.toCoord(width))
+{
+}
+
+ShapePath::ShapePath(Vec<NCoord2D> points, NCoord width)
+{
+    NS_CLASS_MEMBERS_INITIALIZE
+    m_.shape = std::move(points);
+    m_.width = width;
+}
+
 NBox2D ShapePath::GetBBox() const
 {
     return Extent(GetContour());
@@ -135,7 +147,7 @@ NBox2D ShapePath::GetBBox() const
 
 NPolygon ShapePath::GetOutline() const
 {
-    return toPolygon(m_.shape, m_.width);
+    return toPolygon(m_.shape, m_.width, NANO_SHAPE_CIRCLE_DIV);
 }
 
 NPolygonWithHoles ShapePath::GetContour() const
@@ -155,7 +167,7 @@ bool ShapePath::isValid() const
     return not m_.shape.empty() and generic::math::NE<NCoord>(m_.width, 0);
 }
 
-void ShapePath::SetPoints(std::vector<NCoord2D> points)
+void ShapePath::SetPoints(Vec<NCoord2D> points)
 {
     m_.shape = std::move(points);
 }
@@ -217,12 +229,12 @@ Ptr<ShapeCircle> ShapeCircle::CloneFrom(const ShapeCircle & src)
     return this;
 }
 
-ShapePolygon::ShapePolygon(const CoordUnit & coordUnit, std::vector<FCoord2D> outline, FCoord cornerR)
+ShapePolygon::ShapePolygon(const CoordUnit & coordUnit, const Vec<FCoord2D> & outline, FCoord cornerR)
  : ShapePolygon(coordUnit.toCoord(outline), coordUnit.toCoord(cornerR))
 {
 }
 
-ShapePolygon::ShapePolygon(std::vector<NCoord2D> points, NCoord cornerR)
+ShapePolygon::ShapePolygon(Vec<NCoord2D> points, NCoord cornerR)
 {
     NS_CLASS_MEMBERS_INITIALIZE
     NPolygon polygon;
@@ -230,6 +242,12 @@ ShapePolygon::ShapePolygon(std::vector<NCoord2D> points, NCoord cornerR)
     if (cornerR > 0)
         polygon = RoundCorners(polygon, cornerR, NANO_SHAPE_CIRCLE_DIV);
     m_.shape = std::move(polygon);
+}
+
+ShapePolygon::ShapePolygon(NPolygon outline)
+{
+    NS_CLASS_MEMBERS_INITIALIZE
+    m_.shape = std::move(outline);
 }
 
 NBox2D ShapePolygon::GetBBox() const
@@ -263,6 +281,12 @@ Ptr<ShapePolygon> ShapePolygon::CloneFrom(const ShapePolygon & src)
 {
     m_ = src.m_;
     return this;
+}
+
+ShapePolygonWithHoles::ShapePolygonWithHoles(NPolygonWithHoles pwh)
+{
+    NS_CLASS_MEMBERS_INITIALIZE
+    m_.shape = std::move(pwh);
 }
 
 bool ShapePolygonWithHoles::hasHole() const

@@ -100,7 +100,7 @@ struct Via
 {
     enum class Type { UNKNOWN, THROUGH, MICRO, BLIND_BURIED };
     Type type{Type::UNKNOWN};    
-    IdType netId{INVALID_ID};
+    IdType net{INVALID_ID};
     Float size{.0};
     Float drillSize{.0};
     FCoord2D pos{0, 0};
@@ -109,8 +109,8 @@ struct Via
  
 struct Segment
 {
-    IdType netId{INVALID_ID};
-    IdType layerId{INVALID_ID};
+    IdType net{INVALID_ID};
+    IdType layer{INVALID_ID};
     Float width{0};
     FCoord2D start{0, 0};
     FCoord2D end{0, 0};
@@ -118,8 +118,8 @@ struct Segment
 
 struct Zone
 {
-    IdType netId{INVALID_ID};
-    IdType layerId{INVALID_ID};
+    IdType net{INVALID_ID};
+    IdType layer{INVALID_ID};
     Points polygon;
     Vec<Points> filledPolygons;
 };
@@ -130,7 +130,7 @@ struct Pad
     enum class Shape { UNKNOWN, RECT, ROUNDRECT, CIRCLE, OVAL, TRAPEZOID }; 
     Type type{Type::UNKNOWN};
     Shape shape{Shape::UNKNOWN};
-    IdType netId;
+    IdType net;
     Float angle{0};
     Float roundrectRatio{0};
     FCoord2D pos;
@@ -145,7 +145,7 @@ struct Pad
 struct Net
 {
     IdType id{INVALID_ID};
-    IdType netClassId{INVALID_ID};
+    IdType netClass{INVALID_ID};
     std::string name;
     Vec<Via> vias;
     Vec<Segment> segments;
@@ -156,7 +156,7 @@ struct Net
 struct Component
 {
     bool flipped{false};
-    IdType layerId{INVALID_ID};
+    IdType layer{INVALID_ID};
     FCoord2D location{0, 0};
     Float angle{0};
     Float width{0};

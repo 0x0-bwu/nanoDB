@@ -62,8 +62,8 @@ class SignalPin;
 class Timing;
 class Voltage;
 
-using LutNumbers = std::vector<Float>;
-using LutIndices = std::vector<LutNumbers>;
+using LutNumbers = Vec<Float>;
+using LutIndices = Vec<LutNumbers>;
 
 } // namespace liberty
 

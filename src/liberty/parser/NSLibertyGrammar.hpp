@@ -14,7 +14,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 BOOST_FUSION_ADAPT_STRUCT(
     nano::liberty::ast::ComplexAttribute,
     (std::string, name)
-    (std::vector<nano::liberty::ast::SimpleAttribute::Value>, values)
+    (nano::Vec<nano::liberty::ast::SimpleAttribute::Value>, values)
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
@@ -28,7 +28,7 @@ BOOST_FUSION_ADAPT_STRUCT(
     nano::liberty::ast::GroupStatement,
     (std::string, groupName)
     (std::string, name)
-    (std::vector<nano::liberty::ast::AttributeStatement>, statements)
+    (nano::Vec<nano::liberty::ast::AttributeStatement>, statements)
 )
 
 namespace nano::liberty::grammar {

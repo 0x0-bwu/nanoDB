@@ -35,14 +35,14 @@ NS_SERIALIZATION_FUNCTIONS_IMP(LookupTable2D)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-LookupTable1D::LookupTable1D(std::vector<Float> x, std::vector<Float> y)
+LookupTable1D::LookupTable1D(Vec<Float> x, Vec<Float> y)
 {
     NS_CLASS_MEMBERS_INITIALIZE
     m_.lut[0] = std::move(x);
     *(m_.lut) = std::move(y);
 }
 
-LookupTable2D::LookupTable2D(std::vector<Float> x, std::vector<Float> y, std::vector<Float> z)
+LookupTable2D::LookupTable2D(Vec<Float> x, Vec<Float> y, Vec<Float> z)
 {
     NS_CLASS_MEMBERS_INITIALIZE
     m_.lut[0] = std::move(x);

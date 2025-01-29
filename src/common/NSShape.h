@@ -63,6 +63,8 @@ private:
 class ShapePath : public Shape
 {
 public:
+    ShapePath(const CoordUnit & coordUnit, Vec<FCoord2D> points, FCoord width);
+    ShapePath(Vec<NCoord2D> points, NCoord width);
     ShapePath() = default;
     
     bool hasHole() const override { return false; }
@@ -73,7 +75,7 @@ public:
     ShapeType GetType() const override { return ShapeType::PATH; }
     bool isValid() const override;
 
-    void SetPoints(std::vector<NCoord2D> points);
+    void SetPoints(Vec<NCoord2D> points);
     void SetWidth(NCoord width) { m_.width = width;}
     NCoord GetWidth() const { return m_.width; }
 
@@ -116,8 +118,9 @@ private:
 class ShapePolygon : public Shape
 {
 public:
-    ShapePolygon(const CoordUnit & coordUnit, std::vector<FCoord2D> outline, FCoord cornerR = 0);
-    explicit ShapePolygon(std::vector<NCoord2D> outline, NCoord cornerR = 0);
+    ShapePolygon(const CoordUnit & coordUnit, const Vec<FCoord2D> & outline, FCoord cornerR = 0);
+    explicit ShapePolygon(Vec<NCoord2D> outline, NCoord cornerR = 0);
+    explicit ShapePolygon(NPolygon outline);
     ShapePolygon() = default;
 
     bool hasHole() const override { return false; }
@@ -139,6 +142,7 @@ private:
 class ShapePolygonWithHoles : public Shape
 {
 public:
+    explicit ShapePolygonWithHoles(NPolygonWithHoles pwh);
     ShapePolygonWithHoles() = default;
 
     bool hasHole() const override;

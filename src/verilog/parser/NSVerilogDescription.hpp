@@ -23,7 +23,7 @@ struct ImplicitInstance
 {
     std::string type;
     std::string name;
-    std::vector<std::string> ports;
+    Vec<std::string> ports;
 };
 
 struct ExplicitInstance
@@ -37,22 +37,22 @@ struct ExplicitInstance
 using Declaration = boost::variant<Aggregate, std::string>;
 using Instance = boost::variant<ImplicitInstance, ExplicitInstance>;
 
-using Binding = std::pair<std::string, std::string>;
-using Bindings = std::vector<Binding>;
+using Binding = Pair<std::string, std::string>;
+using Bindings = Vec<Binding>;
 
 struct Netlist
 {
     std::string name;
-    std::vector<std::string> ports;
-    std::vector<Declaration> inputs;
-    std::vector<Declaration> inouts;
-    std::vector<Declaration> outputs;
-    std::vector<Declaration> signals;
-    std::vector<Assignment> assignments;
-    std::vector<Instance> instances;
+    Vec<std::string> ports;
+    Vec<Declaration> inputs;
+    Vec<Declaration> inouts;
+    Vec<Declaration> outputs;
+    Vec<Declaration> signals;
+    Vec<Assignment> assignments;
+    Vec<Instance> instances;
 };
 
-using Netlists = std::vector<Netlist>;
+using Netlists = Vec<Netlist>;
 using VerilogDescription = Netlists;
 
 } // namespace nano::verilog::ast
@@ -75,7 +75,7 @@ BOOST_FUSION_ADAPT_STRUCT(
     nano::verilog::ast::ImplicitInstance,
     (std::string, type)
     (std::string, name)
-    (std::vector<std::string>, ports)
+    (nano::Vec<std::string>, ports)
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
@@ -94,11 +94,11 @@ BOOST_FUSION_ADAPT_STRUCT(
 BOOST_FUSION_ADAPT_STRUCT(
     nano::verilog::ast::Netlist,
     (std::string, name)
-    (std::vector<std::string>, ports)
-    (std::vector<nano::verilog::ast::Declaration>, inputs)
-    (std::vector<nano::verilog::ast::Declaration>, inouts)
-    (std::vector<nano::verilog::ast::Declaration>, outputs)
-    (std::vector<nano::verilog::ast::Declaration>, signals)
-    (std::vector<nano::verilog::ast::Assignment>, assignments)
-    (std::vector<nano::verilog::ast::Instance>, instances)
+    (nano::Vec<std::string>, ports)
+    (nano::Vec<nano::verilog::ast::Declaration>, inputs)
+    (nano::Vec<nano::verilog::ast::Declaration>, inouts)
+    (nano::Vec<nano::verilog::ast::Declaration>, outputs)
+    (nano::Vec<nano::verilog::ast::Declaration>, signals)
+    (nano::Vec<nano::verilog::ast::Assignment>, assignments)
+    (nano::Vec<nano::verilog::ast::Instance>, instances)
 )

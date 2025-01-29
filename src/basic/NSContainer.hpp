@@ -52,7 +52,7 @@ class Lut
 {
 public:
     using Key = std::invoke_result_t<KeyFn, const Id<T>>;
-    explicit Lut(std::vector<Id<T>> & data)
+    explicit Lut(Vec<Id<T>> & data)
      : m_data(data) {}
 
     void Add(const Id<T> & id)
@@ -104,7 +104,7 @@ private:
     }
 private:
     KeyFn m_keyFn;
-    std::vector<Id<T>> & m_data;
+    Vec<Id<T>> & m_data;
     mutable HashMap<Key, Id<T>> m_lut;
     mutable std::shared_mutex m_mutex;
     mutable std::atomic<bool> m_build{false};
@@ -125,7 +125,7 @@ struct Luts
 public:
     using LutsMap = hana::map<hana::pair<hana::type<Lut>, UPtr<Lut>>...>;
 
-    explicit Luts(std::vector<Id<T>> & data)
+    explicit Luts(Vec<Id<T>> & data)
     {
         hana::for_each(m_luts, [&](auto & c){ 
             using LutType = typename std::decay_t<decltype(hana::first(c))>::type;
@@ -175,11 +175,11 @@ public:
     // std-style APIs
     using reference = Id<T>&;
     using value_type = Id<T>;
-    using iterator = typename std::vector<Id<T>>::iterator;
-    using const_iterator = typename std::vector<Id<T>>::const_iterator;
+    using iterator = typename Vec<Id<T>>::iterator;
+    using const_iterator = typename Vec<Id<T>>::const_iterator;
     using object_type = T;
     IdVec() : m_luts(std::make_unique<Luts<T>>(m_data)) {}
-    explicit IdVec(std::vector<Id<T>> && data)
+    explicit IdVec(Vec<Id<T>> && data)
      : IdVec() { m_data = std::move(data); }
 
     Id<T> & operator[] (size_t i) { return m_data[i]; }
@@ -268,7 +268,7 @@ public:
 
     IdVec<T, Luts> Clone() const requires (traits::Cloneable<T>)
     {
-        std::vector<Id<T>> data; data.reserve(m_data.size());
+        Vec<Id<T>> data; data.reserve(m_data.size());
         for (auto id : m_data) data.emplace_back(Id<T>(id->Clone()));
         return IdVec<T, Luts>(std::move(data));
     }
@@ -291,7 +291,7 @@ public:
 
 private:
     UPtr<Luts<T>> m_luts;
-    std::vector<Id<T>> m_data;
+    Vec<Id<T>> m_data;
 };
 
 

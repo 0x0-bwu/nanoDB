@@ -5,8 +5,8 @@
 #include "generic/tools/FileSystem.hpp"
 namespace nano::package::utils {
 
-LayoutRenderer::LayoutRenderer(CId<Layout> layout)
- : m_layout(layout)
+LayoutRenderer::LayoutRenderer(CId<Layout> layout, size_t width)
+ : m_layout(layout), m_width(width)
 {
 }
 
@@ -28,7 +28,7 @@ bool LayoutRenderer::WritePNG(std::string_view filename, CId<StackupLayer> layer
     Vec<NPolygon> polygons;
     LayoutRetriever retriever(m_layout);
     retriever.GetLayerPolygons(layer, polygons, net);
-    return generic::geometry::GeometryIO::WritePNG(filename, polygons.begin(), polygons.end());
+    return generic::geometry::GeometryIO::WritePNG(filename, polygons.begin(), polygons.end(), m_width);
 }
 
 } // namespace nano::package::utils

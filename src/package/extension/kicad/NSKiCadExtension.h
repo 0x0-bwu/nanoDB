@@ -36,14 +36,12 @@ private:
 
     //
     Id<pkg::Package> CreatePackage();
-    void CreateBoundary(Id<pkg::Layout> layout);
     void CreateLayers(Id<pkg::Package> pkg);
     void CreateNets(Id<pkg::Layout> layout);
+    void CreateBoundary(const Component & comp, Id<pkg::Layout> layout);
+    void CreateRoutingWires(const Component & comp, Id<pkg::Layout> layout);
     
     CId<pkg::Material> GetOrCreateMaterial(std::string_view name);
-
-    //
-    void ImportComponent(const Component & comp, Id<pkg::Layout> layout);
 
     template <typename... Args>
     static void GetValue(const std::string & s, Args & ...args)
@@ -54,7 +52,7 @@ private:
     }
 
     template <typename... Args>
-    static void GetValue(std::vector<Tree>::const_iterator iter, Args & ...args)
+    static void GetValue(Vec<Tree>::const_iterator iter, Args & ...args)
     {
         ([&]{
             GetValue(iter->value, args);
@@ -63,7 +61,7 @@ private:
     }
 
     template <typename... Args>
-    static void TryGetValue(std::vector<Tree>::const_iterator iter, std::vector<Tree>::const_iterator end, Args & ...args)
+    static void TryGetValue(Vec<Tree>::const_iterator iter, Vec<Tree>::const_iterator end, Args & ...args)
     {
         ([&]{
             if (iter != end) {
@@ -74,13 +72,13 @@ private:
     }
 
     template <typename... Args>
-    static void GetValue(const std::vector<Tree> & branches, Args & ...args)
+    static void GetValue(const Vec<Tree> & branches, Args & ...args)
     {
         GetValue(branches.begin(), args...);
     }
 
     template <typename... Args>
-    static void TryGetValue(const std::vector<Tree> & branches, Args & ...args)
+    static void TryGetValue(const Vec<Tree> & branches, Args & ...args)
     {
         TryGetValue(branches.begin(), branches.end(), args...);
     }
@@ -93,8 +91,10 @@ private:
     // kicad-nano lut
     struct Lut
     {
-        HashMap<IdType, CId<pkg::Layer>> layer;
-        HashMap<IdType, CId<pkg::Net>> net;
+        CId<pkg::StackupLayer> FindStackupLayer(IdType id) const;
+        CId<pkg::Net> FindNet(IdType id) const;
+        HashMap<IdType, CId<pkg::Net>> nets;
+        HashMap<IdType, CId<pkg::StackupLayer>> stackupLayers;
         HashMap<std::string_view, CId<pkg::Material>> material;
     };
     Lut m_lut;

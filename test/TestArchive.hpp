@@ -14,14 +14,14 @@ void t_save_design()
     auto and2a = Create<liberty::InputPin>("a", and2);
     auto and2b = Create<liberty::InputPin>("b", and2);
     auto and2o = Create<liberty::OutputPin>("o", and2);
-    and2->AddSignalPins(std::vector<Id<liberty::SignalPin>>{Id<liberty::SignalPin>(and2a), Id<liberty::SignalPin>(and2b), Id<liberty::SignalPin>(and2o)});
+    and2->AddSignalPins(Vec<Id<liberty::SignalPin>>{Id<liberty::SignalPin>(and2a), Id<liberty::SignalPin>(and2b), Id<liberty::SignalPin>(and2o)});
     lib->AddCell(and2);
 
     auto or2 = Create<liberty::Cell>("or2", lib);
     auto or2a = Create<liberty::InputPin>("a", or2);
     auto or2b = Create<liberty::InputPin>("b", or2);
     auto or2o = Create<liberty::OutputPin>("o", or2);
-    or2->AddSignalPins(std::vector<Id<liberty::SignalPin>>{Id<liberty::SignalPin>(or2a), Id<liberty::SignalPin>(or2b), Id<liberty::SignalPin>(or2o)});
+    or2->AddSignalPins(Vec<Id<liberty::SignalPin>>{Id<liberty::SignalPin>(or2a), Id<liberty::SignalPin>(or2b), Id<liberty::SignalPin>(or2o)});
     lib->AddCell(or2);
 
     //design
@@ -33,7 +33,7 @@ void t_save_design()
     auto inst1 = Create<chip::Inst>("inst1", block);
     auto inst2 = Create<chip::Inst>("inst2", block);
     auto inst3 = Create<chip::Inst>("inst3", block);
-    block->AddInsts(std::vector<Id<chip::Inst>>{inst1, inst2, inst3});
+    block->AddInsts(Vec<Id<chip::Inst>>{inst1, inst2, inst3});
 
     auto n1 = Create<chip::Net>("n1", block);
     auto n2 = Create<chip::Net>("n2", block);
@@ -42,14 +42,14 @@ void t_save_design()
     auto n5 = Create<chip::Net>("n5", block);
     auto n6 = Create<chip::Net>("n6", block);
     auto n7 = Create<chip::Net>("n7", block);
-    block->AddNets(std::vector<Id<chip::Net>>{n1, n2, n3, n4, n5, n6, n7});
+    block->AddNets(Vec<Id<chip::Net>>{n1, n2, n3, n4, n5, n6, n7});
 
     auto bterm1 = Create<chip::BTerm>("IN1", n1, IOType::INPUT);
     auto bterm2 = Create<chip::BTerm>("IN2", n2, IOType::INPUT);
     auto bterm3 = Create<chip::BTerm>("IN3", n3, IOType::INPUT);
     auto bterm4 = Create<chip::BTerm>("IN4", n4, IOType::INPUT);
     auto bterm5 = Create<chip::BTerm>("OUT", n5, IOType::OUTPUT);
-    block->AddBTerms(std::vector<Id<chip::BTerm>>{bterm1, bterm2, bterm3, bterm4, bterm5});
+    block->AddBTerms(Vec<Id<chip::BTerm>>{bterm1, bterm2, bterm3, bterm4, bterm5});
     auto inst1a = Create<chip::ITerm>("a", inst1, n1, IOType::INPUT);
     inst1a->Bind(and2a);
     
