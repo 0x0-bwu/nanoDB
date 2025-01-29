@@ -14,7 +14,7 @@ private:
     LutTemplate();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLASS_MEMBERS_DEFINE(
-    (std::vector<std::string>, variables),
+    (Vec<std::string>, variables),
     (LutIndices, indices))
 };
 

@@ -104,9 +104,9 @@ public:
         return NBox2D(toCoord(box[0]), toCoord(box[1]));
     }
 
-    std::vector<NCoord2D> toCoord(const std::vector<FCoord2D> & coords) const
+    Vec<NCoord2D> toCoord(const Vec<FCoord2D> & coords) const
     {
-        std::vector<NCoord2D> res; res.reserve(coords.size());
+        Vec<NCoord2D> res; res.reserve(coords.size());
         std::transform(coords.begin(), coords.end(), 
             std::back_inserter(res), [&](const auto & c) { return toCoord(c); });
         return res;

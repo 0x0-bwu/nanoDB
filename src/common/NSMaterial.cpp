@@ -149,7 +149,7 @@ void MaterialPropValue::GetDimensions(size_t & row, size_t & col) const
     }
 }
 
-MaterialPropPolynomial::MaterialPropPolynomial(std::vector<std::vector<Float>> coefficients)
+MaterialPropPolynomial::MaterialPropPolynomial(Vec<Vec<Float>> coefficients)
 {
     m_.coefficients = std::move(coefficients);
 }
@@ -193,7 +193,7 @@ void MaterialPropPolynomial::GetDimensions(size_t & row, size_t & col) const
     }
 }
 
-Float MaterialPropPolynomial::Calculate(const std::vector<Float> & coefficients, Float index)
+Float MaterialPropPolynomial::Calculate(const Vec<Float> & coefficients, Float index)
 {
     NS_ASSERT(not coefficients.empty());
     auto value = coefficients.front();

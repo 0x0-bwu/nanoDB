@@ -17,7 +17,7 @@ private:
 class LookupTable1D : public LookupTable
 {
 public:
-    explicit LookupTable1D(std::vector<Float> x, std::vector<Float> y);
+    explicit LookupTable1D(Vec<Float> x, Vec<Float> y);
     LookupTable1D() = default;
 
     bool isValid() const override { return m_.lut.isValid(); }
@@ -33,7 +33,7 @@ private:
 class LookupTable2D : public LookupTable
 {
 public:
-    explicit LookupTable2D(std::vector<Float> x, std::vector<Float> y, std::vector<Float> z);
+    explicit LookupTable2D(Vec<Float> x, Vec<Float> y, Vec<Float> z);
     LookupTable2D() = default;
 
     bool isValid() const override { return m_.lut.isValid(); }

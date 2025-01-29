@@ -50,7 +50,7 @@ public:
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
-    (std::vector<Float>, values))
+    (Vec<Float>, values))
 };
 
 class MaterialPropTable : public MaterialProp
@@ -72,7 +72,7 @@ private:
 class MaterialPropPolynomial : public MaterialProp
 {
 public:
-    explicit MaterialPropPolynomial(std::vector<std::vector<Float>> coefficients);
+    explicit MaterialPropPolynomial(Vec<Vec<Float>> coefficients);
     MaterialPropPolynomial() = default;
 
     bool isPropPolynomial() const { return true; }
@@ -86,11 +86,11 @@ public:
 
     size_t Hash() const override { return nano::Hash(m_); } 
 private:
-    static Float Calculate(const std::vector<Float> & coefficients, Float index);
+    static Float Calculate(const Vec<Float> & coefficients, Float index);
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
-    (std::vector<std::vector<Float>>, coefficients))
+    (Vec<Vec<Float>>, coefficients))
 };
 
 enum class MaterialType { RIGID, FLUID };

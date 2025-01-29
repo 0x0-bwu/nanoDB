@@ -43,7 +43,7 @@ struct SpefValue
 	float value;
 };
 
-using SpefValues = std::vector<SpefValue>;
+using SpefValues = Vec<SpefValue>;
 
 //*PORTS section
 struct SpefPort 
@@ -53,7 +53,7 @@ struct SpefPort
 	Optional<SpefCoord> coord;
 };
 
-using SpefPorts = std::vector<SpefPort>;
+using SpefPorts = Vec<SpefPort>;
 
 //*CONN section
 struct SpefConn
@@ -66,7 +66,7 @@ struct SpefConn
     Optional<SpefName> driver;
 };
 
-using SpefConns = std::vector<SpefConn>;
+using SpefConns = Vec<SpefConn>;
 
 //*D_NET section
 struct SpefNet
@@ -78,7 +78,7 @@ struct SpefNet
 	SpefValues capacitances;  
 };
 
-using SpefNets = std::vector<SpefNet>;
+using SpefNets = Vec<SpefNet>;
 
 struct SpefHeader
 {
@@ -104,8 +104,8 @@ struct SpefDescription
 {
 	SpefHeader header;
 	SpefNameMap nameMap;
-	std::vector<SpefPort> ports;
-	std::vector<SpefNet> nets;
+	Vec<SpefPort> ports;
+	Vec<SpefNet> nets;
 };
 
 } // namespace nano::parasitic::ast

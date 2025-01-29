@@ -239,7 +239,7 @@ Float toFloat(const SimpleAttribute::Value & value)
     return std::numeric_limits<Float>::quiet_NaN();
 }
 
-LutNumbers toNumbers(const std::vector<SimpleAttribute::Value> & values)
+LutNumbers toNumbers(const Vec<SimpleAttribute::Value> & values)
 {
     LutNumbers numbers;
     for (const auto & value : values)
@@ -391,7 +391,7 @@ public:
         }
     }
 private:
-    std::vector<std::pair<CcsLutParser, std::string_view>> m_ccsLutParsers;
+    Vec<std::pair<CcsLutParser, std::string_view>> m_ccsLutParsers;
 };
 
 class LeakagePowerParser : public LibertyObjParser
@@ -438,7 +438,7 @@ public:
         }
     }
 private:
-    std::vector<std::pair<LutParser, std::string_view>> m_lutParsers;
+    Vec<std::pair<LutParser, std::string_view>> m_lutParsers;
 };
 
 class TimingParser : public LibertyObjParser
@@ -495,8 +495,8 @@ public:
         }
     }
 private:
-    std::vector<OutputCurrentParser> m_outputCurrentParsers;
-    std::vector<std::pair<LutParser, std::string_view>> m_lutParsers;
+    Vec<OutputCurrentParser> m_outputCurrentParsers;
+    Vec<std::pair<LutParser, std::string_view>> m_lutParsers;
 };
 
 class PinParser : public LibertyObjParser
@@ -554,7 +554,7 @@ public:
         }
     }
 private:
-    std::vector<InternalPowerParser> m_internalPowerParsers;
+    Vec<InternalPowerParser> m_internalPowerParsers;
 };
 
 class InputPinParser : public SignalPinParser
@@ -620,7 +620,7 @@ public:
             SignalPinParser::operator()(group);
     }
 private:
-    std::vector<TimingParser> m_timingParsers;
+    Vec<TimingParser> m_timingParsers;
 };
 
 class CellParser : public LibertyObjParser
@@ -805,7 +805,7 @@ public:
         for (auto & parser : m_cellParsers) parser.Build();  
     }
 private:
-    std::vector<CellParser> m_cellParsers;
+    Vec<CellParser> m_cellParsers;
 };
 
 Id<Library> LoadLibrary(std::string_view filename)
