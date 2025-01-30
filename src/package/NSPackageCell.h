@@ -9,6 +9,11 @@ protected:
     Cell();
 public:
     CId<Package> GetPackage() const { return m_.package; }
+    const CoordUnit & GetCoordUnit() const;
+
+    virtual void SetBoundary(Id<Shape> boundary) = 0;
+    virtual CId<Shape> GetBoundary() const = 0;
+
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
@@ -24,7 +29,10 @@ public:
     Id<Layout> SetLayout(Id<Layout> layout);
     CId<Layout> GetLayout() const;
     Id<Layout> GetLayout();
-    
+
+    void SetBoundary(Id<Shape> boundary) override;
+    CId<Shape> GetBoundary() const override;
+
 private:
     CircuitCell();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
@@ -52,8 +60,8 @@ public:
     void SetComponentType(ComponentType type);
     ComponentType GetComponentType() const;
     
-    void SetBoundary(Id<Shape> boundary);
-    CId<Shape> GetBoundary() const;
+    void SetBoundary(Id<Shape> boundary) override;
+    CId<Shape> GetBoundary() const override;
 
     void SetMaterial(Id<Material> material);
     CId<Material> GetMaterial() const;

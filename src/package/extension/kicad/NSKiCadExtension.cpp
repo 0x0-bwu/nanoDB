@@ -343,8 +343,11 @@ Id<Package> KiCadExtension::CreatePackage()
     cell->SetLayout(layout);
 
     CreateNets(layout);
-    CreateBoundary(*m_kicad, layout);
+    CreateBoundary(*m_kicad, cell);
     CreateRoutingWires(*m_kicad, layout);
+
+    for (const auto & [name, comp] : m_kicad->components)
+        CreateComponent(comp, pkg, layout);
 
     auto top = nano::Create<pkg::CellInst>(m_kicad->name, cell);
     pkg->SetTop(top);
@@ -382,12 +385,14 @@ void KiCadExtension::CreateNets(Id<pkg::Layout> layout)
     }
 }
 
-void KiCadExtension::CreateBoundary(const Component & comp, Id<pkg::Layout> layout)
+void KiCadExtension::CreateBoundary(const Component & comp, Id<pkg::Cell> cell)
 {
     Vec<NPolygon> polygons;
-    const auto & coordUnit = layout->GetCoordUnit();
+    const auto & coordUnit = cell->GetCoordUnit();
     for (const auto & line : comp.lines) {
-        if (NANO_KICAD_PCB_LAYER_EDGE_CUT_ID == line.layer) {
+        if (NANO_KICAD_PCB_LAYER_EDGE_CUT_ID == line.layer or
+            NANO_KICAD_PCB_LAYER_FRONT_CRTYD_ID == line.layer or
+            NANO_KICAD_PCB_LAYER_BOTTOM_CRTYD_ID == line.layer) {
             auto s = coordUnit.toCoord(line.start);
             auto e = coordUnit.toCoord(line.end);
             auto & polygon = polygons.emplace_back();
@@ -396,7 +401,7 @@ void KiCadExtension::CreateBoundary(const Component & comp, Id<pkg::Layout> layo
     }
     auto polygon = generic::geometry::ConvexHull(polygons);
     auto shape = nano::Create<ShapePolygon>(std::move(polygon));
-    layout->SetBoundary(shape);
+    cell->SetBoundary(shape);
 }
 
 void KiCadExtension::CreateRoutingWires(const Component & comp, Id<pkg::Layout> layout)
@@ -437,6 +442,25 @@ void KiCadExtension::CreateRoutingWires(const Component & comp, Id<pkg::Layout> 
             layout->AddConnObj(wire);
         }
     }
+}
+
+void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Package> package, Id<pkg::Layout> layout)
+{
+    auto fpCell = nano::Create<pkg::FootprintCell>(comp.name, layout->GetPackage());
+    CreateBoundary(comp, fpCell);
+
+    package->AddCell(fpCell);
+    auto component = nano::Create<pkg::Component>(comp.name, fpCell, layout);
+    auto footprint = nano::Create<pkg::Footprint>("mounting", fpCell, FootprintLocation::BOT);
+    auto location = layout->GetCoordUnit().toCoord(comp.location);
+    component->SetTransform(makeTransform2D(1.0, generic::math::Rad(comp.angle), location[0], location[1]));
+
+    auto stackupLayer = m_lut.FindStackupLayer(comp.layer); { NS_ASSERT(stackupLayer); }
+    auto mountingLayer = nano::Create<pkg::ComponentLayer>("mounting", component, footprint);
+    mountingLayer->SetConnectedLayer(stackupLayer);
+    component->AddComponentLayer(mountingLayer);
+
+    layout->AddComponent(component);
 }
 
 CId<pkg::Material> KiCadExtension::GetOrCreateMaterial(std::string_view name)

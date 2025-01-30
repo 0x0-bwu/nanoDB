@@ -309,5 +309,16 @@ bool LayoutRetriever::GetLayerPolygons(CId<StackupLayer> layer, Vec<NPolygon> & 
     return true;
 }
 
+bool LayoutRetriever::GetLayerComponents(CId<StackupLayer> layer, Vec<CId<Component>> & components) const
+{
+    auto compIter = m_layout->GetComponentIter();
+    while (auto comp = compIter.Next()) {
+        if (auto compLayer = comp->GetAssemblyLayer(); 
+            compLayer and compLayer->GetConnectedLayer() == layer)
+            components.emplace_back(comp);
+    }
+    return true;
+}
+
 
 } // namespace nano::package::utils

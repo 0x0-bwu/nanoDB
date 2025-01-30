@@ -38,8 +38,9 @@ private:
     Id<pkg::Package> CreatePackage();
     void CreateLayers(Id<pkg::Package> pkg);
     void CreateNets(Id<pkg::Layout> layout);
-    void CreateBoundary(const Component & comp, Id<pkg::Layout> layout);
+    void CreateBoundary(const Component & comp, Id<pkg::Cell> cell);
     void CreateRoutingWires(const Component & comp, Id<pkg::Layout> layout);
+    void CreateComponent(const Component & comp, Id<pkg::Package> package, Id<pkg::Layout> layout);
     
     CId<pkg::Material> GetOrCreateMaterial(std::string_view name);
 
