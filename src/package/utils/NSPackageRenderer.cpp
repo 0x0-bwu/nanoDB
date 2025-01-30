@@ -28,6 +28,17 @@ bool LayoutRenderer::WritePNG(std::string_view filename, CId<StackupLayer> layer
     Vec<NPolygon> polygons;
     LayoutRetriever retriever(m_layout);
     retriever.GetLayerPolygons(layer, polygons, net);
+
+    Vec<CId<Component>> components;
+    retriever.GetLayerComponents(layer, components);
+    for (auto comp : components) {
+        auto boundary = comp->GetBoundary();
+        NS_ASSERT(boundary);
+        auto contour = boundary->GetContour();
+        polygons.emplace_back(std::move(contour.outline));
+        for (auto & hole : contour.holes)
+            polygons.emplace_back(std::move(hole));
+    }
     return generic::geometry::GeometryIO::WritePNG(filename, polygons.begin(), polygons.end(), m_width);
 }
 

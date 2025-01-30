@@ -48,6 +48,11 @@ Cell::Cell() : Cell("", CId<Package>())
 {
 }
 
+const CoordUnit & Cell::GetCoordUnit() const
+{
+    return GetPackage()->GetCoordUnit();
+}
+
 CircuitCell::CircuitCell(std::string name, CId<Package> package)
  : Cell(std::move(name), package)
 {
@@ -56,6 +61,18 @@ CircuitCell::CircuitCell(std::string name, CId<Package> package)
 
 CircuitCell::CircuitCell() : CircuitCell("", CId<Package>())
 {
+}
+
+void CircuitCell::SetBoundary(Id<Shape> boundary)
+{
+    NS_ASSERT(m_.layout);
+    m_.layout->SetBoundary(boundary);
+}
+
+CId<Shape> CircuitCell::GetBoundary() const
+{
+    NS_ASSERT(m_.layout);
+    return m_.layout->GetBoundary();
 }
 
 Id<Layout> CircuitCell::SetLayout(Id<Layout> layout)

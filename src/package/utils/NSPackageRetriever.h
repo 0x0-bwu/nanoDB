@@ -22,6 +22,7 @@ public:
 
     ///brief: Get the polygons of the specified layer, solid shapes are ccw, holes are cw, start shape is the layout boundary
     bool GetLayerPolygons(CId<StackupLayer> layer, Vec<NPolygon> & polygons, Vec<CId<Net>> & nets) const;
+    bool GetLayerComponents(CId<StackupLayer> layer, Vec<CId<Component>> & components) const;
 
 private:    
     UPtr<Shape> GetBondingWireStartSolderJointShape(CId<BondingWire> bw, Float & thickness) const;
