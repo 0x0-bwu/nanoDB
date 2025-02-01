@@ -454,8 +454,7 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Package> pa
     auto component = nano::Create<pkg::Component>(comp.name, fpCell, layout);
     auto footprint = nano::Create<pkg::Footprint>("mounting", fpCell, FootprintLocation::BOT);
     auto location = layout->GetCoordUnit().toCoord(comp.location);
-    component->SetTransform(makeTransform2D(1.0, generic::math::Rad(comp.angle), location[0], location[1]));
-
+    component->SetTransform(makeTransform2D(1.0, -generic::math::Rad(comp.angle), location[0], location[1]));
     auto stackupLayer = m_lut.FindStackupLayer(comp.layer); { NS_ASSERT(stackupLayer); }
     auto mountingLayer = nano::Create<pkg::ComponentLayer>("mounting", component, footprint);
     mountingLayer->SetConnectedLayer(stackupLayer);

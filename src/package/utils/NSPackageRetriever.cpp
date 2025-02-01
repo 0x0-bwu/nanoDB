@@ -314,9 +314,10 @@ bool LayoutRetriever::GetLayerComponents(CId<StackupLayer> layer, Vec<CId<Compon
     components.clear();
     auto compIter = m_layout->GetComponentIter();
     while (auto comp = compIter.Next()) {
-        if (auto compLayer = comp->GetAssemblyLayer(); 
-            compLayer and compLayer->GetConnectedLayer() == layer)
-            components.emplace_back(comp);
+        if (auto compLayer = comp->GetAssemblyLayer(); compLayer) {
+            if (layer->Identical(compLayer->GetConnectedLayer()))
+                components.emplace_back(comp);
+        }
     }
     return true;
 }
