@@ -188,7 +188,7 @@ struct Database : public Component
     // add
     Layer & AddLayer(IdType id, std::string name);
     Net & AddNet(IdType id, std::string name);
-    Component & AddComponent(std::string name);
+    Component & AddComponent(const std::string & name);
 
     // find
     Ptr<Net> FindNet(IdType id);

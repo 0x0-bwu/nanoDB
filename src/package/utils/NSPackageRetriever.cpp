@@ -311,6 +311,7 @@ bool LayoutRetriever::GetLayerPolygons(CId<StackupLayer> layer, Vec<NPolygon> & 
 
 bool LayoutRetriever::GetLayerComponents(CId<StackupLayer> layer, Vec<CId<Component>> & components) const
 {
+    components.clear();
     auto compIter = m_layout->GetComponentIter();
     while (auto comp = compIter.Next()) {
         if (auto compLayer = comp->GetAssemblyLayer(); 
