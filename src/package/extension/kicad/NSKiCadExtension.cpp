@@ -108,7 +108,8 @@ void KiCadExtension::ExtractNet(const Tree & node)
 void KiCadExtension::ExtractFootprint(const Tree & node)
 {
     auto iter = node.branches.begin();
-    auto & comp = m_kicad->AddComponent(iter->value);
+    auto name = NextName(iter->value, m_kicad->components);
+    auto & comp = m_kicad->AddComponent(name);
     m_current.comp = &comp;
     for (iter = std::next(iter); iter != node.branches.end(); ++iter) {
         const auto & branches = iter->branches;

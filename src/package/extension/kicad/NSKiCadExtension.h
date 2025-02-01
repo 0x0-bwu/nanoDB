@@ -43,6 +43,19 @@ private:
     void CreateComponent(const Component & comp, Id<pkg::Package> package, Id<pkg::Layout> layout);
     
     CId<pkg::Material> GetOrCreateMaterial(std::string_view name);
+    
+    template <typename Lut>
+    static std::string NextName(const std::string & name, const Lut & lut)
+    {
+        if (not lut.count(name)) return name;
+        size_t index = 1;
+        while (true) {
+            std::string next = name + std::to_string(index);
+            if (not lut.count(next)) return next;
+            index++;
+        }
+        return "";
+    }
 
     template <typename... Args>
     static void GetValue(const std::string & s, Args & ...args)

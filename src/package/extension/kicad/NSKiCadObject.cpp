@@ -85,9 +85,9 @@ Net & Database::AddNet(IdType id, std::string name)
     return net;
 }
 
-Component & Database::AddComponent(std::string name)
+Component & Database::AddComponent(const std::string & name)
 {
-    auto & comp = components.emplace(name, Component(std::move(name))).first->second;
+    auto & comp = components.emplace(name, Component(name)).first->second;
     return comp;
 }
 
