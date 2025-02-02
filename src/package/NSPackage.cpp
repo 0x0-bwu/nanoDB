@@ -48,6 +48,16 @@ void Package::SortStackupLayers()
     });
 }
 
+CId<StackupLayer> Package::GetTopStackupLayer() const
+{
+    return m_.stackupLayers.front();
+}
+
+CId<StackupLayer> Package::GetBotStackupLayer() const
+{
+    return m_.stackupLayers.back();
+}
+
 CId<StackupLayer> Package::FindStackupLayer(std::string_view name) const
 {
     return m_.stackupLayers.Lookup<lut::Name>(name);

@@ -105,11 +105,21 @@ CId<Material> Padstack::GetMaterial() const
     return m_.material;
 }
 
+void Padstack::SetPadShape(CId<StackupLayer> layer, CId<Shape> shape)
+{
+    m_.pads[layer].shape = shape;
+}
+
 UPtr<Shape> Padstack::GetPadShape(CId<StackupLayer> layer) const
 {
     auto iter = m_.pads.find(layer);
     if (iter == m_.pads.cend()) return nullptr;
     return iter->second.GetShape();
+}
+
+void Padstack::SetViaShape(CId<Shape> shape)
+{
+    m_.via.shape = shape;
 }
 
 UPtr<Shape> Padstack::GetViaShape() const

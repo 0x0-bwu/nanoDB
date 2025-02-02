@@ -1,6 +1,7 @@
 #include "NSKiCadExtension.h"
 #include <nano/core/package>
 
+#include "generic/tools/StringHelper.hpp"
 #include "generic/geometry/Utility.hpp"
 namespace nano::package::extension::kicad {
 
@@ -267,11 +268,11 @@ void KiCadExtension::ExtractPad(const Tree & node)
             TryGetValue(iter->branches, pad.pos[0], pad.pos[1], pad.angle);
         else if ("size" == iter->value)
             GetValue(iter->branches, pad.size[0], pad.size[1]);
+        else if ("drill" == iter->value)
+            GetValue(iter->branches, pad.drill);
         else if ("layers" == iter->value) {
-            for (const auto & lyrNode : iter->branches) {
-                if (auto layer = m_kicad->FindLayer(lyrNode.value); layer)
-                    pad.layers.emplace_back(layer->id);
-            }
+            for (const auto & lyrNode : iter->branches)
+                pad.layers.emplace_back(lyrNode.value.c_str());
         }
         else if ("roundrect_rratio" == iter->value)
             GetValue(iter->branches, pad.roundrectRatio);
@@ -447,14 +448,41 @@ void KiCadExtension::CreateRoutingWires(const Component & comp, Id<pkg::Layout> 
 
 void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Package> package, Id<pkg::Layout> layout)
 {
+    auto getLayers = [&](const Pad & pad, Vec<CId<StackupLayer>> & layers) {
+        for (const auto & layer : pad.layers) {
+            auto iter = package->GetStackupLayerIter();
+            while (auto stackupLayer = iter.Next()) {
+                if (generic::str::WildcardMatch(stackupLayer->GetName(), layer))
+                    layers.emplace_back(stackupLayer);
+            }
+        }
+    };
+    const auto & coordUnit = layout->GetCoordUnit();
     auto fpCell = nano::Create<pkg::FootprintCell>(comp.name, layout->GetPackage());
     CreateBoundary(comp, fpCell);
 
     package->AddCell(fpCell);
     auto component = nano::Create<pkg::Component>(comp.name, fpCell, layout);
-    auto footprint = nano::Create<pkg::Footprint>("mounting", fpCell, FootprintLocation::BOT);
     auto location = layout->GetCoordUnit().toCoord(comp.location);
     component->SetTransform(makeTransform2D(1.0, -generic::math::Rad(comp.angle), location[0], location[1]));
+
+    auto footprint = nano::Create<pkg::Footprint>("mounting", fpCell, FootprintLocation::BOT);
+    for (const auto & pad : comp.pads) {
+        auto net = m_lut.FindNet(pad.net);
+        auto padstack = nano::Create<pkg::Padstack>(pad.name, package);
+        auto padstackInst = nano::Create<pkg::PadstackInst>(padstack, net);
+        if (Pad::Type::THRU_HOLE == pad.type) {
+            auto hole = nano::Create<pkg::ShapeCircle>(coordUnit, pad.pos, pad.drill / 2);
+            padstack->SetViaShape(hole);
+            padstackInst->SetLayerRange(package->GetTopStackupLayer(), package->GetBotStackupLayer());
+        }
+
+
+
+
+    }
+
+
     auto stackupLayer = m_lut.FindStackupLayer(comp.layer); { NS_ASSERT(stackupLayer); }
     auto mountingLayer = nano::Create<pkg::ComponentLayer>("mounting", component, footprint);
     mountingLayer->SetConnectedLayer(stackupLayer);
