@@ -328,4 +328,11 @@ void PadstackInst::Transform(const Transform2D & transform)
     Transformable2D::AddTransform(transform);
 }
 
+Ptr<PadstackInst> PadstackInst::CloneFrom(const PadstackInst & src)
+{
+    ConnObj::CloneFrom(src);
+    m_ = src.m_;
+    return this;
+}
+
 } // namespace nano::package

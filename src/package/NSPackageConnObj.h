@@ -134,6 +134,7 @@ public:
     void Transform(const Transform2D & transform) override;
 private:
     PadstackInst();
+    NS_CLONE_FUNCTIONS_DECLARATION(PadstackInst)
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
     NS_CLASS_MEMBERS_DEFINE(
     (CId<Padstack>, padstack),

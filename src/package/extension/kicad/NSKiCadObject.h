@@ -131,13 +131,14 @@ struct Pad
     Type type{Type::UNKNOWN};
     Shape shape{Shape::UNKNOWN};
     IdType net;
+    Float drill{0};
     Float angle{0};
     Float roundrectRatio{0};
     FCoord2D pos;
     FCoord2D size;
     std::string name{};
     Points shapePolygon;
-    Vec<IdType> layers;
+    Vec<std::string_view> layers;
     void SetType(const std::string & str);
     void SetShape(const std::string & str);
 };
