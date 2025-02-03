@@ -182,6 +182,7 @@ struct Database : public Component
     HashMap<std::string, Component> components;
     HashMap<std::string, Layer> layers;
     HashMap<IdType, Net> nets;
+    Vec<Layer> stackupLayers;
 
     // lut
     HashMap<std::string_view, Ptr<Net>> netLut;

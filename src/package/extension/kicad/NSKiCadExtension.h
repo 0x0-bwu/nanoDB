@@ -36,11 +36,12 @@ private:
 
     //
     Id<pkg::Package> CreatePackage();
-    void CreateLayers(Id<pkg::Package> pkg);
+    void CreateStackup(Id<pkg::Package> package);
     void CreateNets(Id<pkg::Layout> layout);
     void CreateBoundary(const Component & comp, Id<pkg::Cell> cell);
     void CreateRoutingWires(const Component & comp, Id<pkg::Layout> layout);
-    void CreateComponent(const Component & comp, Id<pkg::Package> package, Id<pkg::Layout> layout);
+    void CreateComponent(const Component & comp, Id<pkg::Layout> layout);
+    void CreatePadstackInst(const Via & via, Id<pkg::Layout> layout);
     
     CId<pkg::Material> GetOrCreateMaterial(std::string_view name);
     
@@ -108,7 +109,7 @@ private:
         CId<pkg::StackupLayer> FindStackupLayer(IdType id) const;
         CId<pkg::Net> FindNet(IdType id) const;
         HashMap<IdType, CId<pkg::Net>> nets;
-        HashMap<IdType, CId<pkg::StackupLayer>> stackupLayers;
+        HashMap<IdType, CId<pkg::StackupLayer>> layers;
         HashMap<std::string_view, CId<pkg::Material>> material;
     };
     Lut m_lut;
