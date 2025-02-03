@@ -77,23 +77,31 @@ void KiCadExtension::ExtractSetup(const Tree & node)
 
 void KiCadExtension::ExtractStackup(const Tree & node)
 {
+    UPtr<Layer> dielectricLayer;
     for (const auto & sub : node.branches) {
         if ("layer" == sub.value) {
             auto iter = sub.branches.begin();
-            if (auto layer = m_kicad->FindLayer(iter->value); layer) {
-                for (iter = std::next(iter); iter != sub.branches.end(); ++iter) {
-                    if ("type" == iter->value)
-                        layer->SetType(iter->branches.front().value);
-                    else if ("thickness" == iter->value)
-                        GetValue(iter->branches, layer->thickness);
-                    else if ("material" == iter->value)
-                        GetValue(iter->branches, layer->material);
-                    else if ("epsilon_r" == iter->value)
-                        GetValue(iter->branches, layer->epsilonR);
-                    else if ("loss_tangent" == iter->value)
-                        GetValue(iter->branches, layer->lossTangent);
-                }
+            auto layer = m_kicad->FindLayer(iter->value);
+            if (not layer) {
+                dielectricLayer.reset(new Layer(INVALID_ID, iter->value));
+                layer = dielectricLayer.get();
             }
+            for (iter = std::next(iter); iter != sub.branches.end(); ++iter) {
+                if ("type" == iter->value)
+                    layer->SetType(iter->branches.front().value);
+                else if ("thickness" == iter->value)
+                    GetValue(iter->branches, layer->thickness);
+                else if ("material" == iter->value)
+                    GetValue(iter->branches, layer->material);
+                else if ("epsilon_r" == iter->value)
+                    GetValue(iter->branches, layer->epsilonR);
+                else if ("loss_tangent" == iter->value)
+                    GetValue(iter->branches, layer->lossTangent);
+            }
+            if (Layer::Type::CONDUCTING == layer->type or
+                Layer::Type::DIELECTRIC == layer->type or
+                Layer::Type::MIXED == layer->type)
+                m_kicad->stackupLayers.emplace_back(*layer);
         }
     }
 }
@@ -337,10 +345,12 @@ Id<Package> KiCadExtension::CreatePackage()
     auto pkg = nano::Create<pkg::Package>(m_kicad->name);
     CoordUnit coordUnit(CoordUnit::Unit::Millimeter);
     pkg->SetCoordUnit(coordUnit);
-    CreateLayers(pkg);
+    CreateStackup(pkg);
 
     // top cell
     auto cell = nano::Create<pkg::CircuitCell>(m_kicad->name, pkg);
+    pkg->AddCell(cell);
+    
     auto layout = nano::Create<pkg::Layout>(cell);
     cell->SetLayout(layout);
 
@@ -348,33 +358,32 @@ Id<Package> KiCadExtension::CreatePackage()
     CreateBoundary(*m_kicad, cell);
     CreateRoutingWires(*m_kicad, layout);
 
+    for (const auto & via : m_kicad->vias)
+        CreatePadstackInst(via, layout);
+
     for (const auto & [name, comp] : m_kicad->components)
-        CreateComponent(comp, pkg, layout);
+        CreateComponent(comp, layout);
 
     auto top = nano::Create<pkg::CellInst>(m_kicad->name, cell);
     pkg->SetTop(top);
     return pkg;
 }
 
-void KiCadExtension::CreateLayers(Id<pkg::Package> pkg)
+void KiCadExtension::CreateStackup(Id<pkg::Package> package)
 {
     Float elevation{0};
-    for (const auto & [kName, kLayer] : m_kicad->layers) {
-        if (kLayer.id > NANO_KICAD_PCB_LAYER_BOTTOM_ADHES_ID)
-            continue;
-        if (kLayer.type == Layer::Type::CONDUCTING or
-            kLayer.type == Layer::Type::DIELECTRIC) {
-            LayerType type = kLayer.type == Layer::Type::CONDUCTING ?
-                            LayerType::CONDUCTING : LayerType::DIELECTRIC;
-            auto layer = nano::Create<pkg::StackupLayer>(kName, type, elevation, kLayer.thickness);
-            auto mat = GetOrCreateMaterial(kLayer.material);
-            if (type == LayerType::DIELECTRIC)
-                layer->SetDielectricMaterial(mat);
-            else layer->SetConductingMaterial(mat);
-            m_lut.stackupLayers.emplace(kLayer.id, layer);
-            elevation -= kLayer.thickness;
-            pkg->AddStackupLayer(layer);
-        }
+    for (const auto & kLayer : m_kicad->stackupLayers) {
+        auto type = kLayer.type == Layer::Type::CONDUCTING ?
+            LayerType::CONDUCTING : LayerType::DIELECTRIC;
+        auto layer = nano::Create<pkg::StackupLayer>(kLayer.name, type, elevation, kLayer.thickness);
+        auto mat = GetOrCreateMaterial(kLayer.material);
+        if (type == LayerType::DIELECTRIC)
+            layer->SetDielectricMaterial(mat);
+        else layer->SetConductingMaterial(mat);
+        elevation -= kLayer.thickness;
+        package->AddStackupLayer(layer);
+        if (INVALID_ID != kLayer.id)
+            m_lut.layers.emplace(kLayer.id, layer);
     }
 }
 
@@ -446,8 +455,9 @@ void KiCadExtension::CreateRoutingWires(const Component & comp, Id<pkg::Layout> 
     }
 }
 
-void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Package> package, Id<pkg::Layout> layout)
+void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> layout)
 {
+    auto package = layout->GetPackage();
     auto getLayers = [&](const Pad & pad, Vec<CId<StackupLayer>> & layers) {
         for (const auto & layer : pad.layers) {
             auto iter = package->GetStackupLayerIter();
@@ -461,7 +471,7 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Package> pa
     auto fpCell = nano::Create<pkg::FootprintCell>(comp.name, layout->GetPackage());
     CreateBoundary(comp, fpCell);
 
-    package->AddCell(fpCell);
+    package.ConstCast()->AddCell(fpCell);
     auto component = nano::Create<pkg::Component>(comp.name, fpCell, layout);
     auto location = layout->GetCoordUnit().toCoord(comp.location);
     component->SetTransform(makeTransform2D(1.0, -generic::math::Rad(comp.angle), location[0], location[1]));
@@ -476,10 +486,6 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Package> pa
             padstack->SetViaShape(hole);
             padstackInst->SetLayerRange(package->GetTopStackupLayer(), package->GetBotStackupLayer());
         }
-
-
-
-
     }
 
 
@@ -489,6 +495,11 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Package> pa
     component->AddComponentLayer(mountingLayer);
 
     layout->AddComponent(component);
+}
+
+void KiCadExtension::CreatePadstackInst(const Via & via, Id<pkg::Layout> layout)
+{
+    //todo
 }
 
 CId<pkg::Material> KiCadExtension::GetOrCreateMaterial(std::string_view name)
@@ -502,8 +513,8 @@ CId<pkg::Material> KiCadExtension::GetOrCreateMaterial(std::string_view name)
 
 CId<pkg::StackupLayer> KiCadExtension::Lut::FindStackupLayer(IdType id) const
 {
-    auto iter = stackupLayers.find(id);
-    return iter == stackupLayers.cend() ? CId<pkg::StackupLayer>() : iter->second;
+    auto iter = layers.find(id);
+    return iter == layers.cend() ? CId<pkg::StackupLayer>() : iter->second;
 }
 
 CId<pkg::Net> KiCadExtension::Lut::FindNet(IdType id) const
