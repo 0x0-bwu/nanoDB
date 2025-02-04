@@ -35,8 +35,8 @@ private:
     void ExtractStroke(const Tree & node, Stroke & stroke);
 
     //
-    Id<pkg::Package> CreatePackage();
-    void CreateStackup(Id<pkg::Package> package);
+    bool CreatePackage();
+    void CreateStackup();
     void CreateNets(Id<pkg::Layout> layout);
     void CreateBoundary(const Component & comp, Id<pkg::Cell> cell);
     void CreateRoutingWires(const Component & comp, Id<pkg::Layout> layout);
@@ -44,6 +44,7 @@ private:
     void CreatePadstackInst(const Via & via, Id<pkg::Layout> layout);
     
     CId<pkg::Material> GetOrCreateMaterial(std::string_view name);
+    CId<pkg::Padstack> GetOrCreatePadstack(NCoord size, NCoord drill);
     
     template <typename Lut>
     static std::string NextName(const std::string & name, const Lut & lut)
@@ -98,6 +99,7 @@ private:
         TryGetValue(branches.begin(), branches.end(), args...);
     }
 
+    Id<pkg::Package> m_package;
     UPtr<Database> m_kicad{nullptr};
 
     // func lut

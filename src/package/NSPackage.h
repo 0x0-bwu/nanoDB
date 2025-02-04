@@ -36,16 +36,18 @@ public:
 
     auto GetCellIter();
     auto GetCellIter() const;
+    size_t NumOfCells() const { return m_.cells.size(); }
 
     auto GetPadstackIter();
     auto GetPadstackIter() const;
+    size_t NumOfPadstacks() const { return m_.padstacks.size(); }
 
     auto GetMaterialIter() { return m_.matLib->GetMaterialIter(); }
     auto GetMaterialIter() const { return m_.matLib->GetMaterialIter(); }
     
     auto GetStackupLayerIter() { return m_.stackupLayers.GetIter<StackupLayer>(); }
     auto GetStackupLayerIter() const { return m_.stackupLayers.GetCIter<StackupLayer>(); }
-    
+    size_t NumOfStackupLayers() const { return m_.stackupLayers.size(); }
 
     Float GetHeight() const override;
     bool isBlackBox() const override;

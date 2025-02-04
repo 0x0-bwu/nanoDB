@@ -31,7 +31,11 @@ Id<Package> KiCadExtension::Load(std::string_view filename)
         NS_ERROR("failed to load file %1%.", filename);
         return Id<Package>();
     }
-    return CreatePackage();
+    if (not CreatePackage()) {
+        NS_ERROR("failed to create package.");
+        return Id<Package>();
+    }
+    return m_package;
 }
 
 bool KiCadExtension::Parse(std::string_view filename)
@@ -282,7 +286,7 @@ void KiCadExtension::ExtractPad(const Tree & node)
             for (const auto & lyrNode : iter->branches)
                 pad.layers.emplace_back(lyrNode.value.c_str());
         }
-        else if ("roundrect_rratio" == iter->value)
+        else if ("roundrect_ratio" == iter->value)
             GetValue(iter->branches, pad.roundrectRatio);
         else if ("net" == iter->value)
             GetValue(iter->branches, pad.net);
@@ -340,16 +344,16 @@ void KiCadExtension::ExtractStroke(const Tree & node, Stroke & stroke)
     }
 }
 
-Id<Package> KiCadExtension::CreatePackage()
+bool KiCadExtension::CreatePackage()
 {
-    auto pkg = nano::Create<pkg::Package>(m_kicad->name);
+    m_package = nano::Create<pkg::Package>(m_kicad->name);
     CoordUnit coordUnit(CoordUnit::Unit::Millimeter);
-    pkg->SetCoordUnit(coordUnit);
-    CreateStackup(pkg);
+    m_package->SetCoordUnit(coordUnit);
+    CreateStackup();
 
     // top cell
-    auto cell = nano::Create<pkg::CircuitCell>(m_kicad->name, pkg);
-    pkg->AddCell(cell);
+    auto cell = nano::Create<pkg::CircuitCell>(m_kicad->name, m_package);
+    m_package->AddCell(cell);
     
     auto layout = nano::Create<pkg::Layout>(cell);
     cell->SetLayout(layout);
@@ -365,11 +369,11 @@ Id<Package> KiCadExtension::CreatePackage()
         CreateComponent(comp, layout);
 
     auto top = nano::Create<pkg::CellInst>(m_kicad->name, cell);
-    pkg->SetTop(top);
-    return pkg;
+    m_package->SetTop(top);
+    return true;
 }
 
-void KiCadExtension::CreateStackup(Id<pkg::Package> package)
+void KiCadExtension::CreateStackup()
 {
     Float elevation{0};
     for (const auto & kLayer : m_kicad->stackupLayers) {
@@ -381,7 +385,7 @@ void KiCadExtension::CreateStackup(Id<pkg::Package> package)
             layer->SetDielectricMaterial(mat);
         else layer->SetConductingMaterial(mat);
         elevation -= kLayer.thickness;
-        package->AddStackupLayer(layer);
+        m_package->AddStackupLayer(layer);
         if (INVALID_ID != kLayer.id)
             m_lut.layers.emplace(kLayer.id, layer);
     }
@@ -457,10 +461,9 @@ void KiCadExtension::CreateRoutingWires(const Component & comp, Id<pkg::Layout> 
 
 void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> layout)
 {
-    auto package = layout->GetPackage();
     auto getLayers = [&](const Pad & pad, Vec<CId<StackupLayer>> & layers) {
         for (const auto & layer : pad.layers) {
-            auto iter = package->GetStackupLayerIter();
+            auto iter = m_package->GetStackupLayerIter();
             while (auto stackupLayer = iter.Next()) {
                 if (generic::str::WildcardMatch(stackupLayer->GetName(), layer))
                     layers.emplace_back(stackupLayer);
@@ -468,10 +471,10 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> lay
         }
     };
     const auto & coordUnit = layout->GetCoordUnit();
-    auto fpCell = nano::Create<pkg::FootprintCell>(comp.name, layout->GetPackage());
+    auto fpCell = nano::Create<pkg::FootprintCell>(comp.name, m_package);
     CreateBoundary(comp, fpCell);
 
-    package.ConstCast()->AddCell(fpCell);
+    m_package->AddCell(fpCell);
     auto component = nano::Create<pkg::Component>(comp.name, fpCell, layout);
     auto location = layout->GetCoordUnit().toCoord(comp.location);
     component->SetTransform(makeTransform2D(1.0, -generic::math::Rad(comp.angle), location[0], location[1]));
@@ -479,12 +482,12 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> lay
     auto footprint = nano::Create<pkg::Footprint>("mounting", fpCell, FootprintLocation::BOT);
     for (const auto & pad : comp.pads) {
         auto net = m_lut.FindNet(pad.net);
-        auto padstack = nano::Create<pkg::Padstack>(pad.name, package);
+        auto padstack = nano::Create<pkg::Padstack>(pad.name, m_package);
         auto padstackInst = nano::Create<pkg::PadstackInst>(padstack, net);
         if (Pad::Type::THRU_HOLE == pad.type) {
             auto hole = nano::Create<pkg::ShapeCircle>(coordUnit, pad.pos, pad.drill / 2);
             padstack->SetViaShape(hole);
-            padstackInst->SetLayerRange(package->GetTopStackupLayer(), package->GetBotStackupLayer());
+            padstackInst->SetLayerRange(m_package->GetTopStackupLayer(), m_package->GetBotStackupLayer());
         }
     }
 
@@ -499,7 +502,15 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> lay
 
 void KiCadExtension::CreatePadstackInst(const Via & via, Id<pkg::Layout> layout)
 {
-    //todo
+    const auto & coordUnit = layout->GetCoordUnit();
+    auto padstack = GetOrCreatePadstack(coordUnit.toCoord(via.size), coordUnit.toCoord(via.drillSize));
+
+    auto net = m_lut.FindNet(via.net);
+    auto topLayer = m_lut.FindStackupLayer(via.layers[0]);
+    auto botLayer = m_lut.FindStackupLayer(via.layers[1]);
+    auto padstackInst = nano::Create<pkg::PadstackInst>(padstack, net);
+    padstackInst->SetLayerRange(topLayer, botLayer);
+    //todo transform
 }
 
 CId<pkg::Material> KiCadExtension::GetOrCreateMaterial(std::string_view name)
@@ -509,6 +520,18 @@ CId<pkg::Material> KiCadExtension::GetOrCreateMaterial(std::string_view name)
         return iter->second;
     auto mat = nano::Create<pkg::Material>(name.data());
     return m_lut.material.emplace(name, mat).first->second;
+}
+
+CId<pkg::Padstack> KiCadExtension::GetOrCreatePadstack(NCoord size, NCoord drill)
+{
+    auto padstack = nano::Find<pkg::Padstack>([&](const auto & padstack) {
+        return false;//todo;
+    });
+    if (not padstack) {
+        auto name = "via" + std::to_string(m_package->NumOfPadstacks());
+        padstack = nano::Create<pkg::Padstack>(std::move(name), m_package);
+    }
+    return padstack;
 }
 
 CId<pkg::StackupLayer> KiCadExtension::Lut::FindStackupLayer(IdType id) const
