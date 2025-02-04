@@ -28,6 +28,15 @@ struct hash<::nano::CId<T>>
     }
 };
 
+template <typename T, std::size_t N>
+struct hash<::nano::Arr<T, N>>
+{
+    std::size_t operator() (const ::nano::Arr<T, N> & arr) const
+    {
+        return generic::hash::OrderedHash(arr);
+    }
+};
+
 template <typename T>
 struct hash<::nano::Vec<T>>
 {
