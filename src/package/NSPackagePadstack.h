@@ -11,8 +11,7 @@ namespace nano::package
             BOOST_HANA_DEFINE_STRUCT(Via,
             (Float, rotation),
             (NCoord2D, offset),
-            (CId<Shape>, shape),
-            (CId<Shape>, drill));
+            (CId<Shape>, shape));
             Via() { NS_INIT_HANA_STRUCT(*this) }
             UPtr<Shape> GetShape() const;
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT

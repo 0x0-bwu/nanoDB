@@ -79,12 +79,13 @@ template <typename Key, typename Value>
 using HashMap = std::unordered_map<Key, Value>;
 
 template <typename T> using Vec  = std::vector<T>;
-template <typename T> using Arr2 = std::array<T, 2>;
-template <typename T> using Arr3 = std::array<T, 3>;
-template <typename T> using Arr4 = std::array<T, 4>;
-template <typename T> using Arr5 = std::array<T, 5>;
-template <typename T> using Arr6 = std::array<T, 6>;
-template <typename T> using Arr9 = std::array<T, 9>;
+template <typename T, size_t N> using Arr = std::array<T, N>;
+template <typename T> using Arr2 = Arr<T, 2>;
+template <typename T> using Arr3 = Arr<T, 3>;
+template <typename T> using Arr4 = Arr<T, 4>;
+template <typename T> using Arr5 = Arr<T, 5>;
+template <typename T> using Arr6 = Arr<T, 6>;
+template <typename T> using Arr9 = Arr<T, 9>;
 
 template <typename T> class Id;
 template <typename T> class CId;

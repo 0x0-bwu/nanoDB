@@ -44,7 +44,7 @@ private:
     void CreatePadstackInst(const Via & via, Id<pkg::Layout> layout);
     
     CId<pkg::Material> GetOrCreateMaterial(std::string_view name);
-    CId<pkg::Padstack> GetOrCreatePadstack(NCoord size, NCoord drill);
+    CId<pkg::Padstack> GetOrCreatePadstack(NCoord padSize, NCoord viaSize);
     
     template <typename Lut>
     static std::string NextName(const std::string & name, const Lut & lut)
@@ -112,7 +112,8 @@ private:
         CId<pkg::Net> FindNet(IdType id) const;
         HashMap<IdType, CId<pkg::Net>> nets;
         HashMap<IdType, CId<pkg::StackupLayer>> layers;
-        HashMap<std::string_view, CId<pkg::Material>> material;
+        HashMap<Arr2<NCoord>, CId<pkg::Padstack>> padstacks;
+        HashMap<std::string_view, CId<pkg::Material>> materials;
     };
     Lut m_lut;
     
