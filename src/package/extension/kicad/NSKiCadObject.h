@@ -138,7 +138,7 @@ struct Pad
     FCoord2D size;
     std::string name{};
     Points shapePolygon;
-    Vec<std::string_view> layers;
+    Vec<std::string> layers;
     void SetType(const std::string & str);
     void SetShape(const std::string & str);
 };

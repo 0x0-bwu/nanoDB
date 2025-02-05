@@ -286,9 +286,9 @@ void KiCadExtension::ExtractPad(const Tree & node)
             GetValue(iter->branches, pad.drill);
         else if ("layers" == iter->value) {
             for (const auto & lyrNode : iter->branches)
-                pad.layers.emplace_back(lyrNode.value.c_str());
+                pad.layers.emplace_back(lyrNode.value);
         }
-        else if ("roundrect_ratio" == iter->value)
+        else if ("roundrect_rratio" == iter->value)
             GetValue(iter->branches, pad.roundrectRatio);
         else if ("net" == iter->value)
             GetValue(iter->branches, pad.net);
@@ -453,7 +453,7 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> lay
         for (const auto & layer : pad.layers) {
             auto iter = m_package->GetStackupLayerIter();
             while (auto stackupLayer = iter.Next()) {
-                if (generic::str::WildcardMatch(stackupLayer->GetName(), layer))
+                if (generic::str::WildcardMatch(stackupLayer->GetName(), layer.c_str()))
                     layers.emplace_back(stackupLayer);
             }
         }
@@ -468,7 +468,8 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> lay
 
     auto component = nano::Create<pkg::Component>(comp.name, footprintCell, layout);
     auto location = layout->GetCoordUnit().toCoord(comp.location);
-    component->SetTransform(makeTransform2D(1.0, -generic::math::Rad(comp.angle), location[0], location[1]));
+    auto transform = makeTransform2D(1.0, -generic::math::Rad(comp.angle), location[0], location[1]);
+    component->SetTransform(transform);
     auto stackupLayer = m_lut.FindStackupLayer(comp.layer); { NS_ASSERT(stackupLayer); }
     auto componentLayer = nano::Create<pkg::ComponentLayer>(comp.name, component, footprint);
     componentLayer->SetConnectedLayer(stackupLayer);
@@ -484,6 +485,9 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> lay
         auto net = m_lut.FindNet(pad.net);
         auto padstack = nano::Create<pkg::Padstack>(pad.name, m_package);
         auto padstackInst = nano::Create<pkg::PadstackInst>(padstack, net);
+        padstackInst->SetTransform(transform);
+        layout->AddConnObj(padstackInst);
+
         auto viaShape = nano::Create<pkg::ShapeCircle>(coordUnit, pad.pos, pad.drill / 2);
         padstack->SetViaShape(viaShape, coordUnit.toCoord(pad.pos), -generic::math::Rad(pad.angle));
         Id<pkg::Shape> padShape;
@@ -512,7 +516,7 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> lay
             NS_ASSERT_MSG(false, "todo, implement other pad shapes.");
         }
         Vec<CId<StackupLayer>> layers;
-        // getPadStackupLayers(pad, layers); //todo, fix regex
+        getPadStackupLayers(pad, layers);
         for (auto layer : layers)
             padstack->SetPadShape(layer, padShape, coordUnit.toCoord(pad.pos), -generic::math::Rad(pad.angle));
         
