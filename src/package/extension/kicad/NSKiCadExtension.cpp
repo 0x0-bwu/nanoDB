@@ -300,20 +300,6 @@ void KiCadExtension::ExtractPad(const Tree & node)
             }
         }
     }
-    if (Pad::Shape::OVAL == pad.shape) {
-        pad.shapePolygon.emplace_back(pad.size[1] / -2, 0);
-        pad.shapePolygon.emplace_back(pad.size[1] / 2, 0);
-    }
-    else if (Pad::Shape::RECT == pad.shape) {
-        auto x1 = pad.size[0] / -2;
-        auto y1 = pad.size[1] / 2;
-        auto x2 = pad.size[0] / 2;
-        auto y2 = pad.size[1] / -2;
-        pad.shapePolygon.emplace_back(x1, y1);
-        pad.shapePolygon.emplace_back(x2, y1);
-        pad.shapePolygon.emplace_back(x2, y2);
-        pad.shapePolygon.emplace_back(x1, y2);
-    }
     m_current.comp->pads.emplace_back(std::move(pad));
 }
 
@@ -463,7 +449,7 @@ void KiCadExtension::CreateRoutingWires(const Component & comp, Id<pkg::Layout> 
 
 void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> layout)
 {
-    auto getLayers = [&](const Pad & pad, Vec<CId<StackupLayer>> & layers) {
+    auto getPadStackupLayers = [&](const Pad & pad, Vec<CId<StackupLayer>> & layers) {
         for (const auto & layer : pad.layers) {
             auto iter = m_package->GetStackupLayerIter();
             while (auto stackupLayer = iter.Next()) {
@@ -473,32 +459,68 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> lay
         }
     };
     const auto & coordUnit = layout->GetCoordUnit();
-    auto fpCell = nano::Create<pkg::FootprintCell>(comp.name, m_package);
-    CreateBoundary(comp, fpCell);
+    auto footprintCell = nano::Create<pkg::FootprintCell>(comp.name, m_package);
+    CreateBoundary(comp, footprintCell);
+    m_package->AddCell(footprintCell);
 
-    m_package->AddCell(fpCell);
-    auto component = nano::Create<pkg::Component>(comp.name, fpCell, layout);
+    auto footprint = nano::Create<pkg::Footprint>(comp.name, footprintCell, FootprintLocation::BOT);
+    footprintCell->AddFootprint(footprint);
+
+    auto component = nano::Create<pkg::Component>(comp.name, footprintCell, layout);
     auto location = layout->GetCoordUnit().toCoord(comp.location);
     component->SetTransform(makeTransform2D(1.0, -generic::math::Rad(comp.angle), location[0], location[1]));
+    auto stackupLayer = m_lut.FindStackupLayer(comp.layer); { NS_ASSERT(stackupLayer); }
+    auto componentLayer = nano::Create<pkg::ComponentLayer>(comp.name, component, footprint);
+    componentLayer->SetConnectedLayer(stackupLayer);
+    component->AddComponentLayer(componentLayer);
 
-    auto footprint = nano::Create<pkg::Footprint>("mounting", fpCell, FootprintLocation::BOT);
     for (const auto & pad : comp.pads) {
+        auto footprintPin = nano::Create<pkg::FootprintPin>(pad.name, footprint);
+        footprintPin->SetLocation(coordUnit.toCoord(pad.pos));
+        footprint->AddPin(footprintPin);
+        auto componentPin = nano::Create<pkg::ComponentPin>(pad.name, componentLayer, footprintPin);
+        componentLayer->AddPin(componentPin);
+        
         auto net = m_lut.FindNet(pad.net);
         auto padstack = nano::Create<pkg::Padstack>(pad.name, m_package);
         auto padstackInst = nano::Create<pkg::PadstackInst>(padstack, net);
+        auto viaShape = nano::Create<pkg::ShapeCircle>(coordUnit, pad.pos, pad.drill / 2);
+        padstack->SetViaShape(viaShape, coordUnit.toCoord(pad.pos), -generic::math::Rad(pad.angle));
+        Id<pkg::Shape> padShape;
+        if (not pad.shapePolygon.empty()) {
+            padShape = nano::Create<pkg::ShapePolygon>(coordUnit, pad.shapePolygon);
+        }
+        else if (Pad::Shape::RECT == pad.shape) {
+            auto x = coordUnit.toCoord(pad.size[0] / 2);
+            auto y = coordUnit.toCoord(pad.size[1] / 2);
+            padShape = nano::Create<pkg::ShapeRect>(NCoord2D(-x, -y), NCoord2D(x, y));
+        }
+        else if (Pad::Shape::ROUNDRECT == pad.shape) {
+            auto x = coordUnit.toCoord(pad.size[0] / 2);
+            auto y = coordUnit.toCoord(pad.size[1] / 2);
+            NCoord cornerR = std::min(x, y) * pad.roundrectRatio;
+            Vec<NCoord2D> outline{NCoord2D(-x, -y), NCoord2D(x, -y), NCoord2D(x, y), NCoord2D(-x, y)};
+            padShape = nano::Create<pkg::ShapePolygon>(std::move(outline), cornerR);
+        }
+        else if (Pad::Shape::CIRCLE == pad.shape) {
+            padShape = nano::Create<pkg::ShapeCircle>(coordUnit, FCoord2D(0, 0), pad.size[0] / 2);
+        }
+        else if (Pad::Shape::OVAL == pad.shape) {
+            padShape = nano::Create<pkg::ShapeOval>(coordUnit, FCoord2D(0, 0), pad.size[0] / 2, pad.size[1] / 2);
+        }
+        else {
+            NS_ASSERT_MSG(false, "todo, implement other pad shapes.");
+        }
+        Vec<CId<StackupLayer>> layers;
+        // getPadStackupLayers(pad, layers); //todo, fix regex
+        for (auto layer : layers)
+            padstack->SetPadShape(layer, padShape, coordUnit.toCoord(pad.pos), -generic::math::Rad(pad.angle));
+        
         if (Pad::Type::THRU_HOLE == pad.type) {
-            auto hole = nano::Create<pkg::ShapeCircle>(coordUnit, pad.pos, pad.drill / 2);
-            padstack->SetViaShape(hole);
             padstackInst->SetLayerRange(m_package->GetTopStackupLayer(), m_package->GetBotStackupLayer());
         }
+        else padstackInst->SetLayerRange(stackupLayer, stackupLayer);
     }
-
-
-    auto stackupLayer = m_lut.FindStackupLayer(comp.layer); { NS_ASSERT(stackupLayer); }
-    auto mountingLayer = nano::Create<pkg::ComponentLayer>("mounting", component, footprint);
-    mountingLayer->SetConnectedLayer(stackupLayer);
-    component->AddComponentLayer(mountingLayer);
-
     layout->AddComponent(component);
 }
 

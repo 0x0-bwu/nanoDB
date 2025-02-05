@@ -67,6 +67,11 @@ FootprintPin::FootprintPin(std::string name, CId<Footprint> footprint, NCoord2D 
     m_.location = location;
 }
 
+FootprintPin::FootprintPin(std::string name, CId<Footprint> footprint)
+ : FootprintPin(std::move(name), footprint, NCoord2D(), IOType::UNKNOWN)
+{
+}
+
 FootprintPin::FootprintPin() : FootprintPin("", CId<Footprint>(), NCoord2D(), IOType::UNKNOWN)
 {
 }

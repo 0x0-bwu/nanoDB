@@ -13,6 +13,7 @@ enum class ShapeType
     INVALID = 0,
     RECTANGLE,
     PATH,
+    OVAL,
     CIRCLE,
     POLYGON,
     POLYGON_WITH_HOLES,
@@ -86,6 +87,35 @@ private:
     NS_CLASS_MEMBERS_DEFINE(
     (NPolyline, shape),
     (NCoord, width))
+};
+
+class ShapeOval : public Shape
+{
+public:
+    ShapeOval(const CoordUnit & coordUnit, FCoord2D o, FCoord a, FCoord b);
+    ShapeOval(NCoord2D o, NCoord a, NCoord b);
+    ShapeOval();
+
+    bool hasHole() const override { return false; }
+    NBox2D GetBBox() const override;
+    NPolygon GetOutline() const override;
+    NPolygonWithHoles GetContour() const override;
+    void Transform(const Transform2D & trans) override;
+    ShapeType GetType() const override { return ShapeType::OVAL; }
+    bool isValid() const override;
+
+    NCoord2D GetCenter() const { return m_.center; }
+    NCoord GetWitdh() const { return m_.a; }
+    NCoord GetHeight() const { return m_.b; }
+
+    size_t Hash() const override { return nano::Hash(m_); }
+private:
+    NS_CLONE_FUNCTIONS_DECLARATION(ShapeOval)
+    NS_SERIALIZATION_FUNCTIONS_DECLARATION
+    NS_CLASS_MEMBERS_DEFINE(
+    (NCoord2D, center),
+    (NCoord, a),
+    (NCoord, b))
 };
 
 class ShapeCircle : public Shape
@@ -193,12 +223,14 @@ private:
 NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::Shape)
 NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::ShapeRect)
 NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::ShapePath)
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::ShapeOval)
 NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::ShapeCircle)
 NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::ShapePolygon)
 NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::ShapePolygonWithHoles)
 NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::ShapeFromTemplate)
 NS_INHERIT_FROM_BASE(nano::ShapeRect, nano::Shape)
 NS_INHERIT_FROM_BASE(nano::ShapePath, nano::Shape)
+NS_INHERIT_FROM_BASE(nano::ShapeOval, nano::Shape)
 NS_INHERIT_FROM_BASE(nano::ShapeCircle, nano::Shape)
 NS_INHERIT_FROM_BASE(nano::ShapePolygon, nano::Shape)
 NS_INHERIT_FROM_BASE(nano::ShapePolygonWithHoles, nano::Shape)

@@ -22,6 +22,7 @@ class FootprintPin : public Pin
 {
 public:
     FootprintPin(std::string name, CId<Footprint> footprint, NCoord2D location, IOType ioType);
+    FootprintPin(std::string name, CId<Footprint> footprint);
 
     void SetLocation(CRef<NCoord2D> location) { m_.location = location; }
     CRef<NCoord2D> GetLocation() const { return m_.location; }
