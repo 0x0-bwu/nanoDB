@@ -105,9 +105,11 @@ CId<Material> Padstack::GetMaterial() const
     return m_.material;
 }
 
-void Padstack::SetPadShape(CId<StackupLayer> layer, CId<Shape> shape)
+void Padstack::SetPadShape(CId<StackupLayer> layer, CId<Shape> shape, const NCoord2D & offset, Float rotation)
 {
     m_.pads[layer].shape = shape;
+    m_.pads[layer].offset = offset;
+    m_.pads[layer].rotation = rotation;
 }
 
 UPtr<Shape> Padstack::GetPadShape(CId<StackupLayer> layer) const
@@ -117,9 +119,11 @@ UPtr<Shape> Padstack::GetPadShape(CId<StackupLayer> layer) const
     return iter->second.GetShape();
 }
 
-void Padstack::SetViaShape(CId<Shape> shape)
+void Padstack::SetViaShape(CId<Shape> shape, const NCoord2D & offset, Float rotation)
 {
     m_.via.shape = shape;
+    m_.via.offset = offset;
+    m_.via.rotation = rotation;
 }
 
 UPtr<Shape> Padstack::GetViaShape() const

@@ -26,6 +26,7 @@ enum class MaterialType;
 class Shape;
 class ShapeCircle;
 class ShapeFromTemplate;
+class ShapeOval;
 class ShapePath;
 class ShapePolygon;
 class ShapePolygonWithHoles;
@@ -102,6 +103,7 @@ using MaterialType           = nano::MaterialType;
 using Shape                  = nano::Shape;
 using ShapeCircle            = nano::ShapeCircle;
 using ShapeFromTemplate      = nano::ShapeFromTemplate;
+using ShapeOval              = nano::ShapeOval;
 using ShapePath              = nano::ShapePath;
 using ShapePolygon           = nano::ShapePolygon;
 using ShapePolygonWithHoles  = nano::ShapePolygonWithHoles;
@@ -195,6 +197,7 @@ inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<Shape                            >, "Shape"sv                          ),
     hana::make_pair(hana::type_c<ShapeCircle                      >, "ShapeCircle"sv                    ),
     hana::make_pair(hana::type_c<ShapeFromTemplate                >, "ShapeFromTemplate"sv              ),
+    hana::make_pair(hana::type_c<ShapeOval                        >, "ShapeOval"sv                      ),
     hana::make_pair(hana::type_c<ShapePath                        >, "ShapePath"sv                      ),
     hana::make_pair(hana::type_c<ShapePolygon                     >, "ShapePolygon"sv                   ),
     hana::make_pair(hana::type_c<ShapePolygonWithHoles            >, "ShapePolygonWithHoles"sv          ),
@@ -256,6 +259,7 @@ inline constexpr static auto inheritanceMap = hana::make_map(
     hana::make_pair(hana::type_c<MaterialPropValue                >, hana::type_c<MaterialProp         >),
     hana::make_pair(hana::type_c<ShapeCircle                      >, hana::type_c<Shape                >),
     hana::make_pair(hana::type_c<ShapeFromTemplate                >, hana::type_c<Shape                >),
+    hana::make_pair(hana::type_c<ShapeOval                        >, hana::type_c<Shape                >),
     hana::make_pair(hana::type_c<ShapePath                        >, hana::type_c<Shape                >),
     hana::make_pair(hana::type_c<ShapePolygon                     >, hana::type_c<Shape                >),
     hana::make_pair(hana::type_c<ShapePolygonWithHoles            >, hana::type_c<Shape                >),

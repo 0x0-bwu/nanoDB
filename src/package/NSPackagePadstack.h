@@ -76,10 +76,10 @@ namespace nano::package
 
         CId<Material> GetMaterial() const;
 
-        void SetPadShape(CId<StackupLayer> layer, CId<Shape> shape);
+        void SetPadShape(CId<StackupLayer> layer, CId<Shape> shape, const NCoord2D & offset = {0, 0}, Float rotation = 0);
         UPtr<Shape> GetPadShape(CId<StackupLayer> layer) const;
         
-        void SetViaShape(CId<Shape> shape);
+        void SetViaShape(CId<Shape> shape, const NCoord2D & offset = {0, 0}, Float rotation = 0);
         UPtr<Shape> GetViaShape() const;
 
     private:

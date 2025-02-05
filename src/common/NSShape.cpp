@@ -2,6 +2,7 @@
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::Shape)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::ShapeRect)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::ShapePath)
+NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::ShapeOval)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::ShapeCircle)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::ShapePolygon)
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::ShapePolygonWithHoles)
@@ -40,6 +41,15 @@ void ShapePath::serialize(Archive & ar, const unsigned int version)
     NS_SERIALIZATION_CLASS_MEMBERS(ar);
 }
 NS_SERIALIZATION_FUNCTIONS_IMP(ShapePath)
+
+template <typename Archive>
+void ShapeOval::serialize(Archive & ar, const unsigned int version)
+{
+    NS_UNUSED(version);
+    ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(Shape);
+    NS_SERIALIZATION_CLASS_MEMBERS(ar);
+}
+NS_SERIALIZATION_FUNCTIONS_IMP(ShapeOval)
 
 template <typename Archive>
 void ShapeCircle::serialize(Archive & ar, const unsigned int version)
@@ -173,6 +183,58 @@ void ShapePath::SetPoints(Vec<NCoord2D> points)
 }
 
 Ptr<ShapePath> ShapePath::CloneFrom(const ShapePath & src)
+{
+    m_ = src.m_;
+    return this;
+}
+
+ShapeOval::ShapeOval(const CoordUnit & coordUnit, FCoord2D o, FCoord a, FCoord b)
+ : ShapeOval(coordUnit.toCoord(o), coordUnit.toCoord(a), coordUnit.toCoord(b))
+{
+}
+
+ShapeOval::ShapeOval(NCoord2D o, NCoord a, NCoord b)
+{
+    NS_CLASS_MEMBERS_INITIALIZE
+    m_.center = o;
+    m_.a = a;
+    m_.b = b;
+}
+
+ShapeOval::ShapeOval()
+ : ShapeOval(NCoord2D(0, 0), 0, 0)
+{
+}
+
+NBox2D ShapeOval::GetBBox() const
+{
+    NCoord2D r(m_.a, m_.b);
+    return NBox2D(m_.center - r, m_.center + r);
+}
+
+NPolygon ShapeOval::GetOutline() const
+{
+    return toPolygon(Ellipse(m_.center, m_.a, m_.b), NANO_SHAPE_CIRCLE_DIV);
+}
+
+NPolygonWithHoles ShapeOval::GetContour() const
+{
+    NPolygonWithHoles pwh;
+    pwh.outline = GetOutline();
+    return pwh;
+}
+
+void ShapeOval::Transform(const Transform2D & trans)
+{
+    generic::geometry::Transform(m_.center, trans.GetTransform());
+}
+
+bool ShapeOval::isValid() const
+{
+    return generic::math::GT<NCoord>(m_.a, 0) and generic::math::GT<NCoord>(m_.b, 0);
+}
+
+Ptr<ShapeOval> ShapeOval::CloneFrom(const ShapeOval & src)
 {
     m_ = src.m_;
     return this;
