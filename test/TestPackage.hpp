@@ -683,6 +683,7 @@ void t_create_package()
             bw->SetSolderJoints(thinBwSolderDef);
         else bw->SetSolderJoints(thickBwSolderDef);
         bw->SetBondingWireType(BondingWireType::JEDEC4);
+        bw->SetMaterial(matCu);
     }
     
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/CAS300M12BM2.nano/database.bin";
