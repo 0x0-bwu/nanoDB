@@ -167,14 +167,14 @@ template <typename... Eles>
 bool Collection<Eles...>::Save(std::string_view filename, ArchiveFormat fmt) const
 {
     unsigned int version = CURRENT_VERSION.toInt();
-    return generic::archive::Save(*this, version, filename, fmt);
+    return nano::Save(*this, version, filename, fmt);
 }
 
 template <typename... Eles>
 bool Collection<Eles...>::Load(std::string_view filename, ArchiveFormat fmt)
 {
     unsigned int version{0};
-    if (generic::archive::Load(*this, version, filename, fmt)) {
+    if (nano::Load(*this, version, filename, fmt)) {
         SetCurrentDir(generic::fs::DirName(filename).string());
         m_version = Version(version);
         return true;

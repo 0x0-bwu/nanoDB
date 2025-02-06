@@ -331,6 +331,7 @@ void PadstackInst::Transform(const Transform2D & transform)
 Ptr<PadstackInst> PadstackInst::CloneFrom(const PadstackInst & src)
 {
     ConnObj::CloneFrom(src);
+    Transformable2D::CloneFrom(src);
     m_ = src.m_;
     return this;
 }

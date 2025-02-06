@@ -27,7 +27,7 @@ public:
     Derived * operator[] (const Id<Derived> & id)
     { 
         static_assert(std::is_same_v<traits::BaseOf<Derived>, T>, "should be derived class or self");
-        return static_cast<Derived *>(m_data[IdType(id)]);
+        return static_cast<Derived *>(m_data[Index(id)]);
     }   
 
     template <typename Derived>
@@ -36,10 +36,10 @@ public:
         return const_cast<Container<T>*>(this)->operator[]<Derived>(id);
     }
     
-    IdType Allocate() { return IdType(m_data.Append(nullptr)); }
+    Index Allocate() { return Index(m_data.Append(nullptr)); }
 
     template <typename Derived>
-    Id<Derived> Register(IdType id, Derived * p)
+    Id<Derived> Register(Index id, Derived * p)
     {
         static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
         NS_ASSERT(m_data[id] == nullptr and p);
@@ -286,11 +286,11 @@ public:
         return id;
     }
 
-    SPtr<T> SharedClone() const { return SPtr<T>(CloneImpl(INVALID_ID)); }
-    UPtr<T> UniqueClone() const { return UPtr<T>(CloneImpl(INVALID_ID)); }
+    SPtr<T> SharedClone() const { return SPtr<T>(CloneImpl(INVALID_INDEX)); }
+    UPtr<T> UniqueClone() const { return UPtr<T>(CloneImpl(INVALID_INDEX)); }
     
 protected:
-    virtual Ptr<T> CloneImpl(IdType id) const = 0;
+    virtual Ptr<T> CloneImpl(Index id) const = 0;
 };
 
 template <typename T>
@@ -300,10 +300,10 @@ public:
     friend class Container<T>;
     virtual ~Entity() = default;
 
-    bool isValid() const { return m_id != INVALID_ID; }
+    bool isValid() const { return m_id != INVALID_INDEX; }
 
     template <typename Derived>
-    bool Identical(const Index<Id<Derived>> & id) const
+    bool Identical(const generic::utils::Index<Id<Derived>, nano::Index> & id) const
     {
         static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
         using SizeType = typename Id<Derived>::SizeType;
@@ -312,7 +312,7 @@ public:
     
     /// binds
     template <typename Other>
-    void Bind(const Index<Id<Other>> & other);
+    void Bind(const generic::utils::Index<Id<Other>, nano::Index> & other);
 
     template <typename Other>
     void Unbind();
@@ -336,8 +336,8 @@ public:
 
     virtual size_t Hash() const { return 0; }
 protected:
-    void SetId(IdType id)  { m_id = id; }
-    IdType GetId() const { return m_id; }
+    void SetId(Index id)  { m_id = id; }
+    Index GetId() const { return m_id; }
 public:
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     template <typename Archive>
@@ -348,8 +348,8 @@ public:
     }
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 private:
-    IdType m_id{INVALID_ID};
-    IdType m_binding{INVALID_ID};
+    Index m_id{INVALID_INDEX};
+    Index m_binding{INVALID_INDEX};
 };
 
 namespace traits {
@@ -361,14 +361,14 @@ class Binding : public Entity<Binding>
 {
 public:
     using Key = std::type_index; 
-    using BindingMap = HashMap<std::type_index, IdType>;
+    using BindingMap = HashMap<std::type_index, Index>;
     static traits::NameIndexMap nameIndexMap;
     static traits::IndexNameMap indexNameMap;
 
     template <typename T>
-    void Set(const Index<Id<T>> & other)
+    void Set(const generic::utils::Index<Id<T>, nano::Index> & other)
     {
-        m_bindingMap.emplace(typeid(T), IdType(other));
+        m_bindingMap.emplace(typeid(T), Index(other));
     }
 
     template <typename T>
@@ -432,15 +432,15 @@ inline void SetCurrentDir(std::string dir)
 }
 
 template <typename T>
-class Id : public Index<Id<T>>
+class Id : public generic::utils::Index<Id<T>, nano::Index>
 {
 public:
-    using Index<Id<T>>::m_id;
-    using SizeType = typename Index<Id<T>>::SizeType;
+    using generic::utils::Index<Id<T>, nano::Index>::m_id;
+    using SizeType = typename generic::utils::Index<Id<T>, nano::Index>::SizeType;
 
-    Id() : Index<Id<T>>() {}
-    Id(const Index<Id<T>> & id) = delete;
-    explicit Id(SizeType id) : Index<Id<T>>(id) {}
+    Id() : generic::utils::Index<Id<T>, nano::Index>() {}
+    Id(const generic::utils::Index<Id<T>, nano::Index> & id) = delete;
+    explicit Id(SizeType id) : generic::utils::Index<Id<T>, nano::Index>(id) {}
 
     template <typename Derived>
     requires std::is_base_of_v<T, Derived>
@@ -450,12 +450,12 @@ public:
     requires (not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>)
     explicit Id(const Id<Base> & base) // explicit convert from base to derivied, will do dynamic cast check
     {
-        m_id = dynamic_cast<T *>(base.operator->()) ? SizeType(base) : INVALID_ID;
+        m_id = dynamic_cast<T *>(base.operator->()) ? SizeType(base) : INVALID_INDEX;
     }
 
     CId<T> GetCId() const { return CId<T>(m_id); }
 
-    bool isNull() const { return m_id == INVALID_ID or nullptr == this->operator->(); }
+    bool isNull() const { return m_id == INVALID_INDEX or nullptr == this->operator->(); }
 
     operator bool() const override { return not isNull(); }
 
@@ -478,21 +478,21 @@ public:
     template <typename Archive>
     void serialize(Archive & ar, const unsigned int)
     {
-        ar & boost::serialization::make_nvp("id", boost::serialization::base_object<Index<Id<T>>>(*this));
+        ar & boost::serialization::make_nvp("id", boost::serialization::base_object<generic::utils::Index<Id<T>, nano::Index>>(*this));
     }
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 };
 
 template <typename T>
-class CId : public Index<Id<T>>
+class CId : public generic::utils::Index<Id<T>, nano::Index>
 {
 public:
-    using Index<Id<T>>::m_id;
-    using SizeType = typename Index<Id<T>>::SizeType;
+    using generic::utils::Index<Id<T>, nano::Index>::m_id;
+    using SizeType = typename generic::utils::Index<Id<T>, nano::Index>::SizeType;
 
-    CId() : Index<Id<T>>() {}
-    CId(const Index<Id<T>> & id) = delete;
-    explicit CId(SizeType id) : Index<Id<T>>(id) {}
+    CId() : generic::utils::Index<Id<T>, nano::Index>() {}
+    CId(const generic::utils::Index<Id<T>, nano::Index> & id) = delete;
+    explicit CId(SizeType id) : generic::utils::Index<Id<T>, nano::Index>(id) {}
 
     template <typename Derived>
     requires std::is_base_of_v<T, Derived>
@@ -506,17 +506,17 @@ public:
     requires (not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>)
     explicit CId(const Id<Base> & base) // explicit convert from base to derived, will do dynamic cast check
     {
-        m_id = dynamic_cast<const T *>(base.operator->()) ? SizeType(base) : INVALID_ID;
+        m_id = dynamic_cast<const T *>(base.operator->()) ? SizeType(base) : INVALID_INDEX;
     }
 
     template <typename Base>
     requires (not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>)
     explicit CId(const CId<Base> & base) // explicit convert from base to derived, will do dynamic cast check
     {
-        m_id = dynamic_cast<const T *>(base.operator->()) ? SizeType(base) : INVALID_ID;
+        m_id = dynamic_cast<const T *>(base.operator->()) ? SizeType(base) : INVALID_INDEX;
     }
 
-    bool isNull() const { return m_id == INVALID_ID or nullptr == this->operator->(); }
+    bool isNull() const { return m_id == INVALID_INDEX or nullptr == this->operator->(); }
 
     operator bool() const override { return not isNull(); }
 
@@ -541,7 +541,7 @@ public:
     template <typename Archive>
     void serialize(Archive & ar, const unsigned int)
     {
-        ar & boost::serialization::make_nvp("id", boost::serialization::base_object<Index<Id<T>>>(*this));
+        ar & boost::serialization::make_nvp("id", boost::serialization::base_object<generic::utils::Index<Id<T>, nano::Index>>(*this));
     }
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 };
@@ -549,10 +549,10 @@ public:
 /// binds
 template <typename T>
 template <typename Other>
-void Entity<T>::Bind(const Index<Id<Other>> & other)
+void Entity<T>::Bind(const generic::utils::Index<Id<Other>, nano::Index> & other)
 {
-    if (m_binding == INVALID_ID)
-        m_binding = IdType(nano::Create<Binding>());
+    if (m_binding == INVALID_INDEX)
+        m_binding = Index(nano::Create<Binding>());
     Id<Binding>(m_binding)->Set<Other>(other);
 }
 
@@ -560,7 +560,7 @@ template <typename T>
 template <typename Other>
 void Entity<T>::Unbind()
 {
-    if(m_binding != INVALID_ID)
+    if(m_binding != INVALID_INDEX)
         Id<Binding>(m_binding)->Unset<Other>();
 }
 
@@ -568,7 +568,7 @@ template <typename T>
 template <typename Other>
 CId<Other> Entity<T>::GetBind() const
 {
-    if(m_binding != INVALID_ID)
+    if(m_binding != INVALID_INDEX)
         return CId<Binding>(m_binding)->Get<Other>();
     return CId<Other>();
 }
@@ -596,7 +596,7 @@ void serialize(Archive & ar, typename nano::Binding::BindingMap & m, const unsig
     }
     else {
         m.clear();
-        IdType id;
+        Index id;
         std::string name;
         for (size_t i = 0; i < size; ++i) {
             ar & boost::serialization::make_nvp("name", name);

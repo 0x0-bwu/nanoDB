@@ -72,13 +72,13 @@ void Layer::SetGroup(const std::string & str)
         group = Group::USER;
 }
 
-Layer & Database::AddLayer(IdType id, std::string name)
+Layer & Database::AddLayer(Index id, std::string name)
 {
     auto & layer = layers.emplace(name, Layer(id, name)).first->second;
     return layer;
 }
 
-Net & Database::AddNet(IdType id, std::string name)
+Net & Database::AddNet(Index id, std::string name)
 {
     auto & net = nets.emplace(id, Net(id, name)).first->second;
     netLut.emplace(net.name.c_str(), &net);
@@ -91,7 +91,7 @@ Component & Database::AddComponent(const std::string & name)
     return comp;
 }
 
-Ptr<Net> Database::FindNet(IdType id)
+Ptr<Net> Database::FindNet(Index id)
 {
     auto iter = nets.find(id);
     if (iter == nets.end()) return nullptr;

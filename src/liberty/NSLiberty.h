@@ -3,8 +3,8 @@
 
 namespace nano::liberty {
 
-inline static constexpr IdType FALL = 0;
-inline static constexpr IdType RISE = 1; 
+inline static constexpr Index FALL = 0;
+inline static constexpr Index RISE = 1; 
 
 enum class DelayModel : int8_t
 {

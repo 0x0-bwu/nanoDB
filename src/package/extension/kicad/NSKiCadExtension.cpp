@@ -64,7 +64,7 @@ void KiCadExtension::ExtractNode(const Tree & node)
 void KiCadExtension::ExtractLayer(const Tree & node)
 {
     for (const auto & sub : node.branches) {   
-        IdType id = std::stoi(sub.value);         
+        Index id = std::stoi(sub.value);         
         auto name = sub.branches.at(0).value;
         auto & layer = m_kicad->AddLayer(id, name);
         layer.SetGroup(sub.branches.at(1).value);
@@ -87,7 +87,7 @@ void KiCadExtension::ExtractStackup(const Tree & node)
             auto iter = sub.branches.begin();
             auto layer = m_kicad->FindLayer(iter->value);
             if (not layer) {
-                dielectricLayer.reset(new Layer(INVALID_ID, iter->value));
+                dielectricLayer.reset(new Layer(INVALID_INDEX, iter->value));
                 layer = dielectricLayer.get();
             }
             for (iter = std::next(iter); iter != sub.branches.end(); ++iter) {
@@ -112,7 +112,7 @@ void KiCadExtension::ExtractStackup(const Tree & node)
 
 void KiCadExtension::ExtractNet(const Tree & node)
 {
-    IdType netId{INVALID_ID};
+    Index netId{INVALID_INDEX};
     auto & netName = node.branches.at(1).value;
     GetValue(node.branches, netId);
     m_kicad->AddNet(netId, netName);
@@ -128,7 +128,7 @@ void KiCadExtension::ExtractFootprint(const Tree & node)
         const auto & branches = iter->branches;
         if ("layer" == iter->value) {
             auto layer = m_kicad->FindLayer(branches.front().value);
-            comp.layer = layer ? layer->id : INVALID_ID;
+            comp.layer = layer ? layer->id : INVALID_INDEX;
             comp.flipped = (0 != comp.layer);
         }
         else if ("at" == iter->value)
@@ -374,7 +374,7 @@ void KiCadExtension::CreateStackup()
         else layer->SetConductingMaterial(mat);
         elevation -= kLayer.thickness;
         m_package->AddStackupLayer(layer);
-        if (INVALID_ID != kLayer.id)
+        if (INVALID_INDEX != kLayer.id)
             m_lut.layers.emplace(kLayer.id, layer);
     }
 }
@@ -488,11 +488,11 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> lay
         padstackInst->SetTransform(transform);
         layout->AddConnObj(padstackInst);
 
-        auto viaShape = nano::Create<pkg::ShapeCircle>(coordUnit, pad.pos, pad.drill / 2);
-        padstack->SetViaShape(viaShape, coordUnit.toCoord(pad.pos), -generic::math::Rad(pad.angle));
+        auto viaShape = nano::Create<pkg::ShapeCircle>(NCoord2D{0, 0}, coordUnit.toCoord(pad.drill / 2));
+        padstack->SetViaShape(viaShape, coordUnit.toCoord(pad.pos), 0);
         Id<pkg::Shape> padShape;
         if (not pad.shapePolygon.empty()) {
-            padShape = nano::Create<pkg::ShapePolygon>(coordUnit, pad.shapePolygon);
+            padShape = nano::Create<pkg::ShapePolygon>(coordUnit.toCoord(pad.shapePolygon));
         }
         else if (Pad::Shape::RECT == pad.shape) {
             auto x = coordUnit.toCoord(pad.size[0] / 2);
@@ -507,10 +507,12 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> lay
             padShape = nano::Create<pkg::ShapePolygon>(std::move(outline), cornerR);
         }
         else if (Pad::Shape::CIRCLE == pad.shape) {
-            padShape = nano::Create<pkg::ShapeCircle>(coordUnit, FCoord2D(0, 0), pad.size[0] / 2);
+            padShape = nano::Create<pkg::ShapeCircle>(NCoord2D(0, 0), coordUnit.toCoord(pad.size[0] / 2));
         }
         else if (Pad::Shape::OVAL == pad.shape) {
-            padShape = nano::Create<pkg::ShapeOval>(coordUnit, FCoord2D(0, 0), pad.size[0] / 2, pad.size[1] / 2);
+            auto a = coordUnit.toCoord(pad.size[0] / 2);
+            auto b = coordUnit.toCoord(pad.size[1] / 2);
+            padShape = nano::Create<pkg::ShapeOval>(NCoord2D(0, 0), a, b);
         }
         else {
             NS_ASSERT_MSG(false, "todo, implement other pad shapes.");
@@ -518,7 +520,7 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> lay
         Vec<CId<StackupLayer>> layers;
         getPadStackupLayers(pad, layers);
         for (auto layer : layers)
-            padstack->SetPadShape(layer, padShape, coordUnit.toCoord(pad.pos), -generic::math::Rad(pad.angle));
+            padstack->SetPadShape(layer, padShape, coordUnit.toCoord(pad.pos), 0);
         
         if (Pad::Type::THRU_HOLE == pad.type) {
             padstackInst->SetLayerRange(m_package->GetTopStackupLayer(), m_package->GetBotStackupLayer());
@@ -576,13 +578,13 @@ CId<pkg::Padstack> KiCadExtension::GetOrCreatePadstack(NCoord padSize, NCoord vi
     return iter->second;
 }
 
-CId<pkg::StackupLayer> KiCadExtension::Lut::FindStackupLayer(IdType id) const
+CId<pkg::StackupLayer> KiCadExtension::Lut::FindStackupLayer(Index id) const
 {
     auto iter = layers.find(id);
     return iter == layers.cend() ? CId<pkg::StackupLayer>() : iter->second;
 }
 
-CId<pkg::Net> KiCadExtension::Lut::FindNet(IdType id) const
+CId<pkg::Net> KiCadExtension::Lut::FindNet(Index id) const
 {
     auto iter = nets.find(id);
     return iter == nets.cend() ? CId<pkg::Net>() : iter->second;
