@@ -86,7 +86,7 @@ private:                                                                        
 #define NS_CLONE_FUNCTIONS_DECLARATION(CLASS)                                                  \
 protected:                                                                                     \
     CLASS * CloneFrom(const CLASS &);                                                          \
-    CLASS * CloneImpl(IdType id) const override                                                \
+    CLASS * CloneImpl(Index id) const override                                                \
     { auto clone = new CLASS; clone->SetId(id); return clone->CloneFrom(*this); }              \
 private:                                                                                       \
 /**/

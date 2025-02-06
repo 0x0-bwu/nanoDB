@@ -54,8 +54,6 @@
     }                                                                                                                   \
     /**/
     #define NS_SERIALIZATION_CLASS_MEMBERS(ARCHIVE) NS_SERIALIZATION_HANA_STRUCT(ARCHIVE, m_)
-
-    namespace nano { using ArchiveFormat = generic::archive::ArchiveFormat; }
 #else
     #define NS_SERIALIZATION_ENTITY_OBJECT_NVP(T)    
     #define NS_SERIALIZATION_CLASS_EXPORT(T)

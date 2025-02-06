@@ -108,10 +108,10 @@ private:
     // kicad-nano lut
     struct Lut
     {
-        CId<pkg::StackupLayer> FindStackupLayer(IdType id) const;
-        CId<pkg::Net> FindNet(IdType id) const;
-        HashMap<IdType, CId<pkg::Net>> nets;
-        HashMap<IdType, CId<pkg::StackupLayer>> layers;
+        CId<pkg::StackupLayer> FindStackupLayer(Index id) const;
+        CId<pkg::Net> FindNet(Index id) const;
+        HashMap<Index, CId<pkg::Net>> nets;
+        HashMap<Index, CId<pkg::StackupLayer>> layers;
         HashMap<Arr2<NCoord>, CId<pkg::Padstack>> padstacks;
         HashMap<std::string_view, CId<pkg::Material>> materials;
     };
@@ -120,8 +120,8 @@ private:
     //current state
     struct State
     {
-        IdType noNamePadId{INVALID_ID};
         Ptr<Component> comp = nullptr;
+        Index noNamePadId{INVALID_INDEX};
         void Reset() { *this = State{}; }
     };
     State m_current;

@@ -43,24 +43,18 @@ using Ref = T &;
 template <typename T>
 using CRef = const T &;
 
-using IdType = size_t;
-
-template<typename Tag>
-using Index = generic::utils::Index<Tag, IdType>;
-
-using ScenarioId = Index<class Scenario>;
-
-
 using Int = int64_t;
+using Index = size_t;
+using ScenarioId = generic::utils::Index<class Scenario, nano::Index>;
 
 using Float32 = float;
 using Float64 = double;
 using Float = Float32;
 
-inline static constexpr auto INVALID_ID = std::numeric_limits<IdType>::max();
+inline static constexpr auto INVALID_INDEX = std::numeric_limits<Index>::max();
 inline static constexpr auto INVALID_FLOAT = std::numeric_limits<Float>::max();//std::nan(quiet_Nan) has issue with AppleClang with -ffast-math
 
-inline bool isValid(IdType id) { return id != INVALID_ID; }
+inline bool isValid(Index i) { return i != INVALID_INDEX; }
 inline bool isValid(Float f) { return f != INVALID_FLOAT; }
 
 template <typename T1, typename T2>
@@ -118,6 +112,22 @@ using Lut1D = generic::math::LookupTable<Float, 1>;
 using Lut2D = generic::math::LookupTable<Float, 2>;
 
 template <typename T> using Optional = boost::optional<T>;
+
+#ifdef NANO_BOOST_SERIALIZATION_SUPPORT
+using ArchiveFormat = generic::archive::ArchiveFormat;
+
+template <typename T>
+inline bool Save(const T & t, unsigned int version, std::string_view filename, ArchiveFormat fmt)
+{
+    return generic::archive::Save(t, version, filename, fmt);
+}
+
+template <typename T>
+inline bool Load(T & t, unsigned int & version, std::string_view filename, ArchiveFormat fmt)
+{
+    return generic::archive::Load(t, version, filename, fmt);
+}
+#endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
 } // namespace nano
 

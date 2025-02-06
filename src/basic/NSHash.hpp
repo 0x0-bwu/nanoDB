@@ -15,7 +15,7 @@ struct hash<::nano::Id<T>>
 {
     std::size_t operator() (const ::nano::Id<T> & id) const noexcept
     {
-        return std::hash<::nano::IdType>()(::nano::IdType(id));
+        return std::hash<::nano::Index>()(::nano::Index(id));
     }
 };
 
@@ -24,7 +24,7 @@ struct hash<::nano::CId<T>>
 {
     std::size_t operator() (const ::nano::CId<T> & id) const noexcept
     {
-        return std::hash<::nano::IdType>()(::nano::IdType(id));
+        return std::hash<::nano::Index>()(::nano::Index(id));
     }
 };
 
