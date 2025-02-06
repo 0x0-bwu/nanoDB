@@ -134,6 +134,7 @@ bool ShapeRect::isValid() const
 
 Ptr<ShapeRect> ShapeRect::CloneFrom(const ShapeRect & src)
 {
+    Entity<Shape>::CloneFrom(src);
     m_ = src.m_;
     return this;
 }
@@ -184,6 +185,7 @@ void ShapePath::SetPoints(Vec<NCoord2D> points)
 
 Ptr<ShapePath> ShapePath::CloneFrom(const ShapePath & src)
 {
+    Entity<Shape>::CloneFrom(src);
     m_ = src.m_;
     return this;
 }
@@ -236,6 +238,7 @@ bool ShapeOval::isValid() const
 
 Ptr<ShapeOval> ShapeOval::CloneFrom(const ShapeOval & src)
 {
+    Entity<Shape>::CloneFrom(src);
     m_ = src.m_;
     return this;
 }
@@ -287,6 +290,7 @@ bool ShapeCircle::isValid() const
 
 Ptr<ShapeCircle> ShapeCircle::CloneFrom(const ShapeCircle & src)
 {
+    Entity<Shape>::CloneFrom(src);
     m_ = src.m_;
     return this;
 }
@@ -341,6 +345,7 @@ bool ShapePolygon::isValid() const
 
 Ptr<ShapePolygon> ShapePolygon::CloneFrom(const ShapePolygon & src)
 {
+    Entity<Shape>::CloneFrom(src);
     m_ = src.m_;
     return this;
 }
@@ -393,6 +398,7 @@ void ShapePolygonWithHoles::AddHole(NPolygon hole)
 
 Ptr<ShapePolygonWithHoles> ShapePolygonWithHoles::CloneFrom(const ShapePolygonWithHoles & src)
 {
+    Entity<Shape>::CloneFrom(src);
     m_ = src.m_;
     return this;
 }
@@ -445,6 +451,7 @@ void ShapeFromTemplate::SetTemplate(CId<Shape> shape)
 
 Ptr<ShapeFromTemplate> ShapeFromTemplate::CloneFrom(const ShapeFromTemplate & src)
 {
+    Entity<Shape>::CloneFrom(src);
     m_ = src.m_;
     return this;
 }

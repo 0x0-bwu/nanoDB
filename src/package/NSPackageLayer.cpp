@@ -69,6 +69,7 @@ CId<StackupLayer> Layer::GetStackupLayer() const
 
 Ptr<Layer> Layer::CloneFrom(const Layer & src)
 {
+    Entity<Layer>::CloneFrom(src);
     NamedObj::CloneFrom(src);
     m_ = src.m_;
     return this;

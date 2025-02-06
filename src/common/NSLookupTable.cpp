@@ -42,12 +42,33 @@ LookupTable1D::LookupTable1D(Vec<Float> x, Vec<Float> y)
     *(m_.lut) = std::move(y);
 }
 
+Float LookupTable1D::Lookup(Float x) const
+{
+    return m_.lut.Lookup(x);
+}
+
+Float LookupTable1D::Lookup(Float x, Float y) const
+{
+    NS_UNUSED(y);
+    return m_.lut.Lookup(x);
+}
+
 LookupTable2D::LookupTable2D(Vec<Float> x, Vec<Float> y, Vec<Float> z)
 {
     NS_CLASS_MEMBERS_INITIALIZE
     m_.lut[0] = std::move(x);
     m_.lut[1] = std::move(y);
     *(m_.lut) = std::move(z);
+}
+
+Float LookupTable2D::Lookup(Float x) const
+{
+    return m_.lut.Lookup(x, m_.lut[1].front());
+}
+
+Float LookupTable2D::Lookup(Float x, Float y) const
+{
+    return m_.lut.Lookup(x, y);
 }
 
 } // namespace nano

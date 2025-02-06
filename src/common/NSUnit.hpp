@@ -117,12 +117,18 @@ public:
         return m_unit;
     }
 
-    template <typename Coord>
-    Float toUnit(Coord coord) const
+    template <typename Scalar>
+    Float toUnit(Scalar scalar) const
     {
-        return coord * Scale2Unit();
+        return scalar * Scale2Unit();
     }
 
+    template <typename Scalar>
+    FCoord2D toUnit(const Coord2D<Scalar> & coord) const
+    {
+        return FCoord2D(toUnit(coord[0]), toUnit(coord[1]));
+    }
+    
     template <typename Coord>
     Float toUnit(Coord coord, Unit unit) const
     {

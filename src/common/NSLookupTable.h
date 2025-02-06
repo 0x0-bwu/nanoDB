@@ -21,8 +21,8 @@ public:
     LookupTable1D() = default;
 
     bool isValid() const override { return m_.lut.isValid(); }
-    Float Lookup(Float x) const override { return 0; /*todo*/ }
-    Float Lookup(Float x, Float y) const override { return 0; /*todo*/ }    
+    Float Lookup(Float x) const override;
+    Float Lookup(Float x, Float y) const override;
     size_t Hash() const override { return nano::Hash(m_); }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
@@ -37,8 +37,8 @@ public:
     LookupTable2D() = default;
 
     bool isValid() const override { return m_.lut.isValid(); }
-    Float Lookup(Float x) const override { return 0; /*todo*/ } 
-    Float Lookup(Float x, Float y) const override { return 0; /*todo*/ }
+    Float Lookup(Float x) const override;
+    Float Lookup(Float x, Float y) const override;
     size_t Hash() const override { return nano::Hash(m_); }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION

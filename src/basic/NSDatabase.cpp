@@ -8,6 +8,22 @@ NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::Content)
 #include <nano/db>
 namespace nano {
 
+void CloseLog()
+{
+    generic::log::ShutDown();
+}
+
+void InitLog(std::string_view dirname)
+{
+    CloseLog();
+    using namespace generic::log;
+    auto logger = MultiSinksLogger("nano", {
+        std::make_shared<FileSinkMT>(std::string(dirname) + "/nano.log"),
+        std::make_shared<StreamSinkMT>(std::cout)});
+    logger->SetLevel(generic::log::Level::Trace);
+    generic::log::SetDefaultLogger(logger);
+}
+
 traits::NameIndexMap Binding::nameIndexMap = [](auto elements) {
     traits::NameIndexMap niMap;
     hana::for_each(elements, [&](auto e){
@@ -54,12 +70,16 @@ void Database::SetCurrentDir(std::string dir)
 
 bool Database::Create(std::string name)
 {
-    return Instance().CreateImpl(std::move(name));
+    return Instance().CreateImpl(name) ? SetCurrent(name.c_str()) : false;
 }
 
 bool Database::SetCurrent(std::string_view name)
 {
-    return Instance().SetCurrentImpl(name);
+    if (Instance().SetCurrentImpl(name)) {
+        InitLog(CurrentDir());
+        return true;
+    }
+    return false;
 }
 
 Ptr<Content> Database::Find(std::string_view name)
@@ -69,11 +89,16 @@ Ptr<Content> Database::Find(std::string_view name)
 
 bool Database::Close(std::string_view name)
 {
-    return Instance().CloseImpl(name);
+    if (Instance().CloseImpl(name)) {
+        CloseLog();
+        return true;
+    }
+    return false;
 }
 
 void Database::Shutdown()
 {
+    CloseLog();
     return Instance().ShutdownImpl();
 }
 
@@ -197,7 +222,11 @@ bool Database::SaveCurrent(std::string_view filename, ArchiveFormat fmt)
 
 bool Database::Load(std::string_view filename, ArchiveFormat fmt)
 {
-    return Instance().LoadImpl(filename, fmt);
+    if (Instance().LoadImpl(filename, fmt)) {
+        InitLog(CurrentDir());
+        return true;
+    }
+    return false;
 }
 
 bool Database::SaveImpl(std::string_view name, std::string_view filename, ArchiveFormat fmt) const

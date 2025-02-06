@@ -338,6 +338,13 @@ public:
 protected:
     void SetId(Index id)  { m_id = id; }
     Index GetId() const { return m_id; }
+
+    Ptr<Entity<T>> CloneFrom(const Entity<T> & src)
+    {
+        m_binding = src.m_binding;
+        return this;
+    }
+
 public:
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     template <typename Archive>
