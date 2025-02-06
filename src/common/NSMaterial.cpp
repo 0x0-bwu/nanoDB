@@ -149,6 +149,33 @@ void MaterialPropValue::GetDimensions(size_t & row, size_t & col) const
     }
 }
 
+bool MaterialPropTable::GetSimpleProperty(Float index, Float & value) const
+{
+    auto getter = [&](CId<MaterialProp> prop) -> Float {
+        Float value{INVALID_FLOAT};
+        return prop->GetSimpleProperty(index, value) ? value : INVALID_FLOAT;
+    };
+    return Lookup(index, getter);
+}
+
+bool MaterialPropTable::GetAnisotropicProperty(Float index, size_t row, Float & value) const
+{
+    auto getter = [&](CId<MaterialProp> prop) -> Float {
+        Float value{INVALID_FLOAT};
+        return prop->GetAnisotropicProperty(index, row, value) ? value : INVALID_FLOAT;
+    };
+    return Lookup(index, getter);
+}
+
+bool MaterialPropTable::GetTensorProperty(Float index, size_t row, size_t col, Float & value) const
+{
+    auto getter = [&](CId<MaterialProp> prop) -> Float {
+        Float value{INVALID_FLOAT};
+        return prop->GetTensorProperty(index, row, col, value) ? value : INVALID_FLOAT;
+    };
+    return Lookup(index, getter);
+}
+
 MaterialPropPolynomial::MaterialPropPolynomial(Vec<Vec<Float>> coefficients)
 {
     m_.coefficients = std::move(coefficients);
