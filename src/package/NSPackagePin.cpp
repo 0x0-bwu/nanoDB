@@ -54,6 +54,7 @@ IOType Pin::GetIOType() const
 
 Ptr<Pin> Pin::CloneFrom(const Pin & src)
 {
+    Entity<Pin>::CloneFrom(src);
     NamedObj::CloneFrom(src);
     m_ = src.m_;
     return this;

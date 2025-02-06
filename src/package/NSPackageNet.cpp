@@ -30,6 +30,7 @@ Net::Net() : Net("", CId<Layout>())
 
 Ptr<Net> Net::CloneFrom(const Net & src)
 {
+    Entity<Net>::CloneFrom(src);
     NamedObj::CloneFrom(src);
     m_ = src.m_;
     return this;

@@ -20,6 +20,8 @@ public:
     Id<ConnObj> AddConnObj(Id<ConnObj> connObj);
     Id<Component> AddComponent(Id<Component> component);
 
+    CId<Component> FindComponent(std::string_view name) const;
+
     auto GetNetIter() { return m_.nets.GetIter<Net>(); }
     auto GetNetIter() const { return m_.nets.GetCIter<Net>(); }
     auto GetConnObjIter() { return m_.connObjs.GetIter<ConnObj>(); }
@@ -47,7 +49,7 @@ private:
     (Id<Shape>, boundary),
     (IdVec<Net, NameLut>, nets),
     (IdVec<ConnObj>, connObjs),
-    (IdVec<Component>, components)
+    (IdVec<Component, NameLut>, components)
     )
 };
 

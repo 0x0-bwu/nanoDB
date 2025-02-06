@@ -56,6 +56,11 @@ Id<Component> Layout::AddComponent(Id<Component> component)
     return m_.components.Add(component);
 }
 
+CId<Component> Layout::FindComponent(std::string_view name) const
+{
+    return m_.components.Lookup<lut::Name>(name);
+}
+
 void Layout::Transform(const Transform2D & transform)
 {
     if (m_.boundary)
@@ -70,6 +75,7 @@ void Layout::Transform(const Transform2D & transform)
 
 Ptr<Layout> Layout::CloneFrom(const Layout & src)
 {
+    Entity<Layout>::CloneFrom(src);
     m_.cell = src.m_.cell;
     if (src.m_.boundary)
         m_.boundary = src.m_.boundary->Clone();

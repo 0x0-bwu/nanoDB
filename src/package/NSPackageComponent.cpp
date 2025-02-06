@@ -92,6 +92,7 @@ Ptr<Component> Component::CloneFrom(const Component & src)
 {
     NamedObj::CloneFrom(src);
     Transformable2D::CloneFrom(src);
+    Entity<Component>::CloneFrom(src);
     m_.footprint = src.m_.footprint;
     m_.layout = src.m_.layout;
     m_.componentLayers = src.m_.componentLayers.Clone();

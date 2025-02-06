@@ -93,8 +93,10 @@ template <typename T> using CIdArr4 = Arr4<CId<T>>;
 
 using NCoord = Int;
 using FCoord = Float;
-using NCoord2D = generic::geometry::Point2D<Int>;
-using FCoord2D = generic::geometry::Point2D<Float>;
+template <typename Scalar>
+using Coord2D = generic::geometry::Point2D<Scalar>;
+using NCoord2D = Coord2D<Int>;
+using FCoord2D = Coord2D<Float>;
 using NCoord3D = generic::geometry::Point3D<Int>;
 using FCoord3D = generic::geometry::Point3D<Float>;
 using NBox2D   = generic::geometry::Box2D<NCoord>;

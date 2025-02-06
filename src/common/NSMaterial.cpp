@@ -98,7 +98,7 @@ void MaterialPropValue::SetTensorProperty(const Arr9<Float> & values)
 
 bool MaterialPropValue::GetSimpleProperty(Float & value) const
 {
-    if (m_.values.size() != 1) return false;
+    if (m_.values.size() < 1) return false;
     value = m_.values[0];
     return true;
 }
@@ -106,7 +106,8 @@ bool MaterialPropValue::GetSimpleProperty(Float & value) const
 bool MaterialPropValue::GetAnisotropicProperty(size_t row, Float & value) const
 {
     NS_ASSERT_MSG(row < 3, "index out of range");
-    if (m_.values.size() != 3) return false;
+    if (m_.values.size() < 3)
+        return GetSimpleProperty(value);
     value = m_.values[row];
     return true;
 }
@@ -114,7 +115,8 @@ bool MaterialPropValue::GetAnisotropicProperty(size_t row, Float & value) const
 bool MaterialPropValue::GetTensorProperty(size_t row, size_t col, Float & value) const
 {
     NS_ASSERT_MSG(row < 3 and col < 3, "index out of range");
-    if (m_.values.size() != 9) return false;
+    if (m_.values.size() < 9)
+        return GetAnisotropicProperty(row, value);
     value = m_.values[row * 3 + col];
     return true;
 }
@@ -183,7 +185,7 @@ MaterialPropPolynomial::MaterialPropPolynomial(Vec<Vec<Float>> coefficients)
 
 bool MaterialPropPolynomial::GetSimpleProperty(Float index, Float & value) const
 {
-    if (m_.coefficients.size() != 1) return false;
+    if (m_.coefficients.size() < 1) return false;
     value = Calculate(m_.coefficients[0], index);
     return true;
 }
@@ -191,7 +193,8 @@ bool MaterialPropPolynomial::GetSimpleProperty(Float index, Float & value) const
 bool MaterialPropPolynomial::GetAnisotropicProperty(Float index, size_t row, Float & value) const
 {
     NS_ASSERT_MSG(row < 3, "index out of range");
-    if (m_.coefficients.size() != 3) return false;
+    if (m_.coefficients.size() < 3)
+        return GetSimpleProperty(index, value);
     value = Calculate(m_.coefficients[row], index);
     return true;
 }
@@ -199,7 +202,8 @@ bool MaterialPropPolynomial::GetAnisotropicProperty(Float index, size_t row, Flo
 bool MaterialPropPolynomial::GetTensorProperty(Float index, size_t row, size_t col, Float & value) const
 {
     NS_ASSERT_MSG(row < 3 and col < 3, "index out of range");
-    if (m_.coefficients.size() != 9) return false;
+    if (m_.coefficients.size() < 9)
+        return GetAnisotropicProperty(index, row, value);
     value = Calculate(m_.coefficients[row * 3 + col], index);
     return true;
 }
