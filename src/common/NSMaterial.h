@@ -56,17 +56,33 @@ private:
 class MaterialPropTable : public MaterialProp
 {
 public:
-    // todo
     bool isPropTable() const override { return true; }
 
-    bool GetSimpleProperty(Float, Float &) const override { return false; }//todo
-    bool GetAnisotropicProperty(Float, size_t, Float &) const override { return false; }//todo
-    bool GetTensorProperty(Float, size_t, size_t, Float &) const override { return false; }//todo
-    size_t Hash() const override { return nano::Hash(m_); } 
+    bool GetSimpleProperty(Float index, Float & value) const override;
+    bool GetAnisotropicProperty(Float index, size_t row, Float & value) const override;
+    bool GetTensorProperty(Float index, size_t row, size_t col, Float & value) const override;
+    size_t Hash() const override { return nano::Hash(m_); }
+
+private:
+    template <typename ValueGetter>
+    Float Lookup(Float index, ValueGetter && getter) const
+    {
+        if (m_.values.empty()) return INVALID_FLOAT;
+        if (m_.values.size() == 1) return getter(m_.values.begin()->second);
+        auto h = m_.values.lower_bound(index);
+        if (h == m_.values.begin()) return getter(h->second);
+        auto l = h; --l;
+        if (auto lValue = getter(l->second), hValue = getter(l->second); 
+            nano::isValid(lValue) && nano::isValid(hValue)) {
+            auto ratio = (index - l->first) / (h->first - l->first);
+            return lValue + ratio * (hValue - lValue);
+        }
+        return INVALID_FLOAT;
+    }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
-    (std::map<Float, Id<MaterialProp>>, values))
+    (Map<Float, Id<MaterialProp>>, values))
 };
 
 class MaterialPropPolynomial : public MaterialProp
