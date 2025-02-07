@@ -99,6 +99,7 @@ Id<FootprintCell> CreateSicFootprintCell(Id<Package> pkg)
     auto topFootprint = sicDie->AddFootprint(nano::Create<Footprint>("Top", sicDie, FootprintLocation::TOP));
     topFootprint->SetSolderBallBumpThickenss(0.1);
     auto solder = pkg->GetMaterialLib()->FindMaterial("Solder");
+    topFootprint->SetSolderFillingMaterial(solder);
     topFootprint->SetSolderMaterial(solder);
     topFootprint->SetBoundary(boundary);
 
@@ -112,6 +113,7 @@ Id<FootprintCell> CreateSicFootprintCell(Id<Package> pkg)
 
     auto botFootprint = sicDie->AddFootprint(nano::Create<Footprint>("Bot", sicDie, FootprintLocation::BOT));
     botFootprint->SetSolderBallBumpThickenss(0.1);
+    botFootprint->SetSolderFillingMaterial(solder);
     botFootprint->SetSolderMaterial(solder);
     botFootprint->AddPin(nano::Create<FootprintPin>("GND", botFootprint, coordUnit.toCoord(FCoord2D(0,  0)), IOType::INPUT));
     
@@ -133,6 +135,7 @@ Id<FootprintCell> CreateDiodeFootprintCell(Id<Package> pkg)
     auto topFootprint = diode->AddFootprint(nano::Create<Footprint>("Top", diode, FootprintLocation::TOP));
     topFootprint->SetSolderBallBumpThickenss(0.1);
     auto solder = pkg->GetMaterialLib()->FindMaterial("Solder");
+    topFootprint->SetSolderFillingMaterial(solder);
     topFootprint->SetSolderMaterial(solder);
     topFootprint->SetBoundary(boundary);
 
@@ -150,6 +153,7 @@ Id<FootprintCell> CreateDiodeFootprintCell(Id<Package> pkg)
 
     auto botFootprint = diode->AddFootprint(nano::Create<Footprint>("Bot", diode, FootprintLocation::BOT));
     botFootprint->SetSolderBallBumpThickenss(0.1);
+    botFootprint->SetSolderFillingMaterial(solder);
     botFootprint->SetSolderMaterial(solder);
     botFootprint->SetBoundary(boundary);
     botFootprint->AddPin(nano::Create<FootprintPin>("GND", botFootprint, coordUnit.toCoord(FCoord2D(0,  0)), IOType::INPUT));
@@ -172,6 +176,7 @@ Id<FootprintCell> CreateGateResistanceFootprintCell(Id<Package> pkg)
     auto solder = pkg->GetMaterialLib()->FindMaterial("Solder");
     auto botFootprint = res->AddFootprint(nano::Create<Footprint>("Bot", res, FootprintLocation::BOT));
     botFootprint->SetSolderBallBumpThickenss(0.1);
+    botFootprint->SetSolderFillingMaterial(solder);
     botFootprint->SetSolderMaterial(solder);
     
     pkg->AddCell(res);

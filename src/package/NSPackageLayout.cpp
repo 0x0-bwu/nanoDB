@@ -75,7 +75,6 @@ void Layout::Transform(const Transform2D & transform)
 
 Ptr<Layout> Layout::CloneFrom(const Layout & src)
 {
-    Entity<Layout>::CloneFrom(src);
     m_.cell = src.m_.cell;
     if (src.m_.boundary)
         m_.boundary = src.m_.boundary->Clone();

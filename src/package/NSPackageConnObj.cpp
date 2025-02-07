@@ -89,7 +89,6 @@ CId<PadstackInst> ConnObj::GetPadstackInst() const
 
 Ptr<ConnObj> ConnObj::CloneFrom(const ConnObj & src)
 {
-    Entity<ConnObj>::CloneFrom(src);
     m_ = src.m_;
     return this;
 }
