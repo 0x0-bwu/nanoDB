@@ -41,7 +41,7 @@ ScenarioId LossPower::GetScenario() const
 
 Float LossPower::GetLossPower(Float temperature) const
 {
-    return m_.lut->Lookup(temperature);
+    return m_.lut->Lookup(temperature, /*extrapolation*/false);
 }
 
 } // namespace nano::power

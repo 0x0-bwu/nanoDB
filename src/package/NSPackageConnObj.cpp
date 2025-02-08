@@ -293,8 +293,9 @@ PadstackInst::PadstackInst()
 
 bool PadstackInst::isLayerInRange(CId<StackupLayer> layer) const
 {
-    auto elevation = layer->GetElevation();
-    return (not (elevation > m_.layerRange[0]->GetElevation())) and (not (elevation < m_.layerRange[1]->GetElevation()));
+    Vec<CId<StackupLayer>> range;
+    GetLayerRange(range);
+    return std::find(range.begin(), range.end(), layer) != range.end();
 }
 
 void PadstackInst::SetLayerRange(CId<StackupLayer> top, CId<StackupLayer> bot)
@@ -307,6 +308,11 @@ void PadstackInst::GetLayerRange(CId<StackupLayer> & top, CId<StackupLayer> & bo
 {
     top = m_.layerRange[0];
     bot = m_.layerRange[1];
+}
+
+void PadstackInst::GetLayerRange(Vec<CId<StackupLayer>> & range) const
+{
+    return GetPadstack()->GetPackage()->GetStackupLayerRange(m_.layerRange[0], m_.layerRange[1], range);
 }
 
 UPtr<Shape> PadstackInst::GetPadShape(CId<StackupLayer> layer) const

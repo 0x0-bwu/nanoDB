@@ -126,6 +126,7 @@ public:
     bool isLayerInRange(CId<StackupLayer> layer) const;
     void SetLayerRange(CId<StackupLayer> top, CId<StackupLayer> bot);
     void GetLayerRange(CId<StackupLayer> & top, CId<StackupLayer> & bot) const;
+    void GetLayerRange(Vec<CId<StackupLayer>> & range) const;
 
     CId<Padstack> GetPadstack() const { return m_.padstack; }
     UPtr<Shape> GetPadShape(CId<StackupLayer> layer) const;

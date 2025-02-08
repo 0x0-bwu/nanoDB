@@ -8,8 +8,8 @@ class LookupTable : public Entity<LookupTable>
 public:
     virtual ~LookupTable() = default;
     virtual bool isValid() const = 0;
-    virtual Float Lookup(Float x) const = 0;
-    virtual Float Lookup(Float x, Float y) const = 0;
+    virtual Float Lookup(Float x, bool extrapolation) const = 0;
+    virtual Float Lookup(Float x, Float y, bool extrapolation) const = 0;
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
 };
@@ -21,8 +21,8 @@ public:
     LookupTable1D() = default;
 
     bool isValid() const override { return m_.lut.isValid(); }
-    Float Lookup(Float x) const override;
-    Float Lookup(Float x, Float y) const override;
+    Float Lookup(Float x, bool extrapolation) const override;
+    Float Lookup(Float x, Float y, bool extrapolation) const override;
     size_t Hash() const override { return nano::Hash(m_); }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION
@@ -37,8 +37,8 @@ public:
     LookupTable2D() = default;
 
     bool isValid() const override { return m_.lut.isValid(); }
-    Float Lookup(Float x) const override;
-    Float Lookup(Float x, Float y) const override;
+    Float Lookup(Float x, bool extrapolation) const override;
+    Float Lookup(Float x, Float y, bool extrapolation) const override;
     size_t Hash() const override { return nano::Hash(m_); }
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION

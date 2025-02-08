@@ -82,6 +82,8 @@ namespace nano::package
         void SetViaShape(CId<Shape> shape, const NCoord2D & offset = {0, 0}, Float rotation = 0);
         UPtr<Shape> GetViaShape() const;
 
+        CId<Package> GetPackage() const;
+
     private:
         Padstack();
         using Pads = HashMap<CId<StackupLayer>, Pad>;

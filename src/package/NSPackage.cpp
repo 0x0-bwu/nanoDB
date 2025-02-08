@@ -58,6 +58,20 @@ CId<StackupLayer> Package::GetBotStackupLayer() const
     return m_.stackupLayers.back();
 }
 
+void Package::GetStackupLayerRange(CId<StackupLayer> top, CId<StackupLayer> bot, Vec<CId<StackupLayer>> & range) const
+{
+    range.clear();
+    bool inRange = false;
+    for (const auto & layer : m_.stackupLayers) {
+        if (layer == top) inRange = true;
+        if (inRange) range.emplace_back(layer);
+        if (layer == bot) {
+            range.emplace_back(layer);
+            break;
+        }
+    }
+}
+
 CId<StackupLayer> Package::FindStackupLayer(std::string_view name) const
 {
     return m_.stackupLayers.Lookup<lut::Name>(name);
