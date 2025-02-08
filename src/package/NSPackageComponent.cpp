@@ -78,9 +78,12 @@ void Component::Transform(const Transform2D & transform)
 
 UPtr<Shape> Component::GetBoundary() const
 {
-    auto shape = m_.footprint->GetBoundary()->UniqueClone();
-    shape->Transform(GetTransform());
-    return shape;
+    if (auto boundary = m_.footprint->GetBoundary(); boundary) {
+        auto shape = boundary->UniqueClone();
+        shape->Transform(GetTransform());
+        return shape;
+    }
+    return nullptr;
 }
 
 Float Component::GetHeight() const

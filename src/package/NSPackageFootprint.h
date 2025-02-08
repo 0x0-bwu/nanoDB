@@ -22,10 +22,11 @@ public:
     void SetSolderMaterial(CId<Material> material);
     CId<Material> GetSolderMaterial() const;
 
-    void SetSolderBallBumpThickenss(Float thickness);
-    Float GetSolderBallBumpThickenss() const;
+    void SetSolderBallBumpThickness(Float thickness);
+    Float GetSolderBallBumpThickness() const;
 
     void SetBoundary(CId<Shape> boundary);
+    CId<Shape> GetBoundary() const;
 
     Id<FootprintPin> AddPin(Id<FootprintPin> pin);
     CId<FootprintPin> FindPin(std::string_view name) const;

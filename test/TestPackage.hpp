@@ -68,6 +68,12 @@ void SetupMaterials(Id<Package> pkg)
     matSolder->SetProperty(Material::MASS_DENSITY, nano::Create<MaterialPropValue>(7800));
     matSolder->SetProperty(Material::RESISTIVITY, nano::Create<MaterialPropValue>(11.4e-8));
     matLib->AddMaterial(matSolder);
+
+    auto matFR4 = nano::Create<Material>("FR4");
+    matFR4->SetProperty(Material::THERMAL_CONDUCTIVITY, nano::Create<MaterialPropValue>(0.3));
+    matFR4->SetProperty(Material::SPECIFIC_HEAT, nano::Create<MaterialPropValue>(700));
+    matFR4->SetProperty(Material::MASS_DENSITY, nano::Create<MaterialPropValue>(1700));
+    matLib->AddMaterial(matFR4);
 }
 
 Id<Padstack> CreateBondingWireSolderJoints(Id<Package> pkg, std::string name, Float bwRadius)
@@ -97,7 +103,7 @@ Id<FootprintCell> CreateSicFootprintCell(Id<Package> pkg)
     sicDie->SetHeight(0.18);
 
     auto topFootprint = sicDie->AddFootprint(nano::Create<Footprint>("Top", sicDie, FootprintLocation::TOP));
-    topFootprint->SetSolderBallBumpThickenss(0.1);
+    topFootprint->SetSolderBallBumpThickness(0.1);
     auto solder = pkg->GetMaterialLib()->FindMaterial("Solder");
     topFootprint->SetSolderFillingMaterial(solder);
     topFootprint->SetSolderMaterial(solder);
@@ -112,11 +118,12 @@ Id<FootprintCell> CreateSicFootprintCell(Id<Package> pkg)
     topFootprint->AddPin(nano::Create<FootprintPin>("K", topFootprint, coordUnit.toCoord(FCoord2D(-2.00, -0.5)), IOType::INPUT));
 
     auto botFootprint = sicDie->AddFootprint(nano::Create<Footprint>("Bot", sicDie, FootprintLocation::BOT));
-    botFootprint->SetSolderBallBumpThickenss(0.1);
+    botFootprint->SetSolderBallBumpThickness(0.1);
     botFootprint->SetSolderFillingMaterial(solder);
     botFootprint->SetSolderMaterial(solder);
     botFootprint->AddPin(nano::Create<FootprintPin>("GND", botFootprint, coordUnit.toCoord(FCoord2D(0,  0)), IOType::INPUT));
-    
+    botFootprint->SetBoundary(boundary);
+
     pkg->AddCell(sicDie);
     return sicDie;
 }
@@ -133,7 +140,7 @@ Id<FootprintCell> CreateDiodeFootprintCell(Id<Package> pkg)
     diode->SetHeight(0.18);
 
     auto topFootprint = diode->AddFootprint(nano::Create<Footprint>("Top", diode, FootprintLocation::TOP));
-    topFootprint->SetSolderBallBumpThickenss(0.1);
+    topFootprint->SetSolderBallBumpThickness(0.1);
     auto solder = pkg->GetMaterialLib()->FindMaterial("Solder");
     topFootprint->SetSolderFillingMaterial(solder);
     topFootprint->SetSolderMaterial(solder);
@@ -152,7 +159,7 @@ Id<FootprintCell> CreateDiodeFootprintCell(Id<Package> pkg)
     topFootprint->AddPin(nano::Create<FootprintPin>("J", topFootprint, coordUnit.toCoord(FCoord2D( 1.125, -1.50)), IOType::INPUT));
 
     auto botFootprint = diode->AddFootprint(nano::Create<Footprint>("Bot", diode, FootprintLocation::BOT));
-    botFootprint->SetSolderBallBumpThickenss(0.1);
+    botFootprint->SetSolderBallBumpThickness(0.1);
     botFootprint->SetSolderFillingMaterial(solder);
     botFootprint->SetSolderMaterial(solder);
     botFootprint->SetBoundary(boundary);
@@ -175,9 +182,10 @@ Id<FootprintCell> CreateGateResistanceFootprintCell(Id<Package> pkg)
 
     auto solder = pkg->GetMaterialLib()->FindMaterial("Solder");
     auto botFootprint = res->AddFootprint(nano::Create<Footprint>("Bot", res, FootprintLocation::BOT));
-    botFootprint->SetSolderBallBumpThickenss(0.1);
+    botFootprint->SetSolderBallBumpThickness(0.1);
     botFootprint->SetSolderFillingMaterial(solder);
     botFootprint->SetSolderMaterial(solder);
+    botFootprint->SetBoundary(boundary);
     
     pkg->AddCell(res);
     return res;
