@@ -172,7 +172,7 @@ CId<Layer> ComponentLayer::GetConnectedLayer() const
 
 Float ComponentLayer::GetSolderBallBumpThickness() const
 {
-    return m_.connectedLayer ? m_.footprint->GetSolderBallBumpThickenss() : 0;
+    return m_.connectedLayer ? m_.footprint->GetSolderBallBumpThickness() : 0;
 }
 
 CId<Material> ComponentLayer::GetSolderFillingMaterial() const
@@ -183,6 +183,16 @@ CId<Material> ComponentLayer::GetSolderFillingMaterial() const
 CId<Material> ComponentLayer::GetSolderMaterial() const
 {
     return m_.footprint->GetSolderMaterial();
+}
+
+UPtr<Shape> ComponentLayer::GetBoundary() const
+{
+    if (auto boundary = m_.footprint->GetBoundary(); boundary) {
+        auto shape = boundary->UniqueClone();
+        shape->Transform(GetComponent()->GetTransform());
+        return shape;
+    }
+    return nullptr;
 }
 
 bool ComponentLayer::isFlipped() const

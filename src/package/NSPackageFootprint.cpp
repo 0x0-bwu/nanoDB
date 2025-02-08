@@ -54,12 +54,12 @@ void Footprint::SetSolderMaterial(CId<Material> material)
     m_.solderMaterial = material;
 }
 
-void Footprint::SetSolderBallBumpThickenss(Float thickness)
+void Footprint::SetSolderBallBumpThickness(Float thickness)
 {
     m_.solderThickness = thickness;
 }
 
-Float Footprint::GetSolderBallBumpThickenss() const
+Float Footprint::GetSolderBallBumpThickness() const
 {
     return m_.solderThickness;
 }
@@ -67,6 +67,11 @@ Float Footprint::GetSolderBallBumpThickenss() const
 void Footprint::SetBoundary(CId<Shape> boundary)
 {
     m_.boundary = boundary;
+}
+
+CId<Shape> Footprint::GetBoundary() const
+{
+    return m_.boundary;
 }
 
 Id<FootprintPin> Footprint::AddPin(Id<FootprintPin> pin)

@@ -464,8 +464,9 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> lay
     m_package->AddCell(footprintCell);
 
     auto footprint = nano::Create<pkg::Footprint>(comp.name, footprintCell, FootprintLocation::BOT);
+    footprint->SetBoundary(footprintCell->GetBoundary());
     footprintCell->AddFootprint(footprint);
-
+    
     auto component = nano::Create<pkg::Component>(comp.name, footprintCell, layout);
     auto location = layout->GetCoordUnit().toCoord(comp.location);
     auto transform = makeTransform2D(1.0, -generic::math::Rad(comp.angle), location[0], location[1]);

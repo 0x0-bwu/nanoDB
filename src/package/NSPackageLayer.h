@@ -93,6 +93,7 @@ public:
     CId<Material> GetSolderFillingMaterial() const;
     CId<Material> GetSolderMaterial() const;
 
+    UPtr<Shape> GetBoundary() const;
     bool isFlipped() const;
 
 private:

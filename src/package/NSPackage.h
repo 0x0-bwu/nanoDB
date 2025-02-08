@@ -31,16 +31,24 @@ public:
     CId<Cell> FindCell(std::string_view name) const;
     Id<Cell> FindCell(std::string_view name);
 
+    CId<Material> FindMaterial(std::string_view name) const;
+    Id<Material> FindMaterial(std::string_view name);
+
     Id<CellInst> SetTop(Id<CellInst> top);
     Id<CellInst> GetTop() { return m_.top; }
     CId<CellInst> GetTop() const { return m_.top; }
 
-    auto GetCellIter();
-    auto GetCellIter() const;
+    auto GetCellIter() { return m_.cells.GetIter<Cell>(); }
+    auto GetCellIter() const { return m_.cells.GetCIter<Cell>(); }
     size_t NumOfCells() const { return m_.cells.size(); }
 
-    auto GetPadstackIter();
-    auto GetPadstackIter() const;
+    auto GetCircuitCellIter() { return m_.cells.GetIter<CircuitCell>(); }
+    auto GetCircuitCellIter() const { return m_.cells.GetCIter<CircuitCell>(); }
+    auto GetFootprintCellIter() { return m_.cells.GetIter<FootprintCell>(); }
+    auto GetFootprintCellIter() const { return m_.cells.GetCIter<FootprintCell>(); }
+
+    auto GetPadstackIter() { return m_.padstacks.GetIter<Padstack>(); }
+    auto GetPadstackIter() const { return m_.padstacks.GetCIter<Padstack>(); }
     size_t NumOfPadstacks() const { return m_.padstacks.size(); }
 
     auto GetMaterialIter() { return m_.matLib->GetMaterialIter(); }
