@@ -1,6 +1,6 @@
 #include "generic/thread/ThreadPool.hpp"
 
-namespace nano {
+namespace nano::thread {
 
 using ThreadPool = generic::thread::ThreadPool;
 
@@ -10,9 +10,14 @@ inline ThreadPool & Pool()
     return pool;
 }
 
-inline size_t Threads()
+inline void SetThreads(size_t threads)
 {
-    return Pool().Threads();
+    return Pool().Resize(threads);
 }
 
-} // namespace nano
+inline size_t Threads()
+{
+    return thread::Pool().Threads();
+}
+
+} // namespace nano::thread

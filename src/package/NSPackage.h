@@ -23,6 +23,7 @@ public:
     void SortStackupLayers();
     CId<StackupLayer> GetTopStackupLayer() const;
     CId<StackupLayer> GetBotStackupLayer() const;
+    void GetStackupLayerRange(CId<StackupLayer> top, CId<StackupLayer> bot, Vec<CId<StackupLayer>> & range) const;
 
     CId<StackupLayer> FindStackupLayer(std::string_view name) const;
     Id<StackupLayer> FindStackupLayer(std::string_view name);

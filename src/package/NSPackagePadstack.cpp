@@ -136,5 +136,11 @@ UPtr<Shape> Padstack::GetViaShape() const
 {
     return m_.via.GetShape();
 }
+
+CId<Package> Padstack::GetPackage() const
+{
+    return m_.package;
+}
+
 } // namespace nano::package
 

@@ -42,15 +42,15 @@ LookupTable1D::LookupTable1D(Vec<Float> x, Vec<Float> y)
     *(m_.lut) = std::move(y);
 }
 
-Float LookupTable1D::Lookup(Float x) const
+Float LookupTable1D::Lookup(Float x, bool extrapolation) const
 {
-    return m_.lut.Lookup(x);
+    return m_.lut.Lookup(x, extrapolation);
 }
 
-Float LookupTable1D::Lookup(Float x, Float y) const
+Float LookupTable1D::Lookup(Float x, Float y, bool extrapolation) const
 {
     NS_UNUSED(y);
-    return m_.lut.Lookup(x);
+    return m_.lut.Lookup(x, extrapolation);
 }
 
 LookupTable2D::LookupTable2D(Vec<Float> x, Vec<Float> y, Vec<Float> z)
@@ -61,14 +61,14 @@ LookupTable2D::LookupTable2D(Vec<Float> x, Vec<Float> y, Vec<Float> z)
     *(m_.lut) = std::move(z);
 }
 
-Float LookupTable2D::Lookup(Float x) const
+Float LookupTable2D::Lookup(Float x, bool extrapolation) const
 {
-    return m_.lut.Lookup(x, m_.lut[1].front());
+    return m_.lut.Lookup(x, m_.lut[1].front(), extrapolation);
 }
 
-Float LookupTable2D::Lookup(Float x, Float y) const
+Float LookupTable2D::Lookup(Float x, Float y, bool extrapolation) const
 {
-    return m_.lut.Lookup(x, y);
+    return m_.lut.Lookup(x, y, extrapolation);
 }
 
 } // namespace nano
