@@ -8,6 +8,8 @@ NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::Content)
 #include <nano/db>
 namespace nano {
 
+std::string currentDir;
+
 void CloseLog()
 {
     generic::log::ShutDown();
@@ -53,6 +55,12 @@ std::string_view NamedObj::GetName() const
     return m_name.c_str();
 }
 
+Database::Database()
+{
+    currentDir = generic::fs::CurrentPath().string() + "/nano";
+    generic::fs::CreateDir(currentDir);
+}
+
 Content & Database::Current()
 {
     return Instance().CurrentImpl();
@@ -60,12 +68,14 @@ Content & Database::Current()
 
 std::string_view Database::CurrentDir()
 {
-    return Current().CurrentDir();
+    return currentDir.c_str();
 }
 
 void Database::SetCurrentDir(std::string dir)
 {
-    return Current().SetCurrentDir(std::move(dir));
+    static std::mutex mtx;
+    std::lock_guard<std::mutex> lock(mtx);
+    currentDir = std::move(dir);
 }
 
 bool Database::Create(std::string name)

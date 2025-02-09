@@ -140,16 +140,8 @@ class Collection : public NamedObj
 public:
     using Elements = hana::tuple<hana::type<Eles>...>;
     using CollectionMap = hana::map<hana::pair<hana::type<Eles>, Container<Eles>>...>;
-    explicit Collection(std::string name)
-     : NamedObj(std::move(name))
-    {
-        SetCurrentDir(generic::fs::CurrentPath().string() + '/' + GetName().data());
-    }
-
+    explicit Collection(std::string name) : NamedObj(std::move(name)) {}
     ~Collection() { Reset(); }
-
-    void SetCurrentDir(std::string dir) { m_currentDir = std::move(dir); }
-    std::string_view CurrentDir() const { return m_currentDir; }
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     bool Save(std::string_view filename, ArchiveFormat fmt) const;
@@ -211,7 +203,6 @@ private:
     Collection() = default;
     // members
     CollectionMap m_data;
-    std::string m_currentDir;
     Version m_version{CURRENT_VERSION};
 };
 
@@ -242,8 +233,7 @@ public:
 
     static Database & Instance();
 private:
-    Database() = default;
-
+    Database();
     Content & CurrentImpl();
     bool CreateImpl(std::string name);
     bool SetCurrentImpl(std::string_view name);

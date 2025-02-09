@@ -20,7 +20,7 @@ constexpr inline void Init(Struct & s)
     using namespace boost;
     auto init = [](auto && self, auto & t) {
         using T = std::decay_t<decltype(t)>;
-        if constexpr (hana::Struct<T>::value) Init(t);
+        if constexpr (hana::Struct<T>::value) t = T{};
         else if constexpr (IsArr<T>) {
             for (size_t i = 0; i < std::size(t); ++i) self(self, t[i]);
         }
