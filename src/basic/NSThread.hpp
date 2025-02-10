@@ -2,22 +2,23 @@
 
 namespace nano::thread {
 
+inline static std::atomic_size_t threads = std::thread::hardware_concurrency();
+
 using ThreadPool = generic::thread::ThreadPool;
 
-inline ThreadPool & Pool()
+inline void SetThreads(size_t n)
 {
-    static ThreadPool pool;
-    return pool;
-}
-
-inline void SetThreads(size_t threads)
-{
-    return Pool().Resize(threads);
+    threads.store(n);
 }
 
 inline size_t Threads()
 {
-    return thread::Pool().Threads();
+    return threads.load();
+}
+
+inline ThreadPool Pool()
+{
+    return ThreadPool(Threads());
 }
 
 } // namespace nano::thread
