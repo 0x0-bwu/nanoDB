@@ -22,6 +22,26 @@ bool LayoutRetriever::GetLayerHeightThickness(CId<Layer> layer, Float & elevatio
     }
 }
 
+bool LayoutRetriever::GetLayoutHeightThickness(Float & elevation, Float & thickness) const
+{
+    Float minH = std::numeric_limits<Float>::max(), maxH = -minH;
+    auto layerIter = m_layout->GetStackupLayerIter();
+    while (auto stackupLayer = layerIter.Next()) {
+        if (not GetStackupLayerHeightThickness(stackupLayer, elevation, thickness)) return false;
+        maxH = std::max(maxH, elevation);
+        minH = std::min(minH, elevation - thickness);
+    }
+    auto compIter = m_layout->GetComponentIter();
+    while (auto comp = compIter.Next()) {
+        if (not GetComponentHeightThickness(comp, elevation, thickness)) return false;
+        maxH = std::max(maxH, elevation);
+        minH = std::min(minH, elevation - thickness);
+    }
+    thickness = maxH - minH;
+    elevation = maxH;
+    return true;
+}
+
 bool LayoutRetriever::GetStackupLayerHeightThickness(CId<StackupLayer> stackupLayer, Float & elevation, Float & thickness) const
 {
     NS_ASSERT(stackupLayer);
