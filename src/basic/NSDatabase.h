@@ -73,7 +73,7 @@ public:
     {
         static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
         vec.clear();
-        for (size_t i = 0; i < m_data.size(); ++i) {
+        for (size_t i = 0; i < Size(); ++i) {
             if (auto * d = dynamic_cast<Derived*>(m_data[i]); d) {
                 if (pred(*d)) vec.emplace_back(i);
             }
@@ -82,7 +82,7 @@ public:
 
     bool Remove(const Id<T> & id)
     {
-        if (size_t(id) >= m_data.size()) return false;
+        if (Index(id) >= Size()) return false;
         if (nullptr == m_data[id]) return false;
         delete m_data[id];
         m_data[id] = nullptr;
@@ -95,6 +95,11 @@ public:
             if (p) delete p;
         }
         m_data.Clear();
+    }
+    
+    size_t Size() const
+    {
+        return m_data.size();
     }
 
     size_t Hash() const
@@ -177,6 +182,9 @@ public:
 
     template <typename T>
     constexpr const auto & Get() const { return m_data[hana::type_c<traits::BaseOf<T>>]; }
+
+    template <typename T>
+    size_t Size() const { return Get<T>().Size(); }
 
     template <typename T>
     void Reset() { Get<traits::BaseOf<T>>().Reset(); }
@@ -460,8 +468,10 @@ public:
 
     T * operator-> () const 
     {
-        auto * p = Database::Current().Get<T>()[Id<T>(m_id)];
-        return p;
+        if (INVALID_INDEX == m_id) return nullptr;
+        auto & container = Database::Current().Get<T>();
+        NS_ASSERT(m_id < container.Size());
+        return container[Id<T>(m_id)];
     }
 
     void Destroy() { nano::Remove<T>(*this); }
@@ -523,8 +533,10 @@ public:
 
     const T * operator-> () const
     {
-        auto * p = Database::Current().Get<T>()[Id<T>(m_id)];
-        return p;
+        if (INVALID_INDEX == m_id) return nullptr;
+        auto & container = Database::Current().Get<T>();
+        NS_ASSERT(m_id < container.Size());
+        return container[Id<T>(m_id)];
     }
 
     void Destroy() const { nano::Remove<T>(*this); }
