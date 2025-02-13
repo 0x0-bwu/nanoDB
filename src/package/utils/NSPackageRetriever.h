@@ -10,6 +10,7 @@ public:
     explicit LayoutRetriever(CId<Layout> layout);
     virtual ~LayoutRetriever() = default;
 
+    bool GetLayoutHeightThickness(Float & elevation, Float & thickness) const;
     bool GetLayerHeightThickness(CId<Layer> layer, Float & elevation, Float & thickness) const;
     bool GetStackupLayerHeightThickness(CId<StackupLayer> stackupLayer, Float & elevation, Float & thickness) const;
     bool GetComponentLayerHeightThickness(CId<ComponentLayer> compLayer, Float & elevation, Float & thickness) const;
