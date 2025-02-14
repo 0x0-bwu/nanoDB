@@ -13,7 +13,9 @@ public:
     using Iterator = typename IdContainer::const_iterator;
     using ReturnType = std::conditional_t<Mutable, Id<T>, CId<T>>; 
     explicit IdIterator(const IdContainer & container)
-     : m_curr(container.cbegin()), m_end(container.cend())
+     : m_curr(container.cbegin()) 
+     , m_start(container.cbegin())
+     , m_end(container.cend())
     {
     }
 
@@ -40,8 +42,12 @@ public:
 
     ReturnType operator*  () const noexcept { return Current(); }
     ReturnType operator-> () const noexcept { return Current(); }
+
+    void Reset() { m_curr = m_start; }
+
 private:
     mutable Iterator m_curr;
+    const Iterator m_start;
     const Iterator m_end;
 };
 
