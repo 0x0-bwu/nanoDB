@@ -54,8 +54,18 @@ using Float = Float32;
 inline static constexpr auto INVALID_INDEX = std::numeric_limits<Index>::max();
 inline static constexpr auto INVALID_FLOAT = std::numeric_limits<Float>::max();//std::nan(quiet_Nan) has issue with AppleClang with -ffast-math
 
-inline bool isValid(Index i) { return i != INVALID_INDEX; }
-inline bool isValid(Float f) { return f != INVALID_FLOAT; }
+template <typename T>
+inline constexpr bool isValid(T t) requires (std::integral<T>)
+{
+    return t != std::numeric_limits<T>::max();
+}
+
+template <typename T>
+inline constexpr bool isValid(T t) requires (std::floating_point<T>)
+{
+    constexpr auto max = std::numeric_limits<T>::max();
+    return -max < t and t < max;
+}
 
 template <typename T1, typename T2>
 using Pair = std::pair<T1, T2>;
