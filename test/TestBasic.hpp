@@ -1,11 +1,11 @@
 #pragma once
 #include "TestCommon.hpp"
 #include <nano/db>
-using namespace nano;
 using namespace boost::unit_test;
 
 void t_basic()
 {
+    using namespace nano;
     Database::Create("basic_test");
     // id
     {

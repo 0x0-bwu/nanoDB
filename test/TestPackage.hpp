@@ -2,16 +2,17 @@
 #include "TestCommon.hpp"
 #include <nano/core/package>
 
-using namespace nano;
 using namespace boost::unit_test;
 
-using LossPowers = IdVec<power::LossPower, NameLut>;
+using LossPowers = nano::IdVec<nano::power::LossPower, nano::NameLut>;
 namespace detail {
 
+using namespace nano;
 using namespace package;
 
 LossPowers CreateLossPowers()
 {
+    using namespace nano;
     LossPowers lossPowers;
     auto diodeLut = nano::Create<LookupTable1D>(
         Vec<Float>{TempUnit(25).inKelvins(), TempUnit(125).inKelvins(), TempUnit(150).inKelvins()}, Vec<Float>{20.4, 21.7, 21.8});
@@ -25,6 +26,7 @@ LossPowers CreateLossPowers()
 
 void SetupMaterials(Id<Package> pkg)
 {
+    using namespace nano;
     pkg->SetMaterialLib(nano::Create<MaterialLib>("mat_lib"));
     BOOST_CHECK(pkg->GetMaterialLib());
     auto matLib = pkg->GetMaterialLib();
@@ -621,12 +623,12 @@ Id<Layout> CreateTopBridgeLayout(Id<Package> pkg, const Vec<FCoord2D> & location
 
 void t_create_package()
 {
+    using namespace nano;
+    using namespace nano::package;
     Vec<Float> parameters = {
         -5.23, 8.93, -5.23, 3.86, -5.23, -1.21, 3.71, 8.08, 3.71, 1.33, 3.71, -5.42,
         5.23, 8.08, 5.23, 1.33, 5.23, -5.42, -3.7, 8.08, -3.7, 1.33, -3.7, -5.42,
     };
-
-    using namespace nano::package;
     Database::Create("CAS300M12BM2");
     auto pkg = nano::Create<Package>("CAS300M12BM2");
     BOOST_CHECK(pkg);

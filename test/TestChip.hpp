@@ -2,7 +2,6 @@
 #include "TestCommon.hpp"
 #include <nano/db>
 
-using namespace nano;
 using namespace boost::unit_test;
 
 void t_create_chip_design()
@@ -19,6 +18,7 @@ void t_create_chip_design()
     // IN4--------|b    /
     //            +-----
 
+    using namespace nano;
     using namespace chip;
     Database::Create("nano");
 
