@@ -1,12 +1,12 @@
 #pragma once
 #include "TestCommon.hpp"
 #include <nano/db>
-using namespace nano;
 using namespace boost::unit_test;
 
 std::string checksum;
 void t_save_design()
 {
+    using namespace nano;
     Database::Create("nano");
     //liberty
     auto lib = Create<liberty::Library>("lib");

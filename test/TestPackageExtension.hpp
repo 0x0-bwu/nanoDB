@@ -7,6 +7,7 @@ using namespace nano::package::extension;
 
 void t_kicad1()
 {
+    using namespace nano;
     Database::Create("kicad_test1");
 
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/package/test.kicad_pcb";
@@ -24,6 +25,7 @@ void t_kicad1()
 
 void t_kicad2()
 {
+    using namespace nano;
     Database::Create("kicad_test2");
 
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/package/jetson-nano-baseboard.kicad_pcb";

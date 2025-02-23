@@ -6,6 +6,7 @@ using namespace boost::unit_test;
 
 void t_read_verilog()
 {
+    using namespace nano;
     using namespace verilog;
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/verilog/test.v";
     Database::Create("read_verilog_test");

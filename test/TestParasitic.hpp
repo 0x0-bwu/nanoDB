@@ -2,11 +2,11 @@
 #include "TestCommon.hpp"
 #include <nano/core/parasitic>
 
-using namespace nano;
 using namespace boost::unit_test;
 
 void t_read_spef_simple()
 {
+    using namespace nano;
     using namespace nano::parasitic;
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/parasitic/simple.spef";
     Database::Create("parse_spef_test");
@@ -17,6 +17,7 @@ void t_read_spef_simple()
 
 void t_read_spef_aes()
 {
+    using namespace nano;
     using namespace nano::parasitic;
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/parasitic/aes.spef";
     Database::Create("parse_spef_test");

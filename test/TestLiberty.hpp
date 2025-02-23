@@ -2,11 +2,11 @@
 #include "TestCommon.hpp"
 #include <nano/core/liberty>
 
-using namespace nano;
 using namespace boost::unit_test;
 
-void liberty_member_check(const liberty::Library & lib)
+void liberty_member_check(const nano::liberty::Library & lib)
 {
+    using namespace nano;
     using namespace liberty;
     constexpr Float t = 1e-3;
     BOOST_CHECK(lib->comment == "");
@@ -69,6 +69,7 @@ void liberty_member_check(const liberty::Library & lib)
 
 void t_parse_liberty()
 {
+    using namespace nano;
     using namespace liberty;
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/liberty/asap7sc7p5t_INVBUF_RVT_TT_ccs_201020.lib";
     Database::Create("parse_liberty_test");
