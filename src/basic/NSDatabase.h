@@ -243,6 +243,7 @@ public:
 private:
     Database();
     Content & CurrentImpl();
+    static void SetCurrentDirImpl(std::string dir);
     bool CreateImpl(std::string name);
     bool SetCurrentImpl(std::string_view name);
     Ptr<Content> FindImpl(std::string_view name);
