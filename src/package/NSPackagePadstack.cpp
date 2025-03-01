@@ -106,6 +106,11 @@ bool Padstack::hasBotSolderBall() const
     return m_.solderBall.shape && m_.solderBall.thickness > 0;
 }
 
+void Padstack::SetMaterial(CId<Material> material)
+{
+    m_.material = material;
+}
+
 CId<Material> Padstack::GetMaterial() const
 {
     return m_.material;
