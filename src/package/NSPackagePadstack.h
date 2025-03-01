@@ -74,6 +74,7 @@ namespace nano::package
         bool hasTopSolderBump() const;
         bool hasBotSolderBall() const;
 
+        void SetMaterial(CId<Material> material);
         CId<Material> GetMaterial() const;
 
         void SetPadShape(CId<StackupLayer> layer, CId<Shape> shape, const NCoord2D & offset = {0, 0}, Float rotation = 0);

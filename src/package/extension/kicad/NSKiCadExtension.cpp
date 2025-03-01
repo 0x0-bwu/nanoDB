@@ -485,6 +485,8 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> lay
         
         auto net = m_lut.FindNet(pad.net);
         auto padstack = nano::Create<pkg::Padstack>(pad.name, m_package);
+        m_package->AddPadstack(padstack);
+        
         auto padstackInst = nano::Create<pkg::PadstackInst>(padstack, net);
         padstackInst->SetTransform(transform);
         layout->AddConnObj(padstackInst);
