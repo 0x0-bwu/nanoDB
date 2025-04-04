@@ -110,11 +110,11 @@ bool ParseTimeUnit(std::string_view s, TimeUnit & tu)
     {
         Symbols() 
         { 
-            add("PS", TimeUnit::Unit::Picosecond)
-            ("NS", TimeUnit::Unit::Nanosecond)
-            ("US", TimeUnit::Unit::Microsecond)
-            ("MS", TimeUnit::Unit::Millisecond)
-            ("S", TimeUnit::Unit::Second);
+            add("PS", TimeUnit::Unit::PICOSECOND)
+            ("NS", TimeUnit::Unit::NANOSECOND)
+            ("US", TimeUnit::Unit::MICROSECOND)
+            ("MS", TimeUnit::Unit::MILLISECOND)
+            ("S", TimeUnit::Unit::SECOND);
         }
     } const symbols;
     Float scale;

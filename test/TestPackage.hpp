@@ -635,7 +635,7 @@ void t_create_package()
 
     detail::SetupMaterials(pkg);
 
-    CoordUnit coordUnit(CoordUnit::Unit::Millimeter);
+    CoordUnit coordUnit(CoordUnit::Unit::MILLIMETER);
     pkg->SetCoordUnit(coordUnit);
 
     auto lossPowers = detail::CreateLossPowers();
