@@ -19,7 +19,7 @@ public:
 
     Float toUnit(Float value, Unit u) const
     {
-        return value * m_scale * std::pow(Float(10), (int(m_unit) - int(u)) * 3);
+        return value * m_scale * std::pow(Float(10), int(m_unit) - int(u));
     }
 
     bool operator== (const NSUnit<U> & other) const
@@ -55,12 +55,12 @@ struct CoordUnit
 {
 public:
     using Unit = generic::unit::Length;
-    CoordUnit() : CoordUnit(Unit::Micrometer, Unit::Nanometer) {}
-    explicit CoordUnit(Unit user) : CoordUnit(user, Unit::Nanometer) {}
+    CoordUnit() : CoordUnit(Unit::MICROMETER, Unit::NANOMETER) {}
+    explicit CoordUnit(Unit user) : CoordUnit(user, Unit::NANOMETER) {}
     /**
      * @brief Construct a new CoordUnit object
      * 
-     * @param user user unit, defualt is um
+     * @param user user unit, default is um
      * @param data database unit, default is nm
      */
     explicit CoordUnit(Unit user, Unit data)
@@ -145,9 +145,9 @@ struct TempUnit
 public:
     using Unit = generic::unit::Temperature;
     TempUnit() = default;
-    TempUnit(Float value, Unit unit = Unit::Celsius) : m_value(value), m_unit(unit) {}
-    Float inCelsius() const { return m_unit == Unit::Celsius ? m_value : generic::unit::Kelvins2Celsius(m_value); }
-    Float inKelvins() const { return m_unit == Unit::Kelvins ? m_value : generic::unit::Celsius2Kelvins(m_value); }
+    TempUnit(Float value, Unit unit = Unit::CELSIUS) : m_value(value), m_unit(unit) {}
+    Float inCelsius() const { return m_unit == Unit::CELSIUS ? m_value : generic::unit::Kelvins2Celsius(m_value); }
+    Float inKelvins() const { return m_unit == Unit::KELVINS ? m_value : generic::unit::Celsius2Kelvins(m_value); }
     static Float Kelvins2Celsius(Float t) { return generic::unit::Kelvins2Celsius(t); }
     static Float Celsius2Kelvins(Float t) { return generic::unit::Celsius2Kelvins(t); }
 
@@ -176,7 +176,7 @@ public:
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 private:
     Float m_value{25};
-    Unit m_unit{Unit::Celsius};
+    Unit m_unit{Unit::CELSIUS};
 };
 
 

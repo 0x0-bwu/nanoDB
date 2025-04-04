@@ -16,7 +16,7 @@ void liberty_member_check(const nano::liberty::Library & lib)
     BOOST_CHECK(lib->currentUnit == CurrUnit(1, CurrUnit::Unit::MA));
     BOOST_CHECK(lib->leakagePwrUnit == PwrUnit(1, PwrUnit::Unit::PW));
     BOOST_CHECK(lib->pullResUnit == ResUnit(1e3, ResUnit::Unit::OHM));
-    BOOST_CHECK(lib->timeUnit == TimeUnit(1e-3, TimeUnit::Unit::Nanosecond));
+    BOOST_CHECK(lib->timeUnit == TimeUnit(1e-3, TimeUnit::Unit::NANOSECOND));
     BOOST_CHECK(lib->voltUnit == VoltUnit(1, VoltUnit::Unit::V));
     BOOST_CHECK(lib->voltageMap.size() == 3);
     BOOST_CHECK_CLOSE(lib->voltageMap.at("VDD"),0.7, t);
