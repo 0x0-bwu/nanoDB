@@ -27,55 +27,46 @@ LossPowers CreateLossPowers()
 void SetupMaterials(Id<Package> pkg)
 {
     using namespace nano;
-    pkg->SetMaterialLib(nano::Create<MaterialLib>("mat_lib"));
-    BOOST_CHECK(pkg->GetMaterialLib());
     auto matLib = pkg->GetMaterialLib();
     BOOST_CHECK(matLib and matLib->GetName() == "mat_lib");
     
-    auto matAl = nano::Create<Material>("Al");
-    matAl->SetProperty(Material::THERMAL_CONDUCTIVITY, nano::Create<MaterialPropValue>(238));
-    matAl->SetProperty(Material::SPECIFIC_HEAT, nano::Create<MaterialPropValue>(880));
-    matAl->SetProperty(Material::MASS_DENSITY, nano::Create<MaterialPropValue>(2700));
-    matAl->SetProperty(Material::RESISTIVITY, nano::Create<MaterialPropValue>(2.82e-8));
-    matLib->AddMaterial(matAl);
+    auto matAl = edit::CreateMaterial(pkg, "Al");
+    matAl->SetProperty(Material::THERMAL_CONDUCTIVITY, edit::CreateMaterialPropValue(238));
+    matAl->SetProperty(Material::SPECIFIC_HEAT, edit::CreateMaterialPropValue(880));
+    matAl->SetProperty(Material::MASS_DENSITY, edit::CreateMaterialPropValue(2700));
+    matAl->SetProperty(Material::RESISTIVITY, edit::CreateMaterialPropValue(2.82e-8));
 
-    auto matCu = nano::Create<Material>("Cu");
-    matCu->SetProperty(Material::THERMAL_CONDUCTIVITY, nano::Create<MaterialPropPolynomial>(Vec<Vec<Float>>{{437.6, -0.165, 1.825e-4, -1.427e-7, 3.979e-11}}));
-    matCu->SetProperty(Material::SPECIFIC_HEAT, nano::Create<MaterialPropPolynomial>(Vec<Vec<Float>>{{342.8, 0.134, 5.535e-5, -1.971e-7, 1.141e-10}}));
-    matCu->SetProperty(Material::MASS_DENSITY, nano::Create<MaterialPropValue>(8850));
-    matLib->AddMaterial(matCu);
+    auto matCu = edit::CreateMaterial(pkg, "Cu");
+    matCu->SetProperty(Material::THERMAL_CONDUCTIVITY, edit::CreateMaterialPropPolynomial(Vec<Vec<Float>>{{437.6, -0.165, 1.825e-4, -1.427e-7, 3.979e-11}}));
+    matCu->SetProperty(Material::SPECIFIC_HEAT, edit::CreateMaterialPropPolynomial(Vec<Vec<Float>>{{342.8, 0.134, 5.535e-5, -1.971e-7, 1.141e-10}}));
+    matCu->SetProperty(Material::MASS_DENSITY, edit::CreateMaterialPropValue(8850));
 
-    auto matAir = nano::Create<Material>("Air");
+    auto matAir = edit::CreateMaterial(pkg, "Air");
     matAir->SetMaterialType(MaterialType::FLUID);
-    matAir->SetProperty(Material::THERMAL_CONDUCTIVITY, nano::Create<MaterialPropValue>(0.026));
-    matAir->SetProperty(Material::SPECIFIC_HEAT, nano::Create<MaterialPropValue>(1.003));
-    matAir->SetProperty(Material::MASS_DENSITY, nano::Create<MaterialPropValue>(1.225));
-    matLib->AddMaterial(matAir);
+    matAir->SetProperty(Material::THERMAL_CONDUCTIVITY, edit::CreateMaterialPropValue(0.026));
+    matAir->SetProperty(Material::SPECIFIC_HEAT, edit::CreateMaterialPropValue(1.003));
+    matAir->SetProperty(Material::MASS_DENSITY, edit::CreateMaterialPropValue(1.225));
 
-    auto matSiC = nano::Create<Material>("SiC");
-    matSiC->SetProperty(Material::THERMAL_CONDUCTIVITY, nano::Create<MaterialPropPolynomial>(Vec<Vec<Float>>{{1860, -11.7, 0.03442, -4.869e-5, 2.675e-8}}));
-    matSiC->SetProperty(Material::SPECIFIC_HEAT, nano::Create<MaterialPropPolynomial>(Vec<Vec<Float>>{{-3338, 33.12, -0.1037, 0.0001522, -8.553e-8}}));
-    matSiC->SetProperty(Material::MASS_DENSITY, nano::Create<MaterialPropValue>(3210));
-    matLib->AddMaterial(matSiC);
+    auto matSiC = edit::CreateMaterial(pkg, "SiC");
+    matSiC->SetProperty(Material::THERMAL_CONDUCTIVITY, edit::CreateMaterialPropPolynomial(Vec<Vec<Float>>{{1860, -11.7, 0.03442, -4.869e-5, 2.675e-8}}));
+    matSiC->SetProperty(Material::SPECIFIC_HEAT, edit::CreateMaterialPropPolynomial(Vec<Vec<Float>>{{-3338, 33.12, -0.1037, 0.0001522, -8.553e-8}}));
+    matSiC->SetProperty(Material::MASS_DENSITY, edit::CreateMaterialPropValue(3210));
 
-    auto matAlN = nano::Create<Material>("AlN");
-    matAlN->SetProperty(Material::THERMAL_CONDUCTIVITY, nano::Create<MaterialPropPolynomial>(Vec<Vec<Float>>{{421.7867, -1.1262, 0.001}}));
-    matAlN->SetProperty(Material::SPECIFIC_HEAT, nano::Create<MaterialPropPolynomial>(Vec<Vec<Float>>{{170.2, -2.018, 0.032, -8.957e-5, 1.032e-7, -4.352e-11}}));
-    matAlN->SetProperty(Material::MASS_DENSITY, nano::Create<MaterialPropValue>(3260));
-    matLib->AddMaterial(matAlN);
+    auto matAlN = edit::CreateMaterial(pkg, "AlN");
+    matAlN->SetProperty(Material::THERMAL_CONDUCTIVITY, edit::CreateMaterialPropPolynomial(Vec<Vec<Float>>{{421.7867, -1.1262, 0.001}}));
+    matAlN->SetProperty(Material::SPECIFIC_HEAT, edit::CreateMaterialPropPolynomial(Vec<Vec<Float>>{{170.2, -2.018, 0.032, -8.957e-5, 1.032e-7, -4.352e-11}}));
+    matAlN->SetProperty(Material::MASS_DENSITY, edit::CreateMaterialPropValue(3260));
     
-    auto matSolder = nano::Create<Material>("Solder");
-    matSolder->SetProperty(Material::THERMAL_CONDUCTIVITY, nano::Create<MaterialPropValue>(55));
-    matSolder->SetProperty(Material::SPECIFIC_HEAT, nano::Create<MaterialPropValue>(218));
-    matSolder->SetProperty(Material::MASS_DENSITY, nano::Create<MaterialPropValue>(7800));
-    matSolder->SetProperty(Material::RESISTIVITY, nano::Create<MaterialPropValue>(11.4e-8));
-    matLib->AddMaterial(matSolder);
+    auto matSolder = edit::CreateMaterial(pkg, "Solder");
+    matSolder->SetProperty(Material::THERMAL_CONDUCTIVITY, edit::CreateMaterialPropValue(55));
+    matSolder->SetProperty(Material::SPECIFIC_HEAT, edit::CreateMaterialPropValue(218));
+    matSolder->SetProperty(Material::MASS_DENSITY, edit::CreateMaterialPropValue(7800));
+    matSolder->SetProperty(Material::RESISTIVITY, edit::CreateMaterialPropValue(11.4e-8));
 
-    auto matFR4 = nano::Create<Material>("FR4");
-    matFR4->SetProperty(Material::THERMAL_CONDUCTIVITY, nano::Create<MaterialPropValue>(0.3));
-    matFR4->SetProperty(Material::SPECIFIC_HEAT, nano::Create<MaterialPropValue>(700));
-    matFR4->SetProperty(Material::MASS_DENSITY, nano::Create<MaterialPropValue>(1700));
-    matLib->AddMaterial(matFR4);
+    auto matFR4 = edit::CreateMaterial(pkg, "FR4");
+    matFR4->SetProperty(Material::THERMAL_CONDUCTIVITY, edit::CreateMaterialPropValue(0.3));
+    matFR4->SetProperty(Material::SPECIFIC_HEAT, edit::CreateMaterialPropValue(700));
+    matFR4->SetProperty(Material::MASS_DENSITY, edit::CreateMaterialPropValue(1700));
 }
 
 Id<Padstack> CreateBondingWireSolderJoints(Id<Package> pkg, std::string name, Float bwRadius)
@@ -630,7 +621,7 @@ void t_create_package()
         5.23, 8.08, 5.23, 1.33, 5.23, -5.42, -3.7, 8.08, -3.7, 1.33, -3.7, -5.42,
     };
     Database::Create("CAS300M12BM2");
-    auto pkg = nano::Create<Package>("CAS300M12BM2");
+    auto pkg = edit::CreatePackage("CAS300M12BM2");
     BOOST_CHECK(pkg);
 
     detail::SetupMaterials(pkg);
