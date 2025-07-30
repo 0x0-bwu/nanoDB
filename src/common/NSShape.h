@@ -25,7 +25,7 @@ class Shape : public Cloneable<Shape>, public Entity<Shape>
 public:
     virtual ~Shape() = default;
     virtual bool hasHole() const = 0;
-    virtual NBox2D GetBBox() const = 0;
+    virtual NBox2D GetBoundary() const = 0;
     virtual NPolygon GetOutline() const = 0;
     virtual NPolygonWithHoles GetContour() const = 0;
     virtual void Transform(const Transform2D & trans) = 0;
