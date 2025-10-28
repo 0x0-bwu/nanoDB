@@ -382,7 +382,7 @@ public:
     CId<T> Get() const
     {
         auto iter = m_bindingMap.find(std::type_index(typeid(T)));
-        if (iter == m_bindingMap.cend()) CId<T>();
+        if (iter == m_bindingMap.cend()) return CId<T>();
         return CId<T>(iter->second);
     }
 public:
