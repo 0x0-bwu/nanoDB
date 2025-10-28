@@ -66,7 +66,6 @@ void Package::GetStackupLayerRange(CId<StackupLayer> top, CId<StackupLayer> bot,
         if (layer == top) inRange = true;
         if (inRange) range.emplace_back(layer);
         if (layer == bot) {
-            range.emplace_back(layer);
             break;
         }
     }
