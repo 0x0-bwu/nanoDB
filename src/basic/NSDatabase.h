@@ -23,15 +23,15 @@ public:
     Container()  { static_assert(std::is_base_of_v<Entity<T>, T>, "T should be derived class of Entity<T>"); }
     ~Container() { Reset(); }
 
-    template <typename Derived>
-    Derived * operator[] (const Id<Derived> & id)
+    template <typename Derived, bool M>
+    Derived * operator[] (const Id<Derived, M> & id)
     { 
         static_assert(std::is_same_v<traits::BaseOf<Derived>, T>, "should be derived class or self");
         return static_cast<Derived *>(m_data[Index(id)]);
     }   
 
-    template <typename Derived>
-    const Derived * operator[] (const Id<Derived> & id) const
+    template <typename Derived, bool M>
+    const Derived * operator[] (const Id<Derived, M> & id) const
     { 
         return const_cast<Container<T>*>(this)->operator[]<Derived>(id);
     }
@@ -301,12 +301,12 @@ public:
 
     bool isValid() const { return m_id != INVALID_INDEX; }
 
-    template <typename Derived>
-    bool Identical(const generic::utils::Index<Id<Derived>, nano::Index> & id) const
+    template <typename Derived, bool M>
+    bool Identical(const generic::utils::Index<Id<Derived, M>, nano::Index> & id) const
     {
         static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
-        using SizeType = typename Id<Derived>::SizeType;
-        return &(*Id<T>(SizeType(id))) == static_cast<const T*>(this);
+        using SizeType = typename Id<Derived, M>::SizeType;
+        return &(*Id<T, M>(SizeType(id))) == static_cast<const T*>(this);
     }
     
     /// binds
@@ -432,26 +432,30 @@ inline void SetCurrentDir(std::string dir)
     Database::SetCurrentDir(std::move(dir));
 }
 
-template <typename T>
-class Id : public generic::utils::Index<Id<T>, nano::Index>
+template <typename T, bool Mutable>
+class Id : public generic::utils::Index<Id<T, Mutable>, nano::Index>
 {
 public:
-    using generic::utils::Index<Id<T>, nano::Index>::m_id;
-    using SizeType = typename generic::utils::Index<Id<T>, nano::Index>::SizeType;
+    using Type = std::conditional_t<Mutable, T, const T>;
+    using generic::utils::Index<Id<T, Mutable>, nano::Index>::m_id;
+    using SizeType = typename generic::utils::Index<Id<T, Mutable>, nano::Index>::SizeType;
 
-    Id() : generic::utils::Index<Id<T>, nano::Index>() {}
-    Id(const generic::utils::Index<Id<T>, nano::Index> & id) = delete;
-    explicit Id(SizeType id) : generic::utils::Index<Id<T>, nano::Index>(id) {}
+    Id() : generic::utils::Index<Id<T, Mutable>, nano::Index>() {}
 
-    template <typename Derived>
+    template <bool M>
+    Id(const generic::utils::Index<Id<T, M>, nano::Index> & id) = delete;
+
+    explicit Id(SizeType id) : generic::utils::Index<Id<T, Mutable>, nano::Index>(id) {}
+
+    template <typename Derived, bool M>
     requires std::is_base_of_v<T, Derived>
-    Id(const Id<Derived> & derived) : Id(SizeType(derived)) {}// implicit convert from derived to base
+    Id(const Id<Derived, M> & derived) : Id(SizeType(derived)) {}// implicit convert from derived to base
 
-    template <typename Base>
+    template <typename Base, bool M>
     requires (not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>)
-    explicit Id(const Id<Base> & base) // explicit convert from base to derivied, will do dynamic cast check
+    explicit Id(const Id<Base, M> & base) // explicit convert from base to derived, will do dynamic cast check
     {
-        m_id = dynamic_cast<T *>(base.operator->()) ? SizeType(base) : INVALID_INDEX;
+        m_id = dynamic_cast<Type *>(base.operator->()) ? SizeType(base) : INVALID_INDEX;
     }
 
     CId<T> GetCId() const { return CId<T>(m_id); }
@@ -461,18 +465,20 @@ public:
     operator bool() const override { return not isNull(); }
 
     bool operator!() const { return isNull(); }
+    
+    Id<T, true> ConstCast() const requires (not Mutable) { return Id<T, true>(m_id); }
 
-    T & operator * () const
+    Type & operator * () const
     {
         return *(this->operator->());
     }
 
-    T * operator-> () const 
+    Type * operator-> () const 
     {
         if (INVALID_INDEX == m_id) return nullptr;
         auto & container = Database::Current().Get<T>();
         NS_ASSERT(m_id < container.Size());
-        return container[Id<T>(m_id)];
+        return container[Id<T, Mutable>(m_id)];
     }
 
     void Destroy() { nano::Remove<T>(*this); }
@@ -481,72 +487,7 @@ public:
     template <typename Archive>
     void serialize(Archive & ar, const unsigned int)
     {
-        ar & boost::serialization::make_nvp("id", boost::serialization::base_object<generic::utils::Index<Id<T>, nano::Index>>(*this));
-    }
-#endif//NANO_BOOST_SERIALIZATION_SUPPORT
-};
-
-template <typename T>
-class CId : public generic::utils::Index<Id<T>, nano::Index>
-{
-public:
-    using generic::utils::Index<Id<T>, nano::Index>::m_id;
-    using SizeType = typename generic::utils::Index<Id<T>, nano::Index>::SizeType;
-
-    CId() : generic::utils::Index<Id<T>, nano::Index>() {}
-    CId(const generic::utils::Index<Id<T>, nano::Index> & id) = delete;
-    explicit CId(SizeType id) : generic::utils::Index<Id<T>, nano::Index>(id) {}
-
-    template <typename Derived>
-    requires std::is_base_of_v<T, Derived>
-    CId(const Id<Derived> & derived) : CId(SizeType(derived)) {}// implicit convert from derived to base
-
-    template <typename Derived>
-    requires std::is_base_of_v<T, Derived>
-    CId(const CId<Derived> & derived) : CId(SizeType(derived)) {}// implicit convert from derived to base
-
-    template <typename Base>
-    requires (not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>)
-    explicit CId(const Id<Base> & base) // explicit convert from base to derived, will do dynamic cast check
-    {
-        m_id = dynamic_cast<const T *>(base.operator->()) ? SizeType(base) : INVALID_INDEX;
-    }
-
-    template <typename Base>
-    requires (not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>)
-    explicit CId(const CId<Base> & base) // explicit convert from base to derived, will do dynamic cast check
-    {
-        m_id = dynamic_cast<const T *>(base.operator->()) ? SizeType(base) : INVALID_INDEX;
-    }
-
-    bool isNull() const { return m_id == INVALID_INDEX or nullptr == this->operator->(); }
-
-    operator bool() const override { return not isNull(); }
-
-    bool operator!() const { return isNull(); }
-
-    Id<T> ConstCast() const { return Id<T>(m_id); }
-
-    const T & operator * () const
-    {
-        return *(this->operator->());
-    }
-
-    const T * operator-> () const
-    {
-        if (INVALID_INDEX == m_id) return nullptr;
-        auto & container = Database::Current().Get<T>();
-        NS_ASSERT(m_id < container.Size());
-        return container[Id<T>(m_id)];
-    }
-
-    void Destroy() const { nano::Remove<T>(*this); }
-
-#ifdef NANO_BOOST_SERIALIZATION_SUPPORT
-    template <typename Archive>
-    void serialize(Archive & ar, const unsigned int)
-    {
-        ar & boost::serialization::make_nvp("id", boost::serialization::base_object<generic::utils::Index<Id<T>, nano::Index>>(*this));
+        ar & boost::serialization::make_nvp("id", boost::serialization::base_object<generic::utils::Index<Id<T, Mutable>, nano::Index>>(*this));
     }
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 };

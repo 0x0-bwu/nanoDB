@@ -91,8 +91,8 @@ template <typename T> using Arr5 = Arr<T, 5>;
 template <typename T> using Arr6 = Arr<T, 6>;
 template <typename T> using Arr9 = Arr<T, 9>;
 
-template <typename T> class Id;
-template <typename T> class CId;
+template <typename T, bool Mutable = true> class Id;
+template <typename T> using CId = Id<T, /*Mutable=*/false>;
 template <typename T> using IdSet = std::unordered_set<Id<T>>;
 template <typename T> using IdArr2 = Arr2<Id<T>>;
 template <typename T> using IdArr3 = Arr3<Id<T>>;

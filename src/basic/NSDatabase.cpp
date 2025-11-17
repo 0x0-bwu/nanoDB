@@ -132,7 +132,7 @@ bool Database::CreateImpl(std::string name)
     if (name.empty()) return false;
     auto iter = m_contents.find(name.c_str());
     if (iter != m_contents.end()) {
-        NS_ERROR("database %1% alread exists!", name.c_str());
+        NS_ERROR("database %1% already exists!", name.c_str());
         return false;
     }
     auto c = std::make_unique<Content>(std::move(name));
