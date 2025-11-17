@@ -30,4 +30,5 @@ Id<Block> BTerm::GetBlock() const
     return m_.net->GetBlock();
 }
 
+
 } // namespace nano::chip

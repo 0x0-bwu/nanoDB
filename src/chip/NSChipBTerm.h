@@ -13,6 +13,7 @@ public:
     Id<Block> GetBlock() const;
 
     Id<Net> GetNet() const;
+    IOType GetIOType() const;
 
 private:  
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
@@ -24,6 +25,11 @@ private:
 inline Id<Net> BTerm::GetNet() const
 {
     return m_.net;
+}
+
+inline IOType BTerm::GetIOType() const
+{
+    return m_.ioType;
 }
 
 } //  namespace nano::chip

@@ -32,19 +32,24 @@ public:
     }
 
     void AddNet(Id<Net> net);
-
     Id<Net> GetNet(size_t i) const;
 
+    Id<Net> FindNet(std::string_view name) const;
+    Id<Inst> FindInst(std::string_view name) const;
+    Id<BTerm> FindBTerm(std::string_view name) const;
+
+    size_t NumOfBTerms() const;
     size_t NumOfInsts() const;
+    size_t NumOfNets() const;
 
     char HierSep() const;
 
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
-    (IdVec<BTerm>, bterms),
-    (IdVec<Inst>, insts),
-    (IdVec<Net>, nets),
+    (IdVec<BTerm, NameLut>, bterms),
+    (IdVec<Inst, NameLut>, insts),
+    (IdVec<Net, NameLut>, nets),
     (char, hierSep));
 };
 
