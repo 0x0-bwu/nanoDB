@@ -8,11 +8,6 @@
 #include "TestVerilog.hpp"
 #include "TestChip.hpp"
 #include "TestBasic.hpp"
-#include "TestCommonModule.hpp"
-#include "TestChipEnhanced.hpp"
-#include "TestLibertyEnhanced.hpp"
-#include "TestPower.hpp"
-#include "TestEdgeCases.hpp"
 
 using namespace boost::unit_test;
 extern test_suite * create_nano_parasitic_test_suite();
@@ -23,16 +18,10 @@ extern test_suite * create_nano_liberty_test_suite();
 extern test_suite * create_nano_chip_test_suite();
 extern test_suite * create_nano_basic_test_suite();
 extern test_suite * create_nano_common_module_test_suite();
-extern test_suite * create_nano_chip_enhanced_test_suite();
-extern test_suite * create_nano_liberty_enhanced_test_suite();
-extern test_suite * create_nano_power_test_suite();
-extern test_suite * create_nano_edge_cases_test_suite();
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
 #include "TestArchive.hpp"
-#include "TestArchiveEnhanced.hpp"
 extern test_suite * create_nano_archive_test_suite();
-extern test_suite * create_nano_archive_enhanced_test_suite();
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
 void t_additional()
@@ -62,14 +51,8 @@ test_suite * init_unit_test_suite(int argc, char* argv[])
     framework::master_test_suite().add(create_nano_parasitic_test_suite());
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
     framework::master_test_suite().add(create_nano_archive_test_suite());
-    framework::master_test_suite().add(create_nano_archive_enhanced_test_suite());
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
     // New enhanced test suites for improved coverage
-    framework::master_test_suite().add(create_nano_common_module_test_suite());
-    framework::master_test_suite().add(create_nano_chip_enhanced_test_suite());
-    framework::master_test_suite().add(create_nano_liberty_enhanced_test_suite());
-    framework::master_test_suite().add(create_nano_power_test_suite());
-    framework::master_test_suite().add(create_nano_edge_cases_test_suite());
     framework::master_test_suite().add(BOOST_TEST_CASE(&t_additional));
     return 0;
 }

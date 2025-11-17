@@ -38,4 +38,9 @@ Id<Block> Chip::GetTop() const
     return m_.top;
 }
 
+Id<Block> Chip::FindBlock(std::string_view name) const
+{
+    return m_.blocks.Lookup<lut::Name>(name);
+}
+
 } // namespace nano::chip
