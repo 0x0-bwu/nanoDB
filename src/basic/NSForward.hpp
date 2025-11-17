@@ -235,7 +235,7 @@ inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<package::ComponentPin            >, "PackageComponentPin"sv            ),
     hana::make_pair(hana::type_c<package::Footprint               >, "PackageFootprint"sv               ),
     hana::make_pair(hana::type_c<package::FootprintCell           >, "PackageFootprintCell"sv           ),
-    hana::make_pair(hana::type_c<package::FootprintPin            >, "PackageFootpinrtPin"sv            ),
+    hana::make_pair(hana::type_c<package::FootprintPin            >, "PackageFootprintPin"sv            ),
     hana::make_pair(hana::type_c<package::HierObj                 >, "PackageHierObj"sv                 ),
     hana::make_pair(hana::type_c<package::Layer                   >, "PackageLayer"sv                   ),
     hana::make_pair(hana::type_c<package::Layout                  >, "PackageLayout"sv                  ),
