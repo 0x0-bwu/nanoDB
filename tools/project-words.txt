@@ -1,3 +1,4 @@
+adhes
 cloneable
 combinational
 deepnwell
@@ -10,12 +11,14 @@ hana
 hier
 insts
 jedec
+kicad
 kohm
 levelized
 luts
 nwell
 padstack
 padstacks
+prepreg
 pwell
 rohm
 unate
