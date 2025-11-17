@@ -10,8 +10,8 @@ requires std::is_base_of_v<typename IdContainer::object_type, T>
 class IdIterator
 {
 public:
+    using ReturnType = Id<T, Mutable>;
     using Iterator = typename IdContainer::const_iterator;
-    using ReturnType = std::conditional_t<Mutable, Id<T>, CId<T>>; 
     explicit IdIterator(const IdContainer & container)
      : m_curr(container.cbegin()) 
      , m_start(container.cbegin())
