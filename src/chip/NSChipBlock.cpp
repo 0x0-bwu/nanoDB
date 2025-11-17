@@ -46,9 +46,34 @@ Id<Net> Block::GetNet(size_t i) const
     return m_.nets[i];
 }
 
+Id<Net> Block::FindNet(std::string_view name) const
+{
+    return m_.nets.Lookup<lut::Name>(name);
+}
+
+Id<Inst> Block::FindInst(std::string_view name) const
+{
+    return m_.insts.Lookup<lut::Name>(name);
+}
+
+Id<BTerm> Block::FindBTerm(std::string_view name) const
+{
+    return m_.bterms.Lookup<lut::Name>(name);
+}
+
+size_t Block::NumOfBTerms() const
+{
+    return m_.bterms.size();
+}
+
 size_t Block::NumOfInsts() const
 {
     return m_.insts.size();
+}
+
+size_t Block::NumOfNets() const
+{
+    return m_.nets.size();
 }
 
 } // namespace nano::chip

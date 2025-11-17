@@ -9,7 +9,7 @@ public:
     virtual ~MaterialProp() = default;
     virtual bool isPropValue() const { return false; }
     virtual bool isPropTable() const { return false; }
-    virtual bool isPropPolyNomial() const { return false; }
+    virtual bool isPropPolynomial() const { return false; }
 
     virtual bool GetSimpleProperty(Float, Float &) const = 0;
     virtual bool GetAnisotropicProperty(Float, size_t, Float &) const = 0;
@@ -91,7 +91,7 @@ public:
     explicit MaterialPropPolynomial(Vec<Vec<Float>> coefficients);
     MaterialPropPolynomial() = default;
 
-    bool isPropPolynomial() const { return true; }
+    bool isPropPolynomial() const override { return true; }
 
     bool GetSimpleProperty(Float index, Float & value) const override;
     bool GetAnisotropicProperty(Float index, size_t row, Float & value) const override;

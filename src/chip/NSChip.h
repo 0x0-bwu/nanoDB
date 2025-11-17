@@ -15,11 +15,13 @@ public:
 
     Id<Block> GetTop() const;
 
+    Id<Block> FindBlock(std::string_view name) const;
+
 private:
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
     NS_CLASS_MEMBERS_DEFINE(
     (Id<Block>, top),
-    (IdVec<Block>, blocks))
+    (IdVec<Block, NameLut>, blocks))
 };
 
 } // namespace nano::chip
