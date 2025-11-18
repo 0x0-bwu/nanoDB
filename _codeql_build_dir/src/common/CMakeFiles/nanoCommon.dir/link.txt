@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../lib/libnanoCommon.a CMakeFiles/nanoCommon.dir/NSLookupTable.cpp.o CMakeFiles/nanoCommon.dir/NSMaterial.cpp.o CMakeFiles/nanoCommon.dir/NSShape.cpp.o
-/usr/bin/ranlib ../../lib/libnanoCommon.a

@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../lib/libnanoBasic.a CMakeFiles/nanoBasic.dir/NSDatabase.cpp.o
-/usr/bin/ranlib ../../lib/libnanoBasic.a

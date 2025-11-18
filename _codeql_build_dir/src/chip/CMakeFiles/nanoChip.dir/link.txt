@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../lib/libnanoChip.a CMakeFiles/nanoChip.dir/NSChip.cpp.o CMakeFiles/nanoChip.dir/NSChipBlock.cpp.o CMakeFiles/nanoChip.dir/NSChipBTerm.cpp.o CMakeFiles/nanoChip.dir/NSChipInst.cpp.o CMakeFiles/nanoChip.dir/NSChipITerm.cpp.o CMakeFiles/nanoChip.dir/NSChipNet.cpp.o
-/usr/bin/ranlib ../../lib/libnanoChip.a

@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../lib/libnanoPower.a CMakeFiles/nanoPower.dir/NSLossPower.cpp.o
-/usr/bin/ranlib ../../lib/libnanoPower.a
