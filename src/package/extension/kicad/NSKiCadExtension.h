@@ -51,8 +51,11 @@ private:
     {
         if (not lut.count(name)) return name;
         size_t index = 1;
+        std::string next;
+        next.reserve(name.size() + 10); // Reserve space for name + potential large number
         while (true) {
-            std::string next = name + std::to_string(index);
+            next = name;
+            next.append(std::to_string(index));
             if (not lut.count(next)) return next;
             index++;
         }

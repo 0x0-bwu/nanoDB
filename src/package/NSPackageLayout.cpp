@@ -81,14 +81,14 @@ Ptr<Layout> Layout::CloneFrom(const Layout & src)
     
     m_.nets = src.m_.nets.Clone();
     HashMap<CId<Net>, CId<Net>> netMap{{CId<Net>(), CId<Net>()}};
-    for (auto [src, tar] : Zip(src.m_.nets, m_.nets))
+    for (const auto& [src, tar] : Zip(src.m_.nets, m_.nets))
         netMap.emplace(src, tar);
     
     m_.components = src.m_.components.Clone();
     HashMap<CId<Component>, CId<Component>> compMap{{CId<Component>(), CId<Component>()}};
     HashMap<CId<ComponentPin>, CId<ComponentPin>> compPinMap{{CId<ComponentPin>(), CId<ComponentPin>()}};
     HashMap<CId<ComponentLayer>, CId<ComponentLayer>> compLayerMap{{CId<ComponentLayer>(), CId<ComponentLayer>()}};
-    for(auto [srcComp, tarComp] : Zip(src.m_.components, m_.components)) {
+    for(const auto& [srcComp, tarComp] : Zip(src.m_.components, m_.components)) {
         tarComp->SetLayout(CId<Layout>(GetId()));
         compMap.emplace(srcComp, tarComp);
         auto srcLayerIter = srcComp->GetComponentLayerIter();

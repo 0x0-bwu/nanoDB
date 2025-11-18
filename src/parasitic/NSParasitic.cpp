@@ -39,7 +39,7 @@ Id<Net> Parasitic::FindNet(std::string_view name) const
 void Parasitic::ClearNets(bool remove)
 {
     if (remove) {
-        for (auto id : m_.nets)
+        for (auto& id : m_.nets)
             nano::Remove<Net>(id);
     }
     m_.nets.clear();
