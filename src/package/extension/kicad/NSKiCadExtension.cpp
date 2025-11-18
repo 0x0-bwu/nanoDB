@@ -334,7 +334,7 @@ void KiCadExtension::ExtractStroke(const Tree & node, Stroke & stroke)
 
 bool KiCadExtension::CreatePackage()
 {
-    m_package = nano::Create<pkg::Package>(m_kicad->name);
+    m_package = pkg::edit::CreatePackage(m_kicad->name);
     CoordUnit coordUnit(CoordUnit::Unit::MILLIMETER);
     m_package->SetCoordUnit(coordUnit);
     CreateStackup();
