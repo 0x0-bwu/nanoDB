@@ -57,8 +57,8 @@ NS_SERIALIZATION_FUNCTIONS_IMP(OutputPin)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Pin::Pin(std::string name, Id<Cell> cell, IOType type)
- : NamedObj(std::move(name))
+Pin::Pin(const std::string& name, Id<Cell> cell, IOType type)
+ : NamedObj(name)
 {
     NS_CLASS_MEMBERS_INITIALIZE
     m_.cell = cell;
@@ -70,8 +70,8 @@ Pin::Pin()
 {
 }
 
-PwrGndPin::PwrGndPin(std::string name, Id<Cell> cell, IOType type)
- : Pin(std::move(name), cell, type)
+PwrGndPin::PwrGndPin(const std::string& name, Id<Cell> cell, IOType type)
+ : Pin(name, cell, type)
 {
     NS_CLASS_MEMBERS_INITIALIZE
 }
@@ -81,8 +81,8 @@ PwrGndPin::PwrGndPin()
 {
 }
 
-SignalPin::SignalPin(std::string name, Id<Cell> cell, IOType type)
- : Pin(std::move(name), cell, type)
+SignalPin::SignalPin(const std::string& name, Id<Cell> cell, IOType type)
+ : Pin(name, cell, type)
 {
     NS_CLASS_MEMBERS_INITIALIZE
 }
@@ -92,8 +92,8 @@ SignalPin::SignalPin()
 {
 }
 
-InputPin::InputPin(std::string name, Id<Cell> cell)
- : SignalPin(std::move(name), cell, IOType::INPUT)
+InputPin::InputPin(const std::string& name, Id<Cell> cell)
+ : SignalPin(name, cell, IOType::INPUT)
 {
     NS_CLASS_MEMBERS_INITIALIZE
 }
@@ -103,8 +103,8 @@ InputPin::InputPin()
 {
 }
 
-OutputPin::OutputPin(std::string name, Id<Cell> cell)
- : SignalPin(std::move(name), cell, IOType::OUTPUT)
+OutputPin::OutputPin(const std::string& name, Id<Cell> cell)
+ : SignalPin(name, cell, IOType::OUTPUT)
  {
     NS_CLASS_MEMBERS_INITIALIZE
  }

@@ -8,7 +8,7 @@ class Cell : public NamedObj, public Entity<Cell>
 {
 public:
     friend class CellParser;
-    Cell(std::string name, Id<Library> library);
+    Cell(const std::string& name, Id<Library> library);
 
     Id<Library> GetLibrary() const;
 

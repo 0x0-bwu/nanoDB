@@ -17,8 +17,8 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Cell)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Cell::Cell(std::string name, Id<Library> library)
- : NamedObj(std::move(name))
+Cell::Cell(const std::string& name, Id<Library> library)
+ : NamedObj(name)
 {
     NS_CLASS_MEMBERS_INITIALIZE
     m_.library = library;

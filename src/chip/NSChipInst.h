@@ -6,7 +6,7 @@ namespace nano::chip {
 class Inst : public NamedObj, public Entity<Inst>
 {
 public:
-    Inst(std::string name, Id<Block> block);
+    Inst(const std::string& name, Id<Block> block);
     Inst() = default;
 
     Id<Block> GetBlock() const;

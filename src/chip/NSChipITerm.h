@@ -6,7 +6,7 @@ namespace nano::chip {
 class ITerm : public NamedObj, public Entity<ITerm>
 {
 public:
-    ITerm(std::string name, Id<Inst> inst, Id<Net> net, IOType ioType);
+    ITerm(const std::string& name, Id<Inst> inst, Id<Net> net, IOType ioType);
     ITerm() = default;
 
     Id<Inst> GetInst() const;

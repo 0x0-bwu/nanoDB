@@ -17,8 +17,8 @@ NS_SERIALIZATION_FUNCTIONS_IMP(OperatingConditions)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-OperatingConditions::OperatingConditions(std::string name)
- : NamedObj(std::move(name))
+OperatingConditions::OperatingConditions(const std::string& name)
+ : NamedObj(name)
 {
     NS_CLASS_MEMBERS_INITIALIZE
 }

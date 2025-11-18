@@ -8,7 +8,7 @@ class OperatingConditions : public NamedObj, public Entity<OperatingConditions>
 {
 public:
     friend class OperatingConditionsParser;
-    explicit OperatingConditions(std::string name);
+    explicit OperatingConditions(const std::string& name);
 
 private:
     OperatingConditions();

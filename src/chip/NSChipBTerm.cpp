@@ -17,8 +17,8 @@ NS_SERIALIZATION_FUNCTIONS_IMP(BTerm)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-BTerm::BTerm(std::string name, Id<Net> net, IOType type)
- : NamedObj(std::move(name))
+BTerm::BTerm(const std::string& name, Id<Net> net, IOType type)
+ : NamedObj(name)
 {
     m_.net = net;
     m_.ioType = type;

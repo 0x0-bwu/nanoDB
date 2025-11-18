@@ -522,7 +522,7 @@ void KiCadExtension::CreateComponent(const Component & comp, Id<pkg::Layout> lay
         }
         Vec<CId<StackupLayer>> layers;
         getPadStackupLayers(pad, layers);
-        for (auto layer : layers)
+        for (const auto& layer : layers)
             padstack->SetPadShape(layer, padShape, coordUnit.toCoord(pad.pos), 0);
         
         if (Pad::Type::THRU_HOLE == pad.type) {

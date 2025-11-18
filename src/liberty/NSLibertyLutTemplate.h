@@ -8,7 +8,7 @@ class LutTemplate : public NamedObj, public Entity<LutTemplate>
 {
 public:
     friend class LutTemplateParser;
-    explicit LutTemplate(std::string name);
+    explicit LutTemplate(const std::string& name);
 
 private:
     LutTemplate();

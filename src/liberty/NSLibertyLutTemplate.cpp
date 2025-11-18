@@ -16,8 +16,8 @@ NS_SERIALIZATION_FUNCTIONS_IMP(LutTemplate)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-LutTemplate::LutTemplate(std::string name)
- : NamedObj(std::move(name))
+LutTemplate::LutTemplate(const std::string& name)
+ : NamedObj(name)
 {
     NS_CLASS_MEMBERS_INITIALIZE
 }

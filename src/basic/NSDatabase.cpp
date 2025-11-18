@@ -70,14 +70,14 @@ std::string_view Database::CurrentDir()
     return currentDir.c_str();
 }
 
-void Database::SetCurrentDir(std::string dir)
+void Database::SetCurrentDir(const std::string& dir)
 {
-    Instance().SetCurrentDirImpl(std::move(dir));
+    Instance().SetCurrentDirImpl(dir);
 }
 
-bool Database::Create(std::string name)
+bool Database::Create(const std::string& name)
 {
-    return Instance().CreateImpl(name) ? SetCurrent(name.c_str()) : false;
+    return Instance().CreateImpl(name) ? SetCurrent(name) : false;
 }
 
 bool Database::SetCurrent(std::string_view name)
@@ -121,21 +121,21 @@ Content & Database::CurrentImpl()
     return *m_current;
 }
 
-void Database::SetCurrentDirImpl(std::string dir)
+void Database::SetCurrentDirImpl(const std::string& dir)
 {
-    currentDir = std::move(dir);
+    currentDir = dir;
     generic::fs::CreateDir(currentDir);
 }
 
-bool Database::CreateImpl(std::string name)
+bool Database::CreateImpl(const std::string& name)
 {
     if (name.empty()) return false;
-    auto iter = m_contents.find(name.c_str());
+    auto iter = m_contents.find(name);
     if (iter != m_contents.end()) {
-        NS_ERROR("database %1% already exists!", name.c_str());
+        NS_ERROR("database %1% already exists!", name);
         return false;
     }
-    auto c = std::make_unique<Content>(std::move(name));
+    auto c = std::make_unique<Content>(name);
     auto res = m_contents.emplace(c->GetName(), std::move(c));
     m_current = res.first->second.get();
     return res.second;

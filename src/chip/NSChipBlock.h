@@ -6,7 +6,7 @@ namespace nano::chip {
 class Block : public NamedObj, public Entity<Block>
 {
 public:
-    Block(std::string name, char hierSep = '/');
+    Block(const std::string& name, char hierSep = '/');
     Block() = default;
 
     template <typename Range>

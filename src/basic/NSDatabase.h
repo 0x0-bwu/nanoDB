@@ -121,7 +121,7 @@ private:
 class NamedObj
 {
 public:
-    NamedObj(std::string name);
+    explicit NamedObj(std::string name);
     virtual ~NamedObj() = default;
 
     std::string_view GetName() const;
@@ -226,8 +226,8 @@ public:
 
     static Content & Current();
     static std::string_view CurrentDir();
-    static void SetCurrentDir(std::string dir);
-    static bool Create(std::string name);
+    static void SetCurrentDir(const std::string& dir);
+    static bool Create(const std::string& name);
     static bool SetCurrent(std::string_view name);
     static Ptr<Content> Find(std::string_view name);
     static bool Close(std::string_view name);
@@ -243,8 +243,8 @@ public:
 private:
     Database();
     Content & CurrentImpl();
-    static void SetCurrentDirImpl(std::string dir);
-    bool CreateImpl(std::string name);
+    static void SetCurrentDirImpl(const std::string& dir);
+    bool CreateImpl(const std::string& name);
     bool SetCurrentImpl(std::string_view name);
     Ptr<Content> FindImpl(std::string_view name);
     CPtr<Content> FindImpl(std::string_view name) const;
@@ -427,9 +427,9 @@ inline std::string_view CurrentDir()
     return Database::CurrentDir();
 }
 
-inline void SetCurrentDir(std::string dir)
+inline void SetCurrentDir(const std::string& dir)
 {
-    Database::SetCurrentDir(std::move(dir));
+    Database::SetCurrentDir(dir);
 }
 
 template <typename T, bool Mutable>

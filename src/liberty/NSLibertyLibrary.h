@@ -8,7 +8,7 @@ class Library : public NamedObj, public Entity<Library>
 {
 public:
     friend class LibraryParser;
-    explicit Library(std::string name);
+    explicit Library(const std::string& name);
     Library();
 
     void SetFilename(std::string_view filename);

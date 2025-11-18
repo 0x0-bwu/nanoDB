@@ -18,8 +18,8 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Net)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Net::Net(std::string name, Id<Block> block)
- : NamedObj(std::move(name))
+Net::Net(const std::string& name, Id<Block> block)
+ : NamedObj(name)
 {
     m_.block = block;
 }

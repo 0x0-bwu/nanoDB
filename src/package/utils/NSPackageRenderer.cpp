@@ -31,7 +31,7 @@ bool LayoutRenderer::WritePNG(std::string_view filename, CId<StackupLayer> layer
 
     Vec<CId<Component>> components;
     retriever.GetLayerComponents(layer, components);
-    for (auto comp : components) {
+    for (const auto& comp : components) {
         auto boundary = comp->GetBoundary();
         NS_ASSERT(boundary);
         auto contour = boundary->GetContour();

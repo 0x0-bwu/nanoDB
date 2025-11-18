@@ -17,8 +17,8 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Inst)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Inst::Inst(std::string name, Id<Block> block)
- : NamedObj(std::move(name))
+Inst::Inst(const std::string& name, Id<Block> block)
+ : NamedObj(name)
 {
     m_.block = block;
 }

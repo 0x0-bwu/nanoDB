@@ -6,7 +6,7 @@ namespace nano::chip {
 class Net : public NamedObj, public Entity<Net>
 {
 public:
-    Net(std::string name, Id<Block> block);
+    Net(const std::string& name, Id<Block> block);
     Net() = default;
 
     Id<Block> GetBlock() const;

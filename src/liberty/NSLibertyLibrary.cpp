@@ -17,8 +17,8 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Library)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Library::Library(std::string name)
- : NamedObj(std::move(name))
+Library::Library(const std::string& name)
+ : NamedObj(name)
 {
     NS_CLASS_MEMBERS_INITIALIZE
 }

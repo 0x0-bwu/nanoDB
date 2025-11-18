@@ -17,8 +17,8 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Chip)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Chip::Chip(std::string name)
- : NamedObj(std::move(name))
+Chip::Chip(const std::string& name)
+ : NamedObj(name)
 {
 }
 

@@ -17,8 +17,8 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Block)
 
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
-Block::Block(std::string name, char hierSep)
- : NamedObj(std::move(name))
+Block::Block(const std::string& name, char hierSep)
+ : NamedObj(name)
 {
     m_.hierSep = hierSep;
 }

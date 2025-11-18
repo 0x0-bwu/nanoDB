@@ -7,7 +7,7 @@ namespace nano::chip {
 class BTerm : public NamedObj, public Entity<BTerm>
 {
 public:
-    BTerm(std::string name, Id<Net> net, IOType type);
+    BTerm(const std::string& name, Id<Net> net, IOType type);
     BTerm() = default;
 
     Id<Block> GetBlock() const;

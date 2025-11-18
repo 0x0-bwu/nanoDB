@@ -88,7 +88,7 @@ private:
 class MaterialPropPolynomial : public MaterialProp
 {
 public:
-    explicit MaterialPropPolynomial(Vec<Vec<Float>> coefficients);
+    MaterialPropPolynomial(Vec<Vec<Float>> coefficients);
     MaterialPropPolynomial() = default;
 
     bool isPropPolynomial() const override { return true; }
@@ -129,7 +129,7 @@ public:
         POISSONSRATIO = 40,
         THERMAL_EXPANSION_COEFFICIENT = 42 //1/K
     };
-    Material(std::string name);
+    explicit Material(const std::string& name);
     Material();
 
     bool hasProperty(Prop prop) const;
@@ -151,7 +151,7 @@ private:
 class MaterialLib : public NamedObj, public Entity<MaterialLib>
 {
 public:
-    MaterialLib(std::string name);
+    explicit MaterialLib(const std::string& name);
     MaterialLib() = default;
 
     void AddMaterial(Id<Material> mat);

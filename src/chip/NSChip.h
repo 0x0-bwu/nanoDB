@@ -6,7 +6,7 @@ namespace nano::chip {
 class Chip : public NamedObj, public Entity<Chip>
 {
 public:
-    Chip(std::string name);
+    explicit Chip(const std::string& name);
     Chip() = default;
 
     void AddBlock(Id<Block> block);

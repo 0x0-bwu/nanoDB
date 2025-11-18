@@ -8,7 +8,7 @@ class Pin : public NamedObj, public Entity<Pin>
 {
 public:
     friend class PinParser;
-    Pin(std::string name, Id<Cell> cell, IOType type = IOType::UNKNOWN);
+    Pin(const std::string& name, Id<Cell> cell, IOType type = IOType::UNKNOWN);
 
     Id<Cell> GetCell() const;
 
@@ -30,7 +30,7 @@ class PwrGndPin : public Pin
 {
 public:
     friend class PwrGndPinParser;
-    PwrGndPin(std::string name, Id<Cell> cell, IOType type = IOType::UNKNOWN);
+    PwrGndPin(const std::string& name, Id<Cell> cell, IOType type = IOType::UNKNOWN);
 private:
     PwrGndPin();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
@@ -45,7 +45,7 @@ class SignalPin : public Pin
 public:
     friend class SignalPinParser;
 protected:
-    SignalPin(std::string name, Id<Cell> cell, IOType type = IOType::UNKNOWN);
+    SignalPin(const std::string& name, Id<Cell> cell, IOType type = IOType::UNKNOWN);
 private:
     SignalPin();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
@@ -60,7 +60,7 @@ class InputPin : public SignalPin
 {
 public:
     friend class InputPinParser;
-    InputPin(std::string name, Id<Cell> cell);
+    InputPin(const std::string& name, Id<Cell> cell);
 private:
     InputPin();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
@@ -78,7 +78,7 @@ class OutputPin : public SignalPin
 {
 public:
     friend class OutputPinParser;
-    OutputPin(std::string name, Id<Cell> cell);
+    OutputPin(const std::string& name, Id<Cell> cell);
 private:
     OutputPin();
     NS_SERIALIZATION_FUNCTIONS_DECLARATION;
