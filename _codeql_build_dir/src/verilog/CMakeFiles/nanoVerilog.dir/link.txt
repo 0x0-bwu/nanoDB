@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../lib/libnanoVerilog.a CMakeFiles/nanoVerilog.dir/NSVerilog.cpp.o
+/usr/bin/ranlib ../../lib/libnanoVerilog.a

@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../lib/libnanoParasitic.a CMakeFiles/nanoParasitic.dir/NSParasitic.cpp.o CMakeFiles/nanoParasitic.dir/NSParasiticNet.cpp.o
+/usr/bin/ranlib ../../lib/libnanoParasitic.a
