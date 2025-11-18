@@ -46,7 +46,7 @@ traits::IndexNameMap Binding::indexNameMap = [](auto elements) {
 }(traits::elementNameMap);
 
 NamedObj::NamedObj(std::string name)
-: m_name(name)
+: m_name(std::move(name))
 {
 }
 
