@@ -7,7 +7,6 @@ Id<Package> CreatePackage(std::string name)
 {
     auto pkg = nano::Create<Package>(std::move(name));
     auto matLib = nano::Create<MaterialLib>("mat_lib");
-
     pkg->SetMaterialLib(matLib);
     
     return pkg;
