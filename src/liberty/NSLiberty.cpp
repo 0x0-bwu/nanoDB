@@ -37,7 +37,7 @@ bool ParseCapUnit(std::string_view s, CapUnit::Unit & u)
             ("UF", CapUnit::Unit::UF)
             ("NF", CapUnit::Unit::NF)
             ("PF", CapUnit::Unit::PF)
-            ("FF", CapUnit::Unit::PF); 
+            ("FF", CapUnit::Unit::FF); 
         }
     } const symbols;
     return x3::phrase_parse(s.begin(), s.end(), x3::no_case[symbols], space, u); 

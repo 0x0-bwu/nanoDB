@@ -45,7 +45,12 @@ using CRef = const T &;
 
 using Int = int64_t;
 using Index = size_t;
-using ScenarioId = generic::utils::Index<class Scenario, nano::Index>;
+
+template <typename T, bool Mutable = true> class Id;
+template <typename T> using CId = Id<T, /*Mutable=*/false>;
+template <typename Tag, bool Mutable>
+using BaseId = generic::utils::Index<Id<Tag, Mutable>, Index>;
+using ScenarioId = generic::utils::Index<class Scenario, Index>;
 
 using Float32 = float;
 using Float64 = double;
@@ -91,8 +96,6 @@ template <typename T> using Arr5 = Arr<T, 5>;
 template <typename T> using Arr6 = Arr<T, 6>;
 template <typename T> using Arr9 = Arr<T, 9>;
 
-template <typename T, bool Mutable = true> class Id;
-template <typename T> using CId = Id<T, /*Mutable=*/false>;
 template <typename T> using IdSet = std::unordered_set<Id<T>>;
 template <typename T> using IdArr2 = Arr2<Id<T>>;
 template <typename T> using IdArr3 = Arr3<Id<T>>;

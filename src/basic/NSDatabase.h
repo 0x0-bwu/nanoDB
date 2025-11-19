@@ -302,7 +302,7 @@ public:
     bool isValid() const { return m_id != INVALID_INDEX; }
 
     template <typename Derived, bool M>
-    bool Identical(const generic::utils::Index<Id<Derived, M>, nano::Index> & id) const
+    bool Identical(const BaseId<Derived, M> & id) const
     {
         static_assert(std::is_base_of_v<T, Derived>, "should be derived class or self");
         using SizeType = typename Id<Derived, M>::SizeType;
@@ -310,8 +310,8 @@ public:
     }
     
     /// binds
-    template <typename Other>
-    void Bind(const generic::utils::Index<Id<Other>, nano::Index> & other);
+    template <typename Other, bool Mutable>
+    void Bind(const BaseId<Other, Mutable> & other);
 
     template <typename Other>
     void Unbind();
@@ -366,8 +366,8 @@ public:
     static traits::NameIndexMap nameIndexMap;
     static traits::IndexNameMap indexNameMap;
 
-    template <typename T>
-    void Set(const generic::utils::Index<Id<T>, nano::Index> & other)
+    template <typename T, bool Mutable>
+    void Set(const BaseId<T, Mutable> & other)
     {
         m_bindingMap.emplace(typeid(T), Index(other));
     }
@@ -404,8 +404,8 @@ inline Id<T> Create(Args &&... args)
     return Database::Current().Create<T>(std::forward<Args>(args)...);
 }
 
-template <typename T>
-inline bool Remove(Id<T> & id)
+template <typename T, bool Mutable>
+inline bool Remove(Id<T, Mutable> & id)
 {
     return Database::Current().Remove<T>(id);
 }
@@ -433,29 +433,28 @@ inline void SetCurrentDir(std::string dir)
 }
 
 template <typename T, bool Mutable>
-class Id : public generic::utils::Index<Id<T, Mutable>, nano::Index>
+class Id : public BaseId<T, Mutable>
 {
 public:
-    using Type = std::conditional_t<Mutable, T, const T>;
-    using generic::utils::Index<Id<T, Mutable>, nano::Index>::m_id;
-    using SizeType = typename generic::utils::Index<Id<T, Mutable>, nano::Index>::SizeType;
+    using BaseId<T, Mutable>::m_id;
+    using DerefT = std::conditional_t<Mutable, T, const T>;
 
-    Id() : generic::utils::Index<Id<T, Mutable>, nano::Index>() {}
+    Id() : BaseId<T, Mutable>() {}
 
     template <bool M>
-    Id(const generic::utils::Index<Id<T, M>, nano::Index> & id) = delete;
+    Id(const BaseId<T, M> & id) = delete;
 
-    explicit Id(SizeType id) : generic::utils::Index<Id<T, Mutable>, nano::Index>(id) {}
+    explicit Id(Index id) : BaseId<T, Mutable>(id) {}
 
     template <typename Derived, bool M>
     requires std::is_base_of_v<T, Derived>
-    Id(const Id<Derived, M> & derived) : Id(SizeType(derived)) {}// implicit convert from derived to base
+    Id(const Id<Derived, M> & derived) : Id(Index(derived)) {}// implicit convert from derived to base
 
     template <typename Base, bool M>
     requires (not std::is_same_v<Base, T> and std::is_base_of_v<Base, T>)
     explicit Id(const Id<Base, M> & base) // explicit convert from base to derived, will do dynamic cast check
     {
-        m_id = dynamic_cast<Type *>(base.operator->()) ? SizeType(base) : INVALID_INDEX;
+        m_id = dynamic_cast<DerefT *>(base.operator->()) ? Index(base) : INVALID_INDEX;
     }
 
     CId<T> GetCId() const { return CId<T>(m_id); }
@@ -468,12 +467,12 @@ public:
     
     Id<T, true> ConstCast() const requires (not Mutable) { return Id<T, true>(m_id); }
 
-    Type & operator * () const
+    DerefT & operator * () const
     {
         return *(this->operator->());
     }
 
-    Type * operator-> () const 
+    DerefT * operator-> () const 
     {
         if (INVALID_INDEX == m_id) return nullptr;
         auto & container = Database::Current().Get<T>();
@@ -487,15 +486,15 @@ public:
     template <typename Archive>
     void serialize(Archive & ar, const unsigned int)
     {
-        ar & boost::serialization::make_nvp("id", boost::serialization::base_object<generic::utils::Index<Id<T, Mutable>, nano::Index>>(*this));
+        ar & boost::serialization::make_nvp("id", boost::serialization::base_object<nano::BaseId<T, Mutable>>(*this));
     }
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 };
 
 /// binds
 template <typename T>
-template <typename Other>
-void Entity<T>::Bind(const generic::utils::Index<Id<Other>, nano::Index> & other)
+template <typename Other, bool Mutable>
+void Entity<T>::Bind(const nano::BaseId<Other, Mutable> & other)
 {
     if (m_binding == INVALID_INDEX)
         m_binding = Index(nano::Create<Binding>());
