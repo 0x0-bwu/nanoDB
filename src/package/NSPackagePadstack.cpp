@@ -20,23 +20,23 @@ NS_SERIALIZATION_FUNCTIONS_IMP(Padstack)
 UPtr<Shape> Padstack::Via::GetShape() const
 {
     if (not shape) return nullptr;
-    Ptr<Shape> res;
+    UPtr<Shape> res;
     if (shape->hasHole())
-        res = new ShapePolygonWithHoles(shape->GetContour());
-    else res = new ShapePolygon(shape->GetOutline());
+        res = UPtr<Shape>(new ShapePolygonWithHoles(shape->GetContour()));
+    else res = UPtr<Shape>(new ShapePolygon(shape->GetOutline()));
     res->Transform(makeTransform2D(1.0, rotation, offset[0], offset[1]));
-    return UPtr<Shape>(res);
+    return res;
 }
 
 UPtr<Shape> Padstack::Pad::GetShape() const
 {
     if (not shape) return nullptr;
-    Ptr<Shape> res;
+    UPtr<Shape> res;
     if (shape->hasHole())
-        res = new ShapePolygonWithHoles(shape->GetContour());
-    else res = new ShapePolygon(shape->GetOutline());
+        res = UPtr<Shape>(new ShapePolygonWithHoles(shape->GetContour()));
+    else res = UPtr<Shape>(new ShapePolygon(shape->GetOutline()));
     res->Transform(makeTransform2D(1.0, rotation, offset[0], offset[1]));
-    return UPtr<Shape>(res);
+    return res;
 }
 
 Padstack::Padstack(std::string name, CId<Package> package)
