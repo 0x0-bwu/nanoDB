@@ -73,7 +73,7 @@ void t_parse_liberty()
     using namespace liberty;
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/liberty/asap7sc7p5t_INVBUF_RVT_TT_ccs_201020.lib";
     Database::Create("parse_liberty_test");
-    auto lib = LoadLibrary(filename.c_str());
+    Id<Library> lib = nano::liberty::LoadLibrary(filename.c_str());
     BOOST_CHECK(lib);
     BOOST_CHECK(lib->GetName() == "asap7sc7p5t_INVBUF_RVT_TT_ccs_201020");
     BOOST_CHECK(lib->NumOfCells() == 37);

@@ -70,6 +70,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
   	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-return-std-move -Wno-nan-infinity-disabled -Wno-missing-template-arg-list-after-template-kw")
 endif()
 
+set(EXE_SUFFIX ".exe")
 set(DYLIB_SUFFIX "so")
 # MacOs
 # On macOS, add the Homebrew prefix (with appropriate suffixes) to the
@@ -81,6 +82,7 @@ set(DYLIB_SUFFIX "so")
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
 
   	add_definitions(-DBOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED)
+	include_directories(/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include)
 
   	find_program(HOMEBREW_EXECUTABLE brew)
   	mark_as_advanced(FORCE HOMEBREW_EXECUTABLE)
@@ -105,6 +107,11 @@ if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
 	endif()
 endif()
 
+if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+	set(EXE_SUFFIX "")
+	set(DYLIB_SUFFIX "dll")
+endif()
+
 # Malloc
 set(NS_MALLOC_LIB "default" CACHE STRING "malloc library")
 set_property(CACHE NS_MALLOC_LIB PROPERTY STRINGS default;jemalloc;tcmalloc)
@@ -119,30 +126,17 @@ else()
 	set(MALLOC_LIB "")
 endif()
 
-# Boost library
-set(BOOST_INCLUDE_PATH $ENV{BOOST_PATH}/include)
-set(BOOST_LIBRARY_PATH $ENV{BOOST_PATH}/lib)
-
-## Ignore BOOST deprecated headers
-add_definitions(-DBOOST_ALLOW_DEPRECATED_HEADERS)
-add_definitions(-DBOOST_BIND_GLOBAL_PLACEHOLDERS)
-add_definitions(-DBOOST_PHOENIX_STL_TUPLE_H_)
-
-## Link boost_serialization
-#link_directories(${BOOST_LIBRARY_PATH})
-add_library(boost_serialization SHARED IMPORTED)
-set(BOOST_SERIALIZATION_LIB_PATH ${BOOST_LIBRARY_PATH}/libboost_serialization.${DYLIB_SUFFIX})
-if(NOT EXISTS ${BOOST_SERIALIZATION_LIB_PATH})
-	set(BOOST_SERIALIZATION_LIB_PATH ${BOOST_LIBRARY_PATH}/libboost_serialization-mt-x64.${DYLIB_SUFFIX})
-	if(NOT EXISTS ${BOOST_SERIALIZATION_LIB_PATH})
-		message(FATAL_ERROR "Can not find boost serialization library at ${BOOST_LIBRARY_PATH}!")
-	endif()
-endif()
-set_target_properties(boost_serialization PROPERTIES IMPORTED_LOCATION ${BOOST_SERIALIZATION_LIB_PATH})
+# Link Boost
+set(Boost_USE_STATIC_LIBS OFF)  # Use dynamic libraries
+set(Boost_USE_MULTITHREADED ON)  # Enable multithreading
+set(Boost_USE_STATIC_RUNTIME OFF) # Use dynamic runtime
+find_package(Boost CONFIG REQUIRED serialization)
+include_directories(${Boost_INCLUDE_DIRS})
 
 # Link Eigen
 if(DEFINED ENV{EIGEN_PATH})
 	include_directories($ENV{EIGEN_PATH})
+	message(STATUS "Eigen library path: $ENV{EIGEN_PATH}")
 else()
 	find_package(Eigen3 REQUIRED)
 	include_directories(${EIGEN3_INCLUDE_DIR})
@@ -163,11 +157,16 @@ if(OpenMP_CXX_FOUND)
 endif()
 
 set(THIRD_LIBRARY_PATH ${PROJECT_SOURCE_DIR}/3rdparty)
-set(GENERIC_INCLUDE_PATH ${THIRD_LIBRARY_PATH}/generic/include)
-include_directories(${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/include ${GENERIC_INCLUDE_PATH} ${BOOST_INCLUDE_PATH})
+set(GENERIC_INCLUDE_PATH ${CMAKE_BINARY_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/include ${GENERIC_INCLUDE_PATH})
 
 # Compile definition
 add_compile_definitions(NANO_BOOST_SERIALIZATION_SUPPORT)
+
+## Ignore BOOST deprecated headers
+add_compile_definitions("-DBOOST_ALLOW_DEPRECATED_HEADERS")
+add_compile_definitions("-DBOOST_BIND_GLOBAL_PLACEHOLDERS")
+add_compile_definitions("-DBOOST_PHOENIX_STL_TUPLE_H_")
 
 # Message
 message(STATUS "BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
@@ -185,12 +184,12 @@ message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 message(STATUS "ENABLE_ASSERTION: ${ENABLE_ASSERTION}")
 message(STATUS "ENABLE_EXCEPTION: ${ENABLE_EXCEPTION}")
 message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
-message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
 
 # Tracting build time
 # set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
 # set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK "${CMAKE_COMMAND} -E time")
 
+add_subdirectory(3rdparty/generic)
 add_subdirectory(src)
 
 option(BUILD_NANO_TEST "Build unit test" ON)

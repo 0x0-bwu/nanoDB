@@ -68,6 +68,12 @@ using LutIndices = Vec<LutNumbers>;
 
 } // namespace liberty
 
+namespace power {
+
+class LossPower;
+
+} // namespace power
+
 namespace package {
 
 class BondingWire;
@@ -124,14 +130,9 @@ class Parasitic;
 
 } // namespace parasitic
 
-namespace power {
-
-class LossPower;
-
-} // namespace power
-
 template <typename... Args>
 class Collection;
+
 using Content = Collection<
     ///
     Binding,
@@ -141,6 +142,7 @@ using Content = Collection<
     Material,
     MaterialLib,
     MaterialProp,
+    ///
     Shape,
     ///
     chip::Block,
@@ -162,6 +164,8 @@ using Content = Collection<
     liberty::Timing,
     liberty::Voltage,
     ///
+    power::LossPower,
+    ///
     package::Cell,
     package::ConnObj,
     package::Component,
@@ -174,9 +178,7 @@ using Content = Collection<
     package::Pin,
     ///
     parasitic::Net,
-    parasitic::Parasitic,
-    ///
-    power::LossPower
+    parasitic::Parasitic
 >;
 
 namespace hana = boost::hana;

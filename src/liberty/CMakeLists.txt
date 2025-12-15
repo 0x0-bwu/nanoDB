@@ -12,3 +12,12 @@ add_library(nanoLiberty
     NSLibertyTiming.cpp
     NSLibertyVoltage.cpp
 )
+
+target_link_libraries(nanoLiberty
+    nanoBasic
+    ${MALLOC_LIB}
+    ${PNG_LIBRARY} 
+    Threads::Threads
+    Boost::serialization
+    dl
+)

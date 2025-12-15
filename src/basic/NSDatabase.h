@@ -16,6 +16,10 @@ template<typename Key, typename Value>
 using LinearMap = generic::utils::LinearMap<Key, Value>;
 
 template <typename T> class Entity;
+
+void CloseLog();
+void InitLog(std::string_view dirname);
+
 template <typename T>
 class Container
 {
@@ -139,19 +143,49 @@ private:
     void Rename(std::string name) { m_name = std::move(name); }
 };
 
+#ifdef NANO_BOOST_SERIALIZATION_SUPPORT
+namespace archive {
+
+using Format = generic::archive::ArchiveFormat;
+
+namespace detail {
+
+template <typename... Eles>
+inline bool Save(const Collection<Eles...> & collection, std::string_view filename, Format fmt);
+
+template <typename... Eles>
+inline bool Load(std::string_view filename, Format fmt, Collection<Eles...> & collection);
+
+} // namespace detail
+
+bool Save(std::string_view name, std::string_view filename, Format fmt);
+bool SaveCurrent(std::string_view filename, Format fmt);
+bool Load(std::string_view filename, Format fmt);
+
+} // namespace archive
+#endif//NANO_BOOST_SERIALIZATION_SUPPORT
+
 template <typename... Eles>
 class Collection : public NamedObj
 {
 public:
     using Elements = hana::tuple<hana::type<Eles>...>;
     using CollectionMap = hana::map<hana::pair<hana::type<Eles>, Container<Eles>>...>;
-    explicit Collection(std::string name) : NamedObj(std::move(name)) {}
-    ~Collection() { Reset(); }
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
-    bool Save(std::string_view filename, ArchiveFormat fmt) const;
-    bool Load(std::string_view filename, ArchiveFormat fmt);
+
+    template <typename... Args>
+    friend bool nano::archive::detail::Save(const Collection<Args...> & collection, std::string_view filename, nano::archive::Format fmt);
+
+    template <typename... Args>
+    friend bool nano::archive::detail::Load(std::string_view filename, nano::archive::Format fmt, Collection<Args...> & collection);
+
+    template<class Archive>
+    friend void boost::serialization::serialize(Archive & ar, Collection<Eles...> & collection, const unsigned int version);
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
+
+    explicit Collection(std::string name) : NamedObj(std::move(name)) {}
+    ~Collection() { Reset(); }
 
     template <typename T, typename... Args>
     Id<T> Create(Args &&... args)
@@ -205,8 +239,6 @@ public:
         std::stringstream ss; ss << std::hex << sum;
         return ss.str();
     }
-public:
-    NS_SERIALIZATION_FUNCTIONS_DECLARATION;
 private:
     Collection() = default;
     // members
@@ -218,6 +250,15 @@ class Database
 {
     static_assert(hana::size(traits::elementNameMap) - hana::size(traits::inheritanceMap) == hana::size(Content::Elements()), "don't forget to register elements name!");
 public:
+
+#ifdef NANO_BOOST_SERIALIZATION_SUPPORT
+
+    friend bool nano::archive::Save(std::string_view name, std::string_view filename, nano::archive::Format fmt);
+    friend bool nano::archive::SaveCurrent(std::string_view filename, nano::archive::Format fmt);
+    friend bool nano::archive::Load(std::string_view filename, nano::archive::Format fmt);
+
+#endif//NANO_BOOST_SERIALIZATION_SUPPORT
+
     ~Database() = default;
     Database(Database &&) = delete;
     Database(const Database &) = delete;
@@ -233,12 +274,6 @@ public:
     static bool Close(std::string_view name);
     static void Shutdown();
 
-#ifdef NANO_BOOST_SERIALIZATION_SUPPORT
-    static bool Save(std::string_view name, std::string_view filename, ArchiveFormat fmt);
-    static bool SaveCurrent(std::string_view filename, ArchiveFormat fmt);
-    static bool Load(std::string_view filename, ArchiveFormat fmt);
-#endif//NANO_BOOST_SERIALIZATION_SUPPORT
-
     static Database & Instance();
 private:
     Database();
@@ -250,11 +285,6 @@ private:
     CPtr<Content> FindImpl(std::string_view name) const;
     bool CloseImpl(std::string_view name);
     void ShutdownImpl();
-
-#ifdef NANO_BOOST_SERIALIZATION_SUPPORT
-    bool SaveImpl(std::string_view name, std::string_view filename, ArchiveFormat fmt) const;
-    bool LoadImpl(std::string_view filename, ArchiveFormat fmt);
-#endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
 private:
     Ptr<Content> m_current{nullptr};
@@ -520,8 +550,6 @@ CId<Other> Entity<T>::GetBind() const
 ///
 
 } // namespace nano
-NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::NamedObj)
-NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::Content)
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
 namespace boost::serialization {
 
@@ -554,3 +582,5 @@ void serialize(Archive & ar, typename nano::Binding::BindingMap & m, const unsig
 }
 } // namespace boost::serialization
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
+
+NS_SERIALIZATION_CLASS_EXPORT_KEY(nano::NamedObj)

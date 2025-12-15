@@ -1,6 +1,7 @@
 #pragma once
 #include "TestCommon.hpp"
 #include <nano/core/package>
+#include <nano/core/archive>
 
 using namespace boost::unit_test;
 
@@ -695,7 +696,7 @@ void t_create_package()
     
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/CAS300M12BM2.nano/database.bin";
     nano::test::variables[BOOST_HANA_STRING("package_checksum")] = Database::Current().Checksum();
-    Database::SaveCurrent(filename, ArchiveFormat::BIN);
+    nano::archive::SaveCurrent(filename, nano::archive::Format::BIN);
     Database::Shutdown();
 }
 
