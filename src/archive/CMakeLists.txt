@@ -1,16 +1,16 @@
-add_library(nanoArchive
+add_library(nano_archive
     NSArchive.cpp
 )
 
-target_link_libraries(nanoArchive
-    nanoBasic
-    nanoCommon
-    nanoChip
-    nanoLiberty
-    nanoPower
-    nanoPackage
-    nanoParasitic
-    nanoVerilog
+target_link_libraries(nano_archive
+    nano_basic
+    nano_common
+    nano_chip
+    nano_liberty
+    nano_power
+    nano_package
+    nano_parasitic
+    nano_verilog
     ${MALLOC_LIB}
     ${PNG_LIBRARY} 
     Threads::Threads

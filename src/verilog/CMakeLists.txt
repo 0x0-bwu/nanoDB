@@ -1,9 +1,9 @@
-add_library(nanoVerilog
+add_library(nano_verilog
     NSVerilog.cpp
 )
 
-target_link_libraries(nanoVerilog
-    nanoBasic
+target_link_libraries(nano_verilog
+    nano_basic
     ${MALLOC_LIB}
     ${PNG_LIBRARY} 
     Threads::Threads

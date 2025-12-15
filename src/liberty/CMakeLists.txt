@@ -1,4 +1,4 @@
-add_library(nanoLiberty
+add_library(nano_liberty
     NSLiberty.cpp
     NSLibertyCell.cpp
     NSLibertyInternalPower.cpp
@@ -13,8 +13,8 @@ add_library(nanoLiberty
     NSLibertyVoltage.cpp
 )
 
-target_link_libraries(nanoLiberty
-    nanoBasic
+target_link_libraries(nano_liberty
+    nano_basic
     ${MALLOC_LIB}
     ${PNG_LIBRARY} 
     Threads::Threads

@@ -1,4 +1,4 @@
-add_library(nanoPackage
+add_library(nano_package
     edit/NSPackageEditInterface.cpp
     extension/kicad/NSKiCadExtension.cpp
     extension/kicad/NSKiCadObject.cpp
@@ -20,10 +20,10 @@ add_library(nanoPackage
     NSPackagePin.cpp
 )
 
-target_link_libraries(nanoPackage
-    nanoBasic
-    nanoCommon
-    nanoPower
+target_link_libraries(nano_package
+    nano_basic
+    nano_common
+    nano_power
     ${MALLOC_LIB}
     ${PNG_LIBRARY} 
     Threads::Threads

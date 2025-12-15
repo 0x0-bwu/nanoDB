@@ -127,10 +127,11 @@ else()
 endif()
 
 # Link Boost
+cmake_policy(SET CMP0167 NEW)
 set(Boost_USE_STATIC_LIBS OFF)  # Use dynamic libraries
 set(Boost_USE_MULTITHREADED ON)  # Enable multithreading
 set(Boost_USE_STATIC_RUNTIME OFF) # Use dynamic runtime
-find_package(Boost CONFIG REQUIRED serialization)
+find_package(Boost CONFIG REQUIRED COMPONENTS serialization)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Link Eigen
