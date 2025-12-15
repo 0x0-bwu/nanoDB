@@ -8,18 +8,18 @@ add_subdirectory(parasitic)
 add_subdirectory(verilog)
 add_subdirectory(archive)
 
-add_library(nanoDB SHARED NanoDB.cpp)
+add_library(nano_db SHARED NanoDB.cpp)
 
-target_link_libraries(nanoDB
-    nanoBasic
-    nanoCommon
-    nanoChip
-    nanoLiberty
-    nanoPower
-    nanoPackage
-    nanoParasitic
-    nanoVerilog
-    nanoArchive
+target_link_libraries(nano_db
+    nano_basic
+    nano_common
+    nano_chip
+    nano_liberty
+    nano_power
+    nano_package
+    nano_parasitic
+    nano_verilog
+    nano_archive
     ${MALLOC_LIB}
     ${PNG_LIBRARY} 
     Threads::Threads

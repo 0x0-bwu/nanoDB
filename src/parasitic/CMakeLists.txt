@@ -1,10 +1,10 @@
-add_library(nanoParasitic
+add_library(nano_parasitic
     NSParasitic.cpp
     NSParasiticNet.cpp
 )
 
-target_link_libraries(nanoParasitic
-    nanoBasic
+target_link_libraries(nano_parasitic
+    nano_basic
     ${MALLOC_LIB}
     ${PNG_LIBRARY} 
     Threads::Threads

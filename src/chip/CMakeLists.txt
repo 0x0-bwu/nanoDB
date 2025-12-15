@@ -1,4 +1,4 @@
-add_library(nanoChip
+add_library(nano_chip
     NSChip.cpp
     NSChipBlock.cpp
     NSChipBTerm.cpp
@@ -7,9 +7,9 @@ add_library(nanoChip
     NSChipNet.cpp
 )
 
-target_link_libraries(nanoChip
-    nanoBasic
-    nanoCommon
+target_link_libraries(nano_chip
+    nano_basic
+    nano_common
     ${MALLOC_LIB}
     ${PNG_LIBRARY} 
     Threads::Threads
