@@ -130,22 +130,6 @@ using Lut2D = generic::math::LookupTable<Float, 2>;
 
 template <typename T> using Optional = boost::optional<T>;
 
-#ifdef NANO_BOOST_SERIALIZATION_SUPPORT
-using ArchiveFormat = generic::archive::ArchiveFormat;
-
-template <typename T>
-inline bool Save(const T & t, unsigned int version, std::string_view filename, ArchiveFormat fmt)
-{
-    return generic::archive::Save(t, version, filename, fmt);
-}
-
-template <typename T>
-inline bool Load(T & t, unsigned int & version, std::string_view filename, ArchiveFormat fmt)
-{
-    return generic::archive::Load(t, version, filename, fmt);
-}
-#endif//NANO_BOOST_SERIALIZATION_SUPPORT
-
 } // namespace nano
 
 #define NS_TRACE(args...) generic::log::Trace(args)

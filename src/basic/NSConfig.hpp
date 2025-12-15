@@ -31,7 +31,7 @@
     /**/
     #define NS_SERIALIZATION_ABSTRACT_CLASS_FUNCTIONS_DECLARATION                              \
     friend class boost::serialization::access;                                                 \
-    template<typename Archive> void serialize(Archive &, unsigned int) {}                      \
+    template<typename Archive> void serialize(Archive &, const unsigned int) {}                \
     /**/
 
     #define NS_SERIALIZATION_CLASS_EXPORT(T) BOOST_CLASS_EXPORT(T)

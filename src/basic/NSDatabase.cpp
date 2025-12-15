@@ -1,6 +1,5 @@
 #include "NSDatabase.h"
 NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::NamedObj)
-NS_SERIALIZATION_CLASS_EXPORT_IMP(nano::Content)
 
 #include "generic/tools/FileSystem.hpp"
 #include "generic/common/Archive.hpp"
@@ -187,85 +186,6 @@ void NamedObj::serialize(Archive & ar, const unsigned int version)
 }
 NS_SERIALIZATION_FUNCTIONS_IMP(NamedObj);
 
-template <typename... Eles>
-template <typename Archive>
-void Collection<Eles...>::serialize(Archive & ar, const unsigned int version)
-{
-    if constexpr (Archive::is_loading::value) Reset();
-    ar & BOOST_SERIALIZATION_BASE_OBJECT_NVP(NamedObj);
-    hana::for_each(m_data, [&](auto & c){
-        using T = typename std::decay_t<decltype(hana::first(c))>::type;
-        boost::serialization::serialize(ar,  m_data[hana::type<T>()], version);
-    });
-}
-
-NS_SERIALIZATION_FUNCTIONS_IMP(Content);
-
-template <typename... Eles>
-bool Collection<Eles...>::Save(std::string_view filename, ArchiveFormat fmt) const
-{
-    unsigned int version = CURRENT_VERSION.toInt();
-    return nano::Save(*this, version, filename, fmt);
-}
-
-template <typename... Eles>
-bool Collection<Eles...>::Load(std::string_view filename, ArchiveFormat fmt)
-{
-    unsigned int version{0};
-    if (nano::Load(*this, version, filename, fmt)) {
-        SetCurrentDir(generic::fs::DirName(filename).string());
-        m_version = Version(version);
-        return true;
-    }
-    return false;
-}
-
-template bool Content::Save(std::string_view filename, ArchiveFormat fmt) const;
-template bool Content::Load(std::string_view filename, ArchiveFormat fmt);
-
-bool Database::Save(std::string_view name, std::string_view filename, ArchiveFormat fmt)
-{
-    return Instance().SaveImpl(name, filename, fmt);
-}
-
-bool Database::SaveCurrent(std::string_view filename, ArchiveFormat fmt)
-{
-    return Instance().SaveImpl(Current().GetName(), filename, fmt);
-}
-
-bool Database::Load(std::string_view filename, ArchiveFormat fmt)
-{
-    if (Instance().LoadImpl(filename, fmt)) {
-        InitLog(CurrentDir());
-        return true;
-    }
-    return false;
-}
-
-bool Database::SaveImpl(std::string_view name, std::string_view filename, ArchiveFormat fmt) const
-{
-    auto content = FindImpl(name);
-    if (content) return content->Save(filename, fmt);
-    return false;
-}
-
-bool Database::LoadImpl(std::string_view filename, ArchiveFormat fmt)
-{
-    auto c = std::make_unique<Content>("");
-    m_current = c.get();
-    if (c->Load(filename, fmt)) {
-        if (FindImpl(c->GetName().data())) {
-            NS_ERROR("failed to load, database %1% alread exists!", c->GetName());
-        }
-        else {
-            auto res = m_contents.emplace(c->GetName(), std::move(c));
-            m_current = res.second ? res.first->second.get() : nullptr;
-            return res.second;
-        }
-    }
-    m_current = nullptr;
-    return false;
-}
 #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
 } // namespace nano

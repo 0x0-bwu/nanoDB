@@ -19,3 +19,14 @@ add_library(nanoPackage
     NSPackagePadstack.cpp
     NSPackagePin.cpp
 )
+
+target_link_libraries(nanoPackage
+    nanoBasic
+    nanoCommon
+    nanoPower
+    ${MALLOC_LIB}
+    ${PNG_LIBRARY} 
+    Threads::Threads
+    Boost::serialization
+    dl
+)

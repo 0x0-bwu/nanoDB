@@ -69,7 +69,7 @@ public:
     void SetHeight(Float height);
     virtual Float GetHeight() const;
 
-    Id<Footprint> AddFootprint(Id<Footprint> interface);
+    Id<Footprint> AddFootprint(Id<Footprint>);
 
     CId<Footprint> FindFootprint(std::string_view name) const;
 

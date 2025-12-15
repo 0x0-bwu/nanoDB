@@ -1,8 +1,9 @@
-add_library(nanoBasic
-    NSDatabase.cpp
+add_library(nanoArchive
+    NSArchive.cpp
 )
 
-target_link_libraries(nanoBasic
+target_link_libraries(nanoArchive
+    nanoBasic
     nanoCommon
     nanoChip
     nanoLiberty

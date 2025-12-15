@@ -214,7 +214,7 @@ NBox2D ShapeOval::GetBBox() const
 
 NPolygon ShapeOval::GetOutline() const
 {
-    return toPolygon(Ellipse(m_.center, m_.a, m_.b), NANO_SHAPE_CIRCLE_DIV);
+    return toPolygon(generic::geometry::Ellipse<NCoord>(m_.center, m_.a, m_.b), NANO_SHAPE_CIRCLE_DIV);
 }
 
 NPolygonWithHoles ShapeOval::GetContour() const

@@ -58,7 +58,7 @@ void t_save_design()
     BOOST_CHECK(block->GetNet(1).isNull());
 
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/nano.nano/database.bin";
-    auto saveState = Database::SaveCurrent(filename.c_str(), ArchiveFormat::BIN);
+    auto saveState = nano::archive::SaveCurrent(filename.c_str(), nano::archive::Format::BIN);
     BOOST_CHECK(saveState);
     checksum = Database::Current().Checksum();
     Database::Shutdown();
@@ -68,7 +68,7 @@ void t_load_design()
 {
     using namespace nano;
     auto filename = generic::fs::DirName(__FILE__).string() + "/data/archive/nano.nano/database.bin";
-    auto loadState = Database::Load(filename.c_str(), ArchiveFormat::BIN);
+    auto loadState = nano::archive::Load(filename.c_str(), nano::archive::Format::BIN);
     BOOST_CHECK(loadState);
     BOOST_CHECK(Database::Current().GetName() == "nano");
 
