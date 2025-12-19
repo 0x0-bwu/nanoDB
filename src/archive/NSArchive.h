@@ -7,7 +7,7 @@
 namespace boost::serialization {
 
 template <typename Archive, typename... Eles>
-void serialize(Archive & ar, nano::Collection<Eles...> & collection, const unsigned int version)
+inline void serialize(Archive & ar, nano::Collection<Eles...> & collection, const unsigned int version)
 {
     if constexpr (Archive::is_loading::value) collection.Reset();
     ar & boost::serialization::make_nvp("name", boost::serialization::base_object<nano::NamedObj>(collection));

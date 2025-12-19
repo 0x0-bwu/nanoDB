@@ -11,20 +11,64 @@ namespace detail {
 template <typename... Args>
 bool Save(const Collection<Args...> & collection, std::string_view filename, Format fmt)
 {
+    auto dir = generic::fs::DirName(filename);
+    if (not generic::fs::CreateDir(dir)) return false;
+
+    std::ofstream ofs(filename.data());
+    if (not ofs.is_open()) return false;
+
     unsigned int version = CURRENT_VERSION.toInt();
-    return generic::archive::Save(collection, version, filename, fmt);
+    if (fmt == Format::TXT) {
+        boost::archive::text_oarchive oa(ofs);
+        oa & boost::serialization::make_nvp("version", version);
+        boost::serialization::serialize(oa, const_cast<Collection<Args...>&>(collection), version);
+    }
+    else if (fmt == Format::XML) {
+        boost::archive::xml_oarchive oa(ofs);
+        oa & boost::serialization::make_nvp("version", version);
+        boost::serialization::serialize(oa, const_cast<Collection<Args...>&>(collection), version);
+    }
+    else if (fmt == Format::BIN) {
+        boost::archive::binary_oarchive oa(ofs);
+        oa & boost::serialization::make_nvp("version", version);
+        boost::serialization::serialize(oa, const_cast<Collection<Args...>&>(collection), version);
+    }
+    else {
+        NS_ASSERT(false/*unsupported format*/)
+        return false;
+    }
+    return true;
 }
 
 template <typename... Args>
 bool Load(std::string_view filename, Format fmt, Collection<Args...> & collection)
 {
+    std::ifstream ifs(filename.data());
+    if (not ifs.is_open()) return false;
+
     unsigned int version{0};
-    if (generic::archive::Load(collection, version, filename, fmt)) {
-        SetCurrentDir(generic::fs::DirName(filename).string());
-        collection.m_version = Version(version);
-        return true;
+    if (fmt == Format::TXT) {
+        boost::archive::text_iarchive ia(ifs);
+        ia & boost::serialization::make_nvp("version", version);
+        boost::serialization::serialize(ia, collection, version);
     }
-    return false;
+    else if (fmt == Format::XML) {
+        boost::archive::xml_iarchive ia(ifs);
+        ia & boost::serialization::make_nvp("version", version);
+        boost::serialization::serialize(ia, collection, version);
+    }
+    else if (fmt == Format::BIN) {
+        boost::archive::binary_iarchive ia(ifs);
+        ia & boost::serialization::make_nvp("version", version);
+        boost::serialization::serialize(ia, collection, version);
+    }
+    else {
+        NS_ASSERT(false/*unsupported format*/)
+        return false;
+    }
+    SetCurrentDir(generic::fs::DirName(filename).string());
+    collection.m_version = Version(version);
+    return true;
 }
 
 template bool Save(const Content & content, std::string_view filename, Format fmt);

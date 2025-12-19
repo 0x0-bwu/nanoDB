@@ -173,19 +173,20 @@ public:
     using CollectionMap = hana::map<hana::pair<hana::type<Eles>, Container<Eles>>...>;
 
 #ifdef NANO_BOOST_SERIALIZATION_SUPPORT
-
     template <typename... Args>
     friend bool nano::archive::detail::Save(const Collection<Args...> & collection, std::string_view filename, nano::archive::Format fmt);
 
     template <typename... Args>
     friend bool nano::archive::detail::Load(std::string_view filename, nano::archive::Format fmt, Collection<Args...> & collection);
 
-    template<class Archive>
-    friend void boost::serialization::serialize(Archive & ar, Collection<Eles...> & collection, const unsigned int version);
-#endif//NANO_BOOST_SERIALIZATION_SUPPORT
+    template<class Archive, typename... Args>
+    friend void boost::serialization::serialize(Archive & ar, Collection<Args...> & collection, const unsigned int version);
+    #endif//NANO_BOOST_SERIALIZATION_SUPPORT
 
     explicit Collection(std::string name) : NamedObj(std::move(name)) {}
     ~Collection() { Reset(); }
+
+    const Version & GetVersion() const { return m_version; }
 
     template <typename T, typename... Args>
     Id<T> Create(Args &&... args)
