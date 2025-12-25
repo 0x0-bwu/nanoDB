@@ -1,5 +1,15 @@
 #pragma once
 
+#ifdef _WIN32
+#    ifdef NANO_EXPORTS
+#        define NANO_API __declspec(dllexport)
+#    else
+#        define NANO_API __declspec(dllimport)
+#    endif
+#else
+#    define NANO_API 
+#endif
+
 #define NANO_CURRENT_CXX_VERSION 23
 #undef  GENERIC_CURRENT_CXX_VERSION
 #define GENERIC_CURRENT_CXX_VERSION NANO_CURRENT_CXX_VERSION
