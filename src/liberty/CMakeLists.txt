@@ -4,6 +4,7 @@ add_library(nano_liberty
     NSLibertyInternalPower.cpp
     NSLibertyLeakagePower.cpp
     NSLibertyLibrary.cpp
+    NSLibertyLibrarySet.cpp
     NSLibertyLut.cpp
     NSLibertyLutTemplate.cpp
     NSLibertyOperatingConditions.cpp
