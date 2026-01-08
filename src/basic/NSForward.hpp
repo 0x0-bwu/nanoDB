@@ -51,6 +51,7 @@ class InputPin;
 class InternalPower;
 class LeakagePower;
 class Library;
+class LibrarySet;
 class Lut;
 class LutTemplate;
 class NormalizedDriverWaveform;
@@ -156,6 +157,7 @@ using Content = Collection<
     liberty::InternalPower,
     liberty::LeakagePower,
     liberty::Library,
+    liberty::LibrarySet,
     liberty::Lut,
     liberty::LutTemplate,
     liberty::OperatingConditions,
@@ -216,6 +218,7 @@ inline constexpr static auto elementNameMap = hana::make_map(
     hana::make_pair(hana::type_c<liberty::InternalPower           >, "LibertyInternalPower"sv           ),
     hana::make_pair(hana::type_c<liberty::LeakagePower            >, "LibertyLeakagePower"sv            ),
     hana::make_pair(hana::type_c<liberty::Library                 >, "LibertyLibrary"sv                 ),
+    hana::make_pair(hana::type_c<liberty::LibrarySet              >, "LibertyLibrarySet"sv              ),
     hana::make_pair(hana::type_c<liberty::Lut                     >, "LibertyLut"sv                     ),
     hana::make_pair(hana::type_c<liberty::LutTemplate             >, "LibertyLutTemplate"sv             ),
     hana::make_pair(hana::type_c<liberty::NormalizedDriverWaveform>, "LibertyNormalizedDriverWaveform"sv),

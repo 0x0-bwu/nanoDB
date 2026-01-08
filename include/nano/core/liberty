@@ -5,6 +5,7 @@
 #include "../../../src/liberty/NSLibertyKeywords.hpp"
 #include "../../../src/liberty/NSLibertyLeakagePower.h"
 #include "../../../src/liberty/NSLibertyLibrary.h"
+#include "../../../src/liberty/NSLibertyLibrarySet.h"
 #include "../../../src/liberty/NSLibertyLut.h"
 #include "../../../src/liberty/NSLibertyLutTemplate.h"
 #include "../../../src/liberty/NSLibertyOperatingConditions.h"
